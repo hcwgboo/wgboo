@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.modules.adv.mapper.MemberMapper" >
+
+  <sql id="Base_Column_List" >
+    t.id,
+    t.user_id,
+    t.nick_name,
+    t.avatar_url,
+    t.gender,
+    t.province,
+    t.city,
+    t.openid,
+    t.create_by,
+    t.create_date,
+    t.update_by,
+    t.update_date,
+    t.del_flag,
+    t.remarks
+  </sql>
+  
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.modules.sys.mapper.AdvertiseRuleRelationMapper" >
+
+  <sql id="Base_Column_List" >
+    t.id,
+    t.adv_id,
+    t.adv_rule_id
+  </sql>
+  
+  <select id="selectAdvRuleRelationPage" resultType="cn.jeeweb.modules.sys.dto.AdvertiseRuleRelationDto" parameterType="java.util.Map">
+    
+    select
+      av.id as id,
+      av.merchant_id as merchantId,
+      uu.realname as merchantName,
+      av.adv_rule_id as advRuleId,
+      ar.name as advRuleName,
+      ar.ratio as ratio,
+      ar.min_money as minMoney,
+      ar.min_size as minSize
+    from adv_advertise_rule_relation as av
+    left join adv_advertise_rule ar on ar.id = av.adv_rule_id
+    left join sys_user uu on uu.id = av.merchant_id
+    where 1=1
+    <if test="merchantName != null and merchantName !=''">
+      and uu.realname like concat('%','${merchantName}','%')
+    </if>
+    <if test="merchantName != null and merchantName !=''">
+      and uu.advRuleName like concat('%','${advRuleName}','%')
+    </if>
+    
+  </select>
+
+  <select id="selectAdvRuleById" resultType="cn.jeeweb.modules.sys.dto.AdvertiseRuleRelationDto" parameterType="java.lang.String">
+    select
+      av.id as id,
+      av.merchant_id as merchantId,
+      uu.realname as merchantName,
+      av.adv_rule_id as advRuleId,
+      ar.name as advRuleName,
+      ar.ratio as ratio,
+      ar.min_money as minMoney,
+      ar.min_size as minSize
+    from adv_advertise_rule_relation as av
+    left join adv_advertise_rule ar on ar.id = av.adv_rule_id
+    left join sys_user uu on uu.id = av.merchant_id
+    where av.id = #{id}
+  </select>
+
+  <select id="selectRuleByMercharntId" resultType="cn.jeeweb.modules.sys.dto.AdvertiseRuleRelationDto" parameterType="java.lang.String">
+     select
+      av.id as id,
+      av.merchant_id as merchantId,
+      uu.realname as merchantName,
+      av.adv_rule_id as advRuleId,
+      ar.name as advRuleName,
+      ar.ratio as ratio,
+      ar.min_money as minMoney,
+      ar.min_size as minSize
+    from adv_advertise_rule_relation as av
+    left join adv_advertise_rule ar on ar.id = av.adv_rule_id
+    left join sys_user uu on uu.id = av.merchant_id
+    where av.merchant_id = #{merchantId}
+  </select>
+  
+</mapper>
