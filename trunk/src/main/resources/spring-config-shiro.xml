@@ -73,7 +73,7 @@
     <!-- manager -->
     <!-- Remembered vs Authenticated http://www.ituring.com.cn/article/287 -->
     <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
-        <!-- rememberme cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度（128 256 512 位）-->
+        <!-- rememberme cookie加密的密钥 建议每个楼盘都不一样 默认AES算法 密钥长度（128 256 512 位）-->
         <property name="cipherKey"
                   value="#{T(org.apache.shiro.codec.Base64).decode('${shiro.uid.rememeberMe.cookie.base64.cipherKey}')}"/>
         <property name="cookie" ref="rememberMeCookie"/>
@@ -169,11 +169,16 @@
         </property>
         <property name="filterChainDefinitions">
             <value>
-                /static/** = anon
-                /jcaptcha* = anon
-                /upload/** = anon
+                ${admin.url.prefix}/static/** = anon
+                ${admin.url.prefix}/jcaptcha* = anon
+                ${admin.url.prefix}/upload/** = anon
+
+                ${admin.url.prefix}/sendVerifyCode = anon
+                ${admin.url.prefix}/sys/appdownstatistics/statistics = anon
+                ${admin.url.prefix}/officialRegister = anon
                 /weixin/mp/front/** = anon
                 ${admin.url.prefix}/logout = logout
+                ${admin.url.prefix}/sys/merchantregister/register = anon
                 ${admin.url.prefix}/login  = jCaptchaValidate,authc
                 /** = sysUser,onlineSession,user,perms,roles
             </value>

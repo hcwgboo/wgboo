@@ -28,9 +28,15 @@ public class AdvertiseRule extends AbstractEntity<String> {
     /**规则名称*/
     @TableField(value = "name")
 	private String name;
-    /**平台佣金比例*/
+    /**平台佣金占比*/
     @TableField(value = "ratio")
 	private Double ratio;
+	/**上级分销佣金占比*/
+    @TableField(value = "superior_commission_ratio")
+    private Double superiorCommissionRatio;
+    /**下级分销佣金占比*/
+	@TableField(value = "sub_commission_ratio")
+    private Double subCommissionRatio;
     /**最低金额*/
     @TableField(value = "min_money")
 	private BigDecimal minMoney;
@@ -109,6 +115,15 @@ public class AdvertiseRule extends AbstractEntity<String> {
 	public void setRatio(Double ratio){
 		this.ratio = ratio;
 	}
+
+	public Double getSuperiorCommissionRatio() {
+		return superiorCommissionRatio;
+	}
+
+	public void setSuperiorCommissionRatio(Double superiorCommissionRatio) {
+		this.superiorCommissionRatio = superiorCommissionRatio;
+	}
+
 	/**
 	 * 获取  minMoney
 	 *@return: Double  最低金额
@@ -268,5 +283,12 @@ public class AdvertiseRule extends AbstractEntity<String> {
 	public void setRemarks(String remarks){
 		this.remarks = remarks;
 	}
-	
+
+	public Double getSubCommissionRatio() {
+		return subCommissionRatio;
+	}
+
+	public void setSubCommissionRatio(Double subCommissionRatio) {
+		this.subCommissionRatio = subCommissionRatio;
+	}
 }

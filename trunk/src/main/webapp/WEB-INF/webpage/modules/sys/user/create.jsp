@@ -26,23 +26,23 @@
 		              <label><font color="red">*</font>姓名:</label>
 		         </td>
 		         <td class="width-35" >
-		             <form:input path="realname" class="form-control " datatype="*" nullmsg="请输入姓名！" validErrorMsg="用户名重复" htmlEscape="false" />
+		             <form:input path="realname" class="form-control " datatype="*" nullmsg="请输入姓名" validErrorMsg="用户名重复" htmlEscape="false" />
 		             <label class="Validform_checktip"></label>
 		         </td>
 		      </tr>
 		      <tr>
-		         <td  class="width-15 active text-right">	
-		              <label><font color="red">*</font>邮箱:</label>
+		         <td  class="width-15 active text-right">
+		              <label><font color="red">*</font>公司名称:</label>
 		         </td>
 		         <td class="width-35" >
-		             <form:input path="email" class="form-control" ajaxurl="${adminPath}/sys/user/validate"   datatype="e" nullmsg="请输入邮箱！"  htmlEscape="false" />
+		             <form:input path="companyname" class="form-control"  datatype="n" nullmsg="请输入公司名称"  htmlEscape="false" />
 		             <label class="Validform_checktip"></label>
 		         </td>
-		         <td  class="width-15 active text-right">	
+		         <td  class="width-15 active text-right">
 		           	 <label><font color="red">*</font>联系电话:</label>
 		         </td>
 		         <td  class="width-35" >
-		             <form:input path="phone" class="form-control" ajaxurl="${adminPath}/sys/user/validate"  htmlEscape="false"  datatype="m"  nullmsg="请输入用户名！"/>
+		             <form:input path="phone" class="form-control" ajaxurl="${adminPath}/sys/user/validate"  htmlEscape="false"  datatype="m"  nullmsg="请输入用户名"/>
 		             <label class="Validform_checktip"></label>
 		         </td>
 		      </tr>
@@ -51,7 +51,7 @@
 		              <label><font color="red">*</font>密码:</label>
 		         </td>
 		         <td class="width-35" >
-		             <input type="password" value="" name="password"  class="form-control" datatype="*6-16" nullmsg="请设置密码！" errormsg="密码范围在6~16位之间！" />
+		             <input type="password" value="" name="password"  class="form-control" datatype="*6-16" nullmsg="请设置密码！" errormsg="密码范围在6~16位之间" />
 		             <label class="Validform_checktip"></label>
 		         </td>
 		         <td  class="width-15 active text-right">	<label><font color="red">*</font>确认密码:</label></td>
@@ -62,15 +62,14 @@
 		      </tr>
 		      <tr>
 		         <td class="active"><label class="pull-right"><font color="red">*</font>用户角色:</label></td>
-		         <td>
+		         <td colspan="3">
 		         	<form:checkboxes path="roleIdList" nested="false" items="${allRoles}" itemLabel="name" itemValue="id" htmlEscape="false" cssClass="i-checks required"/>
-		          
 		         </td>
 		      </tr>
 		      <tr>
 				<td class="width-15 active"><label class="pull-right">组织机构:</label></td>
 				<td colspan="3">
-				   <form:treeselect title="请选择组织机构" path="organizationIds"  nested="false"  dataUrl="${adminPath}/sys/organization/treeData" labelName="parentname" labelValue="${organizationNames}" multiselect="true" />	   
+				   <form:treeselect title="请选择组织机构" path="organizationIds"  nested="false"  dataUrl="${adminPath}/sys/organization/treeData" labelName="parentname" chkboxType="" labelValue="${organizationNames}" multiselect="true" />
 				</td>
 		      </tr>
 		     

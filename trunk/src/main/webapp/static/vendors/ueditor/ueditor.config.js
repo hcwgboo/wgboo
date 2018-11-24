@@ -69,7 +69,7 @@
         //若实例化编辑器的页面手动修改的domain，此处需要设置为true
         //,customDomain:false
 
-        //常用配置项目
+        //常用配置楼盘
         //,isShow : true    //默认显示编辑器
 
         //,textarea:'editorValue' // 提交表单时，服务器获取编辑器提交内容的所用的参数，多实例时可以给容器name属性，会将name给定的值最为每个实例的键值，不用每次实例化的时候都设置这个值
@@ -350,7 +350,7 @@
         //webAppKey 百度应用的APIkey，每个站长必须首先去百度官网注册一个key后方能正常使用app功能，注册介绍，http://app.baidu.com/static/cms/getapikey.html
         //, webAppKey: ""
 
-        //默认过滤规则相关配置项目
+        //默认过滤规则相关配置楼盘
         //,disabledTableInTable:true  //禁止表格嵌套
         //,allowDivTransToP:true      //允许进入编辑器的div标签自动变成p标签
         //,rgb2Hex:true               //默认产出的数据中的color自动从rgb格式变成16进制格式

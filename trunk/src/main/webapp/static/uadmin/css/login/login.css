@@ -1,0 +1,152 @@
+*{
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
+}
+body,html{
+    height:100%;
+    overflow: hidden;
+}
+.wrapper{
+    width:100%;
+    height:auto;
+    min-height:100%;
+}
+.content{
+
+    width: 500px;
+    margin:0 auto;
+    height:600px;
+    /* border-radius: 5px;
+   box-shadow: 0 2px 15px 0 rgba(0,0,0,.15); */
+    padding-bottom: 150px;/* 必须使用和footer相同的高度 */
+}
+#loginform{
+    margin-top:50px;
+    width:500px;
+    /*height:600px;*/
+    border:1px solid #eee;
+    border-radius: 5px;
+    background: white;
+    box-shadow: 0 2px 15px 0 rgba(0,0,0,.15);
+    padding:0 65px;
+}
+#loginform p.welcome{
+    text-align: center;
+    color:#BBBBBB;
+}
+.user{
+    border:1px solid #E5E5E5;
+    height:50px;
+    margin-top:20px;
+    border-radius: 6px;
+    box-shadow: 0 2px 15px 0 rgba(0,0,0,.15);
+    display: flex;
+}
+.user-icon{
+    flex: 0 0 50px;
+    width:50px;
+    height:50px;
+    padding:15px;
+    border-right:1px solid #E5E5E5;
+    /* background: url('/devpc/static/common/img/user.png') no-repeat center center; */
+}
+
+.user input{
+    flex:1;
+    border:none;
+    outline: none;
+    font-size: 16px;
+    padding:0  12px;
+    height: 100%;
+}
+.pwd{
+    border:1px solid #E5E5E5;
+    height:50px;
+    margin-top:14px;
+    margin-bottom:13px;
+    border-radius: 6px;
+    box-shadow: 0 2px 15px 0 rgba(0,0,0,.15);
+    display: flex;
+}
+.pwd input{
+    height: 100% !important;
+}
+.pwd .pwd-icon{
+    flex: 0 0 50px;
+    width:50px;
+    height:50px;
+    padding:15px;
+    border-right:1px solid #E5E5E5;
+    /* background: url('../common/img/key.png') no-repeat center center; */
+}
+.pwd input{
+    flex:1;
+    border:none;
+    outline: none;
+    font-size: 16px;
+    padding:0 12px;
+}
+.logo{
+    width:85px;
+    height:85px;
+    margin:0 auto;
+    background: #000;
+    border: 1px solid #000;
+    border-radius: 85px;
+    margin-top:36px;
+    margin-bottom:10px;
+}
+.logo  img{
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+label{
+    margin-top:13px;
+    color:#BBBBBB;
+}
+#login-btn{
+    width:100%;
+    height:50px;
+    background: #000;
+    border: 1px solid #000;
+    border-radius: 6px;
+    margin-top:20px;
+    color:white;
+    font-size: 18px;
+    outline: none;
+    cursor: pointer;
+}
+.faq{
+    /*margin-top:27px;*/
+    /*padding-top:25px;*/
+    border-top:1px solid  #E5E5E5;
+}
+.footer {
+    position: relative;
+    margin-top: -150px; /* footer高度的负值 */
+    height: 150px;
+    clear:both;
+}
+.footer p{
+    width:500px;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 12px;
+    text-align: center;
+    color:#757575;
+}
+.clearfix{
+    display: inline-block;
+}
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}

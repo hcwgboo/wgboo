@@ -11,7 +11,7 @@
 		//回调函数，在编辑和保存动作时，供openDialog调用提交表单。
 		function doSubmit(func){
 			callFunc=func;
-		    validateForm.ajaxPost();
+		    var ajaxPost = validateForm.ajaxPost();
 		}
 		$(document).ready(function() {
 		        validateForm = $("#<sitemesh:getProperty property='body.formid'/>").Validform({
@@ -32,7 +32,14 @@
 					}
 					return true;	
 				},callback:function(result){
-					if(result.ret==0)
+					//异常的处理
+					if(result.ret==null){
+						if(result.resultInfo!=null){
+							top.layer.open({title:"提示",content:result.resultInfo.message});
+						}else{							
+							top.layer.open({title:"提示",content:result.message});
+						}
+					}else if(result.ret==0)
 	              	{
 	              	    top.layer.alert(result.msg, {icon: 0, title:'提示'});
 	              	    //运行回调

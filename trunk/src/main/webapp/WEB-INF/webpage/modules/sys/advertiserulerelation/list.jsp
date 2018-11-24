@@ -13,9 +13,11 @@
 	<grid:button groupname="opt" function="delete" />
     <grid:column label="商家名称"  name="merchantName" />
     <grid:column label="规则名称"  name="advRuleName" />
-    <grid:column label="平台比例"  name="ratio" />
-    <grid:column label="最低金额"  name="minMoney" />
-    <grid:column label="最少条数"  name="minSize" />
+    <grid:column label="平台拥挤占比"  name="ratio" />
+    <grid:column label="上级分销拥挤占比"  name="superiorCommissionRatio" />
+    <grid:column label="下级分销拥挤占比"  name="subCommissionRatio" />
+    <grid:column label="最低金额(分)"  name="minMoney" />
+    <grid:column label="最少条数(条)"  name="minSize" />
 	<grid:toolbar function="create"/>
 	<grid:toolbar function="update"/>
 	<grid:toolbar function="delete"/>

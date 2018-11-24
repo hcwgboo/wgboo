@@ -35,7 +35,7 @@ public class CommonServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M
 		Pageable pageable = queryable.getPageable();
 		com.baomidou.mybatisplus.plugins.Page<T> page = new com.baomidou.mybatisplus.plugins.Page<T>(
 				pageable.getPageNumber(), pageable.getPageSize());
-		com.baomidou.mybatisplus.plugins.Page<T> content = selectPage(page, wrapper);
+		com.baomidou.mybatisplus.plugins.Page<T> content = selectPage(page, wrapper.eq("del_flag", "0"));
 		return new PageImpl<T>(content.getRecords(), queryable.getPageable(), content.getTotal());
 	}
 
@@ -90,6 +90,18 @@ public class CommonServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M
 			// 该值不可用
 			return false;
 		}
+	}
+
+	@Override
+	public Boolean checkObjectInfo(Wrapper<T> wrapper) {
+		Boolean flag = null;
+		Integer num = baseMapper.selectCount(wrapper);
+		if (num == null || num == 0) {
+			flag = false; 
+		}else {
+			flag = true;
+		}
+		return flag;
 	}
 
 }

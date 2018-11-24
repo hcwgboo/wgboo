@@ -42,23 +42,39 @@
 						<label><font color="red">*</font>平台佣金比例:</label>
 					</td>
 					<td class="width-35">
-						<form:input path="ratio" htmlEscape="false" class="form-control"  datatype="*"     />
+						<form:input path="ratio" htmlEscape="false" onblur="ratioChange();" class="form-control"  datatype="*"     />
+						<label class="Validform_checktip"></label>
+					</td>
+				</tr>
+				<tr>
+					<td  class="width-15 active text-right">
+						<label><font color="red">*</font>上级分销佣金占比:</label>
+					</td>
+					<td class="width-35">
+						<form:input path="superiorCommissionRatio" onblur="ratioChange();" htmlEscape="false" class="form-control"  datatype="*"     />
+						<label class="Validform_checktip"></label>
+					</td>
+					<td  class="width-15 active text-right">
+						<label><font color="red">*</font>下级分销佣金占比:</label>
+					</td>
+					<td class="width-35">
+						<form:input path="subCommissionRatio" onblur="ratioChange();" htmlEscape="false" class="form-control"  datatype="*"     />
 						<label class="Validform_checktip"></label>
 					</td>
 				</tr>
 		   		<tr>
 					<td  class="width-15 active text-right">
-						<label><font color="red">*</font>每条最少金额:</label>
-					</td>
-					<td class="width-35">
-						<form:input path="minMoney" htmlEscape="false" class="define-input-class"  datatype="n" style="width: 200px;"   /><span style="color:red;font-size: 20px;">（分）</span>
-						<label class="Validform_checktip"></label>
-					</td>
-					<td  class="width-15 active text-right">
 						<label><font color="red">*</font>最少条数:</label>
 					</td>
 					<td class="width-35">
 						<form:input path="minSize" htmlEscape="false" class="form-control"  datatype="n"     />
+						<label class="Validform_checktip"></label>
+					</td>
+					<td  class="width-15 active text-right">
+						<label><font color="red">*</font>每条最少金额:</label>
+					</td>
+					<td class="width-35">
+						<form:input path="minMoney" htmlEscape="false" class="define-input-class"  datatype="n" style="width: 200px;"   /><span style="color:red;font-size: 20px;">（分）</span>
 						<label class="Validform_checktip"></label>
 					</td>
 				</tr>
@@ -67,13 +83,30 @@
 						<label>说明:</label>
 					</td>
 					<td class="width-35" colspan="3">
-						<form:textarea path="describe" htmlEscape="false" class="form-control"    ></form:textarea>
+						<form:textarea path="describe" htmlEscape="false" class="form-control" rows="3"   ></form:textarea>
 					</td>
 				</tr>
+
 		   </tbody>
 		</table>   
 	</form:form>
 <html:js name="bootstrap-fileinput" />
-<html:js name="simditor" />
+<html:js name="simditor,jqGrid_curdtools" />
+<script type="text/javascript">
+	function ratioChange() {
+		var ratio = $("#ratio").val();
+        var sup = $("#superiorCommissionRatio").val();
+        var sub = $("#subCommissionRatio").val();
+        if(ratio && sup && sub){
+			if((ratio + sub + sup) != 1){
+                $("#ratio").val("")
+                $("#superiorCommissionRatio").val("");
+                $("#subCommissionRatio").val("");
+			    msgDialog("平台、上级分销、下级分销佣金之和等于1");
+			}
+		}
+    }
+
+</script>
 </body>
 </html>

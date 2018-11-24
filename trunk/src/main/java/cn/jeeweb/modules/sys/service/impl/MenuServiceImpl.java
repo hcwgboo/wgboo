@@ -24,4 +24,14 @@ public class MenuServiceImpl extends TreeCommonServiceImpl<MenuMapper, Menu, Str
 		return baseMapper.findMenuByRoleId(roleId);
 	}
 
+	@Override
+	public List<String> getParentMenuId(List<String> list) {
+		return baseMapper.getParentMenuId(list);
+	}
+
+	@Override
+	public List<Menu> getMenuIdListByPId(String id) {
+		return baseMapper.getMenuIdListByPId(id);
+	}
+
 }

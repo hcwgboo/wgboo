@@ -135,8 +135,24 @@
     ]]>
     </css>
     <css name="common">
-    <![CDATA[
+        <![CDATA[
 		<link href="${staticPath}/common/css/common.css" rel="stylesheet">
+    ]]>
+    </css>
+    <css name="sco">
+        <![CDATA[
+		<link href="${staticPath}/vendors/sco/css/sco.message.css" rel="stylesheet">
+		<link href="${staticPath}/vendors/sco/css/scojs.css" rel="stylesheet">
+    ]]>
+    </css>
+    <css name="jcrop">
+        <![CDATA[
+		<link href="${staticPath}/vendors/jcrop/css/jquery.Jcrop.min.css" rel="stylesheet">
+    ]]>
+    </css>
+    <css name="iconFont">
+        <![CDATA[
+		<link rel="stylesheet" href="//at.alicdn.com/t/font_606442_2m5sokckvmsa714i.css" />
     ]]>
     </css>
 </html-component>  

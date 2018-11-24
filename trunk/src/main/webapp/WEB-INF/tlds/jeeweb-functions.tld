@@ -15,6 +15,20 @@
 	  <function-signature>java.lang.String getAdminUrlPrefix()</function-signature>
 	  <example>${fns:getAdminUrlPrefix()}</example>  
 	</function>
+	<function>
+	  <description>获得后台静态资源配置前缀地址</description>
+	  <name>getStaticUrlPrefix</name>
+	  <function-class>cn.jeeweb.modules.sys.tags.SysFunctions</function-class>
+	  <function-signature>java.lang.String getStaticUrlPrefix()</function-signature>
+	  <example>${fns:getStaticUrlPrefix()}</example>  
+	</function>
+	<function>
+	  <description>获得后台jscss前缀地址</description>
+	  <name>getStaticUrlHost</name>
+	  <function-class>cn.jeeweb.modules.sys.tags.SysFunctions</function-class>
+	  <function-signature>java.lang.String getStaticUrlHost()</function-signature>
+	  <example>${fns:getStaticUrlHost()}</example>  
+	</function>
 
 	<function>
 	  <description>获取当前用户的菜单对象列表</description>

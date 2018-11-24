@@ -8,29 +8,19 @@ import cn.jeeweb.core.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.core.utils.JeewebPropertiesUtil;
 import cn.jeeweb.core.utils.MyBeanUtils;
 import cn.jeeweb.core.utils.StringUtils;
-import cn.jeeweb.modules.sys.entity.Organization;
-import cn.jeeweb.modules.sys.entity.Role;
-import cn.jeeweb.modules.sys.entity.User;
-import cn.jeeweb.modules.sys.entity.UserOrganization;
-import cn.jeeweb.modules.sys.entity.UserRole;
-import cn.jeeweb.modules.sys.service.IOrganizationService;
-import cn.jeeweb.modules.sys.service.IRoleService;
-import cn.jeeweb.modules.sys.service.IUserOrganizationService;
-import cn.jeeweb.modules.sys.service.IUserRoleService;
-import cn.jeeweb.modules.sys.service.IUserService;
+import cn.jeeweb.modules.sys.constants.DictConstants;
+import cn.jeeweb.modules.sys.entity.*;
+import cn.jeeweb.modules.sys.service.*;
 import cn.jeeweb.modules.sys.utils.UserUtils;
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -162,11 +152,12 @@ public class UserController extends BaseCRUDController<User, String> {
 		if (!StringUtils.isEmpty(organizationid)) {
 			entityWrapper.eq("uo.organization_id", organizationid);
 		}
+		entityWrapper.eq("type", DictConstants.USER_TYPE_1);
 	}
 
 	@Override
 	public void preSave(User entity, HttpServletRequest request, HttpServletResponse response) {
-
+		entity.setType(DictConstants.USER_TYPE_1);
 	}
 
 	@Override
@@ -220,6 +211,44 @@ public class UserController extends BaseCRUDController<User, String> {
 	public String merchantList(Model model, HttpServletRequest request, HttpServletResponse response){
 
 		return display("merchantlist");
+	}
+
+	/**
+	 * 账号锁定
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="{id}/userLock", method = RequestMethod.POST)
+	@ResponseBody
+	public AjaxJson userLock(@PathVariable("id") String id){
+		AjaxJson ajaxJson = new AjaxJson();
+		ajaxJson.success("成功锁定账号");
+		try {
+			userService.userLockOrNot(id,User.STATUS_LOCKED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxJson.fail("账号锁定失败：" + e.getMessage());
+		}
+		return ajaxJson;
+	}
+
+	/**
+	 * 账号解锁
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="{id}/userUnLock", method = RequestMethod.POST)
+	@ResponseBody
+	public AjaxJson userUnLock(@PathVariable("id") String id){
+		AjaxJson ajaxJson = new AjaxJson();
+		ajaxJson.success("账号解锁成功");
+		try {
+			userService.userLockOrNot(id,User.STATUS_NORMAL);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxJson.fail("账号解锁失败：" + e.getMessage());
+		}
+		return ajaxJson;
 	}
 
 

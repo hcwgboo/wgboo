@@ -1,5 +1,6 @@
 package cn.jeeweb.modules.sys.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +10,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.fileupload.FileUploadBase;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,11 +23,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+
 import cn.jeeweb.core.common.controller.BaseController;
 import cn.jeeweb.core.model.AjaxJson;
 import cn.jeeweb.core.model.PageJson;
@@ -37,6 +42,8 @@ import cn.jeeweb.core.utils.MessageUtils;
 import cn.jeeweb.core.utils.StringUtils;
 import cn.jeeweb.core.utils.upload.exception.FileNameLengthLimitExceededException;
 import cn.jeeweb.core.utils.upload.exception.InvalidExtensionException;
+import cn.jeeweb.modules.sys.Constants;
+import cn.jeeweb.modules.sys.dto.AttachmentEnum;
 import cn.jeeweb.modules.sys.entity.Attachment;
 import cn.jeeweb.modules.sys.service.IAttachmentService;
 
@@ -79,7 +86,6 @@ public class AttachmentController extends BaseController {
 	 * @description: 文件上传
 	 * @param request
 	 * @param response
-	 * @param files
 	 * @return
 	 * @return: AjaxUploadResponse
 	 */
@@ -87,6 +93,11 @@ public class AttachmentController extends BaseController {
 	@ResponseBody
 	public AjaxJson upload(HttpServletRequest request, HttpServletResponse response) {
 		response.setContentType("text/plain");
+		String str = request.getParameter("compress");
+		boolean compress = Constants.COMPRESS_FALSE;
+		if (!StringUtils.isEmpty(str) && "true".equals(str)) {
+			compress = Constants.COMPRESS_TRUE;
+		}
 		AjaxJson ajaxJson = new AjaxJson();
 		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
 				request.getSession().getServletContext());
@@ -97,7 +108,7 @@ public class AttachmentController extends BaseController {
 			while (ite.hasNext()) {
 				MultipartFile file = multiRequest.getFile(ite.next());
 				try {
-					Attachment attachment = attachmentService.upload(request, file);
+					Attachment attachment = attachmentService.upload(request, file, compress);
 					attachmentList.add(attachment);
 					continue;
 				} catch (IOException e) {
@@ -110,6 +121,9 @@ public class AttachmentController extends BaseController {
 					ajaxJson.fail(MessageUtils.getMessage("upload.server.error"));
 					continue;
 				} catch (FileNameLengthLimitExceededException e) {
+					ajaxJson.fail(MessageUtils.getMessage("upload.server.error"));
+					continue;
+				}catch(Exception e){
 					ajaxJson.fail(MessageUtils.getMessage("upload.server.error"));
 					continue;
 				}
@@ -126,7 +140,6 @@ public class AttachmentController extends BaseController {
 	 * @description: 文件上传
 	 * @param request
 	 * @param response
-	 * @param files
 	 * @return
 	 * @return: AjaxUploadResponse
 	 */
@@ -145,7 +158,7 @@ public class AttachmentController extends BaseController {
 			while (ite.hasNext()) {
 				MultipartFile file = multiRequest.getFile(ite.next());
 				try {
-					Attachment attachment = attachmentService.upload(request, file);
+					Attachment attachment = attachmentService.upload(request, file, Constants.COMPRESS_FALSE);
 					attachmentList.add(attachment);
 					continue;
 				} catch (IOException e) {
@@ -160,13 +173,16 @@ public class AttachmentController extends BaseController {
 				} catch (FileNameLengthLimitExceededException e) {
 					ajaxJson.fail(MessageUtils.getMessage("upload.server.error"));
 					continue;
+				}catch(Exception e){
+					ajaxJson.fail(MessageUtils.getMessage("upload.server.error"));
+					continue;
 				}
 			}
 			String ctxPath = request.getContextPath();
 			ajaxJson.setData(attachmentList);
 			data.put("success", Boolean.TRUE);
 			data.put("msg", MessageUtils.getMessage("upload.server.error"));
-			data.put("file_path", ctxPath + "/" + attachmentList.get(0).getFilepath());
+			data.put("file_path", attachmentList.get(0).getFilepath());
 		} else {
 			data.put("success", Boolean.FALSE);
 			data.put("msg", MessageUtils.getMessage("upload.server.error"));
@@ -209,7 +225,6 @@ public class AttachmentController extends BaseController {
 	 * @description: 文件上传
 	 * @param request
 	 * @param response
-	 * @param files
 	 * @return
 	 * @return: AjaxUploadResponse
 	 */
@@ -224,8 +239,13 @@ public class AttachmentController extends BaseController {
 			List<Attachment> list = attachmentService
 					.selectList(new EntityWrapper<Attachment>().in("id", id.split(",")));
 			ajaxJson.setData(list);
-		} else {
-			String filepath = request.getParameter("url");
+		} else if (saveType.equals("path")) {
+			String path = request.getParameter("path");
+			List<Attachment> list = attachmentService
+					.selectList(new EntityWrapper<Attachment>().in("path", path.split(",")));
+			ajaxJson.setData(list);
+		}else {
+			String filepath = request.getParameter("filepath");
 			List<Attachment> list = attachmentService
 					.selectList(new EntityWrapper<Attachment>().in("filepath", filepath.split(",")));
 			ajaxJson.setData(list);
@@ -233,4 +253,76 @@ public class AttachmentController extends BaseController {
 
 		return ajaxJson;
 	}
+	
+	
+	@ResponseBody
+    @RequestMapping(value = "/projectPic")
+    public AjaxJson upload(HttpServletRequest request) throws Exception {
+    	AjaxJson ajaxJson = new AjaxJson();
+    	Attachment attachment = attachmentService.jcropPicture(request);
+    	ajaxJson.setData(attachment);
+        return ajaxJson;
+    }
+
+	/**
+	 * 上传文件
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/uploadFile")
+	public List<Attachment> uploadFile(HttpServletRequest request) throws Exception {
+		return attachmentService.uploadFile(request);
+	}
+
+	/**
+	 * 图片上传做条件验证，验证条件前台传
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/uploadByCondition")
+	public AjaxJson uploadByCondition(HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/plain");
+		String str = request.getParameter("compress");
+		boolean compress = Constants.COMPRESS_FALSE;
+		if (!StringUtils.isEmpty(str) && "true".equals(str)) {
+			compress = Constants.COMPRESS_TRUE;
+		}
+		AjaxJson ajaxJson = new AjaxJson();
+		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
+		List<Attachment> attachmentList = new ArrayList<Attachment>();
+		if (multipartResolver.isMultipart(request)) { // 判断request是否有文件上传
+			MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+			Iterator<String> ite = multiRequest.getFileNames();
+			while (ite.hasNext()) {
+				MultipartFile file = multiRequest.getFile(ite.next());
+				
+				CommonsMultipartFile cf = (CommonsMultipartFile) file;
+				DiskFileItem fi = (DiskFileItem) cf.getFileItem();
+				File upFile = fi.getStoreLocation();
+				boolean flag = attachmentService.isSatisfyCondition(upFile, request);
+				if(flag){
+					try {
+						Attachment attachment = attachmentService.upload(request, file, compress);
+						attachmentList.add(attachment);
+						continue;
+					} catch (Exception e) {
+						ajaxJson.fail(MessageUtils.getMessage("upload.server.error"));
+						continue;
+					}
+				}else {
+					ajaxJson.fail(fi.getName()+"<br/>"+AttachmentEnum.getValue(Integer.parseInt(request.getParameter("type"))));
+					continue;
+				}
+
+			}
+			ajaxJson.setData(attachmentList);
+		}
+		return ajaxJson;
+	}
+
+
 }

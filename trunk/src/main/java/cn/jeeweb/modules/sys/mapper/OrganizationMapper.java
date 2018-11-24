@@ -16,4 +16,6 @@ public interface OrganizationMapper extends BaseTreeMapper<Organization> {
 	 * @return: List<Organization>
 	 */
 	List<Organization> findListByUserId(String userId);
+
+	Organization getRoot();
 }

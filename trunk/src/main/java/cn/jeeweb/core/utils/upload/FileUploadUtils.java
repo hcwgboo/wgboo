@@ -1,25 +1,38 @@
 package cn.jeeweb.core.utils.upload;
 
+import cn.jeeweb.core.utils.StringUtils;
+import cn.jeeweb.core.utils.upload.exception.FileNameLengthLimitExceededException;
+import cn.jeeweb.core.utils.upload.exception.InvalidExtensionException;
+import cn.jeeweb.modules.common.oss.OSSClientUtils;
+import com.alibaba.simpleimage.ImageRender;
+import com.alibaba.simpleimage.SimpleImageException;
+import com.alibaba.simpleimage.render.ReadRender;
+import com.alibaba.simpleimage.render.ScaleParameter;
+import com.alibaba.simpleimage.render.ScaleRender;
+import com.alibaba.simpleimage.render.WriteRender;
 import org.apache.commons.fileupload.FileUploadBase.FileSizeLimitExceededException;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.aspectj.util.FileUtil;
 import org.springframework.web.multipart.MultipartFile;
-import cn.jeeweb.core.utils.StringUtils;
-import cn.jeeweb.core.utils.upload.exception.FileNameLengthLimitExceededException;
-import cn.jeeweb.core.utils.upload.exception.InvalidExtensionException;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FileUploadUtils {
 
-	// 默认大小 50M
-	public static final long DEFAULT_MAX_SIZE = 52428800;
+	// 默认大小 5M
+	public static final long DEFAULT_MAX_SIZE = 5242880;
+	
+	public static final long COMPRESS_SIZE = 524800;
 
 	// 默认上传的地址
 	private static String defaultBaseDir = "upload";
@@ -59,17 +72,17 @@ public class FileUploadUtils {
 	 *            当前请求
 	 * @param file
 	 *            上传的文件
-	 * @param result
-	 *            添加出错信息
+	 * @param
+	 *
 	 * @return
 	 * @throws IOException
 	 * @throws FileNameLengthLimitExceededException
 	 * @throws InvalidExtensionException
 	 * @throws FileSizeLimitExceededException
 	 */
-	public static final String upload(HttpServletRequest request, MultipartFile file)
+	public static final Map<String, Object> upload(HttpServletRequest request, MultipartFile file)
 			throws FileSizeLimitExceededException, InvalidExtensionException, FileNameLengthLimitExceededException,
-			IOException {
+			IOException ,Exception {
 		return upload(request, file, DEFAULT_ALLOWED_EXTENSION);
 	}
 
@@ -80,8 +93,8 @@ public class FileUploadUtils {
 	 *            当前请求
 	 * @param file
 	 *            上传的文件
-	 * @param result
-	 *            添加出错信息
+	 * @param
+	 *
 	 * @param allowedExtension
 	 *            允许上传的文件类型
 	 * @return
@@ -90,10 +103,10 @@ public class FileUploadUtils {
 	 * @throws InvalidExtensionException
 	 * @throws FileSizeLimitExceededException
 	 */
-	public static final String upload(HttpServletRequest request, MultipartFile file, String[] allowedExtension)
-			throws FileSizeLimitExceededException, InvalidExtensionException, FileNameLengthLimitExceededException,
-			IOException {
-		return upload(request, getDefaultBaseDir(), file, allowedExtension, DEFAULT_MAX_SIZE, true);
+	public static final Map<String, Object> upload(HttpServletRequest request, MultipartFile file,
+			String[] allowedExtension) throws FileSizeLimitExceededException, InvalidExtensionException,
+			FileNameLengthLimitExceededException, IOException,Exception {
+		return upload(request, getDefaultBaseDir(), file, allowedExtension, DEFAULT_MAX_SIZE, true, false);
 	}
 
 	/**
@@ -111,6 +124,8 @@ public class FileUploadUtils {
 	 *            最大上传的大小 -1 表示不限制
 	 * @param needDatePathAndRandomName
 	 *            是否需要日期目录和随机文件名前缀
+	 * @param compress 当时图片上传的时候，是否需要压缩，true需要压缩，false不需要压缩
+	 * 
 	 * @return 返回上传成功的文件名
 	 * @throws InvalidExtensionException
 	 *             如果MIME类型不允许
@@ -118,14 +133,14 @@ public class FileUploadUtils {
 	 *             如果超出最大大小
 	 * @throws FileNameLengthLimitExceededException
 	 *             文件名太长
+	 * @throws UnsupportedEncodingException
 	 * @throws IOException
 	 *             比如读写文件出错时
 	 */
-	public static final String upload(HttpServletRequest request, String baseDir, MultipartFile file,
-			String[] allowedExtension, long maxSize, boolean needDatePathAndRandomName)
-			throws InvalidExtensionException, FileSizeLimitExceededException, IOException,
-			FileNameLengthLimitExceededException {
-
+	public static final Map<String, Object> upload(HttpServletRequest request, String baseDir, MultipartFile file,
+			String[] allowedExtension, long maxSize, boolean needDatePathAndRandomName, boolean compress)
+			throws FileNameLengthLimitExceededException, FileSizeLimitExceededException, InvalidExtensionException,
+			UnsupportedEncodingException,Exception {
 		int fileNamelength = file.getOriginalFilename().length();
 		if (fileNamelength > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH) {
 			throw new FileNameLengthLimitExceededException(file.getOriginalFilename(), fileNamelength,
@@ -135,13 +150,110 @@ public class FileUploadUtils {
 		assertAllowed(file, allowedExtension, maxSize);
 		String filename = extractFilename(file, baseDir, needDatePathAndRandomName);
 
-		File desc = getAbsoluteFile(extractUploadDir(request), filename);
+		// File desc = getAbsoluteFile(extractUploadDir(request), filename);
+		// file.transferTo(desc);
+		String url = "";
+		Map<String, Object> map = new HashMap<>();
+		long size = file.getSize();
+		if (compress && size>COMPRESS_SIZE) {
+			File upFile = picCompress(file);
+			url = OSSClientUtils.putObject(upFile, filename);
+			map.put("size", upFile.length());
+			upFile.delete();
+		}else{
+			CommonsMultipartFile cf = (CommonsMultipartFile) file;
+			DiskFileItem fi = (DiskFileItem) cf.getFileItem();
+			url = OSSClientUtils.putObject(fi.getStoreLocation(), filename);
+			map.put("size", file.getSize());
+		}
+		map.put("url", url);
+		map.put("path", filename);
+		return map;
+		// return filename;
+	}
+	
+	/**
+	 * 图片压缩，返回压缩后的file
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	public static File picCompress(MultipartFile file) throws IOException {
+		CommonsMultipartFile cf = (CommonsMultipartFile) file;
+		DiskFileItem fi = (DiskFileItem) cf.getFileItem();
+		File in = fi.getStoreLocation();
+		WriteRender wr = null;
+		File out = null;
+		FileInputStream input = null;
+		synchronized (FileUploadUtils.class) {
+			out = File.createTempFile(System.currentTimeMillis()+"", ".jpg");
+		}
+		try {
+			BufferedImage image = ImageIO.read(in);
+			int with = (int)(image.getWidth()*0.6);
+			int height = (int)(image.getHeight()*0.6);
+			if (with<1024 || height<1024) {
+				with = 1024;
+				height = 1024;
+			}
+			ScaleParameter scaleParam = new ScaleParameter(with, height);
+			input = new FileInputStream(in);
+			ImageRender rr = new ReadRender(input);
+			ImageRender sr = new ScaleRender(rr, scaleParam);
+			wr = new WriteRender(sr, out);
 
-		file.transferTo(desc);
-		return filename;
+			wr.render(); // 触发图像处理
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != input) {
+				try {
+					input.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			if (wr != null) {
+				try {
+					wr.dispose(); // 释放simpleImage的内部资源
+				} catch (SimpleImageException ignore) {
+					// skip ...
+				}
+			}
+		}
+		/*	此图片压缩可能会有颜色产生
+		ImageWriter writer;
+		ImageWriteParam writeParam;
+		BufferedImage image = null;
+		FileOutputStream out = null;
+		File temp = null;
+		synchronized (FileUploadUtils.class) {
+			temp = File.createTempFile(System.currentTimeMillis()+"", ".jpg");
+		}
+		writer = ImageIO.getImageWritersByFormatName("jpg").next();// 指定写图片的方式为 jpg
+		writeParam = writer.getDefaultWriteParam(); // new JPEGImageWriteParam(null);
+		writer.getDefaultWriteParam();
+		writeParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);// 要使用压缩，必须指定压缩方式为MODE_EXPLICIT
+		writeParam.setCompressionQuality((float) 0.4);// 这里指定压缩的程度，参数qality是取值0~1范围内，
+		writeParam.setProgressiveMode(ImageWriteParam.MODE_DISABLED);
+		
+		try {
+			image = ImageIO.read(file.getInputStream());
+			out = new FileOutputStream(temp);
+			writer.reset();
+			writer.setOutput(ImageIO.createImageOutputStream(out));
+			writer.write(null, new IIOImage(image, null, null), writeParam);// 调用write方法，就可以向输入流写图片
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException();
+		} finally {
+			out.flush();
+			out.close();
+		}*/
+		return out;
 	}
 
-	private static final File getAbsoluteFile(String uploadDir, String filename) throws IOException {
+	public static final File getAbsoluteFile(String uploadDir, String filename) throws IOException {
 
 		uploadDir = FilenameUtils.normalizeNoEndSeparator(uploadDir);
 
@@ -163,12 +275,15 @@ public class FileUploadUtils {
 		if (slashIndex >= 0) {
 			filename = filename.substring(slashIndex + 1);
 		}
-		if (needDatePathAndRandomName) {
-			filename = baseDir + "/" + datePath() + "/" + System.currentTimeMillis() + "."
-					+ StringUtils.getExtensionName(filename);
-		} else {
-			filename = baseDir + "/" + filename;
+		synchronized(FileUploadUtils.class){
+			if (needDatePathAndRandomName) {
+				filename = baseDir + "/" + datePath() + "/" + StringUtils.randomUUID() + "."
+						+ StringUtils.getExtensionName(filename);
+			} else {
+				filename = baseDir + "/" + filename;
+			}
 		}
+
 		return filename;
 	}
 
@@ -260,63 +375,76 @@ public class FileUploadUtils {
 		}
 	}
 
-
-
-
 	/**
 	 * 以默认配置进行文件上传
 	 *
-	 * @param request          当前请求
-	 * @param remoteUrl             上传的文件
-	 *                         添加出错信息
-	 * @param allowedExtension 允许上传的文件类型
+	 * @param request
+	 *            当前请求
+	 * @param remoteUrl
+	 *            上传的文件 添加出错信息
+	 * @param allowedExtension
+	 *            允许上传的文件类型
 	 * @return
 	 * @throws IOException
 	 * @throws FileNameLengthLimitExceededException
 	 * @throws InvalidExtensionException
 	 * @throws FileSizeLimitExceededException
 	 */
-	public static String remote(HttpServletRequest request,String baseDir,String remoteUrl, String[] allowedExtension,long maxSize)
-			throws FileSizeLimitExceededException, InvalidExtensionException, FileNameLengthLimitExceededException,
-			IOException {
+	public static String remote(HttpServletRequest request, String baseDir, String remoteUrl, String[] allowedExtension,
+			long maxSize) throws FileSizeLimitExceededException, InvalidExtensionException,
+			FileNameLengthLimitExceededException, IOException {
 		return remote(request, baseDir, remoteUrl, allowedExtension, maxSize, true);
 	}
 
 	/**
 	 * 文件上传
 	 *
-	 * @param request                   当前请求 从请求中提取 应用上下文根
-	 * @param baseDir                   相对应用的基目录
-	 * @param remoteUrl                      上传的文件
-	 * @param allowedExtension          允许的文件类型 null 表示允许所有
-	 * @param maxSize                   最大上传的大小 -1 表示不限制
-	 * @param needDatePathAndRandomName 是否需要日期目录和随机文件名前缀
+	 * @param request
+	 *            当前请求 从请求中提取 应用上下文根
+	 * @param baseDir
+	 *            相对应用的基目录
+	 * @param remoteUrl
+	 *            上传的文件
+	 * @param allowedExtension
+	 *            允许的文件类型 null 表示允许所有
+	 * @param maxSize
+	 *            最大上传的大小 -1 表示不限制
+	 * @param needDatePathAndRandomName
+	 *            是否需要日期目录和随机文件名前缀
 	 * @return 返回上传成功的文件名
-	 * @throws InvalidExtensionException            如果MIME类型不允许
-	 * @throws FileSizeLimitExceededException       如果超出最大大小
-	 * @throws FileNameLengthLimitExceededException 文件名太长
-	 * @throws IOException                          比如读写文件出错时
+	 * @throws InvalidExtensionException
+	 *             如果MIME类型不允许
+	 * @throws FileSizeLimitExceededException
+	 *             如果超出最大大小
+	 * @throws FileNameLengthLimitExceededException
+	 *             文件名太长
+	 * @throws IOException
+	 *             比如读写文件出错时
 	 */
-	public static String remote(HttpServletRequest request, String baseDir,String remoteUrl,
-						 String[] allowedExtension, long maxSize, boolean needDatePathAndRandomName)
-			throws InvalidExtensionException, FileSizeLimitExceededException, IOException,
-			FileNameLengthLimitExceededException {
+	public static String remote(HttpServletRequest request, String baseDir, String remoteUrl, String[] allowedExtension,
+			long maxSize, boolean needDatePathAndRandomName) throws InvalidExtensionException,
+			FileSizeLimitExceededException, IOException, FileNameLengthLimitExceededException {
 		URL url = new URL(remoteUrl);
 		assertAllowed(remoteUrl, allowedExtension, maxSize);
-		String filename = extractByFilename(remoteUrl,baseDir, needDatePathAndRandomName);
-		FileUtil.copyStream(url.openStream(),new FileOutputStream(filename));
+		String filename = extractByFilename(remoteUrl, baseDir, needDatePathAndRandomName);
+		FileUtil.copyStream(url.openStream(), new FileOutputStream(filename));
 		return filename;
 	}
 
 	/**
 	 * 是否允许文件上传
 	 *
-	 * @param remoteUrl             上传的文件
-	 * @param allowedExtension 文件类型 null 表示允许所有
-	 * @param maxSize          最大大小 字节为单位 -1表示不限制
+	 * @param remoteUrl
+	 *            上传的文件
+	 * @param allowedExtension
+	 *            文件类型 null 表示允许所有
+	 * @param maxSize
+	 *            最大大小 字节为单位 -1表示不限制
 	 * @return
-	 * @throws InvalidExtensionException      如果MIME类型不允许
-	 * @throws FileSizeLimitExceededException 如果超出最大大小
+	 * @throws InvalidExtensionException
+	 *             如果MIME类型不允许
+	 * @throws FileSizeLimitExceededException
+	 *             如果超出最大大小
 	 */
 	public static void assertAllowed(String remoteUrl, String[] allowedExtension, long maxSize)
 			throws InvalidExtensionException, FileSizeLimitExceededException {
@@ -337,19 +465,23 @@ public class FileUploadUtils {
 			}
 		}
 	}
-	public static String extractByFilename(String remoteUrl,String baseDir, boolean needDatePathAndRandomName)
+
+	public static String extractByFilename(String remoteUrl, String baseDir, boolean needDatePathAndRandomName)
 			throws UnsupportedEncodingException {
 		String filename = remoteUrl;
 		int slashIndex = filename.indexOf("/");
 		if (slashIndex >= 0) {
 			filename = filename.substring(slashIndex + 1);
 		}
-		if (needDatePathAndRandomName) {
-			filename = baseDir + "/" + datePath() + "/" + System.currentTimeMillis() + "."
-					+ StringUtils.getExtensionName(filename);
-		} else {
-			filename = baseDir + "/" + filename;
+		synchronized (FileUploadUtils.class){
+			if (needDatePathAndRandomName) {
+				filename = baseDir + "/" + datePath() + "/" + StringUtils.randomUUID() + "."
+						+ StringUtils.getExtensionName(filename);
+			} else {
+				filename = baseDir + "/" + filename;
+			}
 		}
+
 		return filename;
 	}
 }

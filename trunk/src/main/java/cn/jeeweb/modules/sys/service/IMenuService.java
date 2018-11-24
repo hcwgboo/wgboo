@@ -28,4 +28,17 @@ public interface IMenuService extends ITreeCommonService<Menu, String> {
 	 * @return
 	 */
 	List<Menu> findMenuByRoleId(String roleId);
+
+	/**
+	 * 获取父菜单的id
+	 * @param list
+	 * @return
+	 */
+	List<String> getParentMenuId(List<String> list);
+	/**
+	 * 通过父id获取父子id
+	 * @param list
+	 * @return
+	 */
+	List<Menu> getMenuIdListByPId(String id);
 }

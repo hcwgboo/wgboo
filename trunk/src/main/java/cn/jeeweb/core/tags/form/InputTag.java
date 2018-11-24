@@ -58,8 +58,8 @@ public class InputTag extends org.springframework.web.servlet.tags.form.InputTag
 					value = value.toString().substring(0, value.toString().indexOf("."));
 				}
 				Date date;
-				if (value.indexOf("CST")>0) {
-					SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US);
+				if (value.indexOf("CST")>0 || value.indexOf("GMT")>0) {
+					SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
 					date=sdf.parse(value);
 				}else{
 					date = DateUtils.parseDate(value);

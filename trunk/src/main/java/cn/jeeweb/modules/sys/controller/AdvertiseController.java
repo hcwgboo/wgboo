@@ -1,6 +1,7 @@
 package cn.jeeweb.modules.sys.controller;
 
 import cn.jeeweb.core.common.controller.BaseBeanController;
+import cn.jeeweb.core.exception.ExceptionResultInfo;
 import cn.jeeweb.core.model.AjaxJson;
 import cn.jeeweb.core.model.PageJson;
 import cn.jeeweb.core.query.annotation.PageableDefaults;
@@ -9,12 +10,15 @@ import cn.jeeweb.core.query.data.Queryable;
 import cn.jeeweb.core.query.utils.QueryableConvertUtils;
 import cn.jeeweb.core.query.wrapper.EntityWrapper;
 import cn.jeeweb.core.security.shiro.authz.annotation.RequiresMethodPermissions;
+import cn.jeeweb.core.tags.pop.Addres;
 import cn.jeeweb.core.utils.ObjectUtils;
 import cn.jeeweb.core.utils.StringUtils;
+import cn.jeeweb.modules.sys.constants.DictConstants;
 import cn.jeeweb.modules.sys.dto.AdvertiseRuleRelationDto;
 import cn.jeeweb.modules.sys.entity.Advertise;
 import cn.jeeweb.modules.sys.entity.AdvertiseRule;
 import cn.jeeweb.modules.sys.entity.User;
+import cn.jeeweb.modules.sys.service.IAddressService;
 import cn.jeeweb.modules.sys.service.IAdvertiseRuleRelationService;
 import cn.jeeweb.modules.sys.service.IAdvertiseRuleService;
 import cn.jeeweb.modules.sys.service.IAdvertiseService;
@@ -53,6 +57,8 @@ public class AdvertiseController extends BaseBeanController<Advertise> {
     protected IAdvertiseService advertiseService;
     @Autowired
     private IAdvertiseRuleRelationService advertiseRuleRelationService;
+    @Autowired
+    private IAddressService addressService;
 
     public Advertise get(String id) {
         if (!ObjectUtils.isNullOrEmpty(id)) {
@@ -73,6 +79,7 @@ public class AdvertiseController extends BaseBeanController<Advertise> {
     private void ajaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                           HttpServletResponse response) throws IOException {
         EntityWrapper<Advertise> entityWrapper = new EntityWrapper<Advertise>(entityClass);
+        entityWrapper.eq("merchant_id", UserUtils.getUser().getId());
         propertyPreFilterable.addQueryProperty("id");
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
@@ -88,9 +95,29 @@ public class AdvertiseController extends BaseBeanController<Advertise> {
         User user = UserUtils.getUser();
         Optional<List<AdvertiseRuleRelationDto>> optional = Optional.ofNullable(advertiseRuleRelationService.selectRuleByMercharntId(user.getId()));
         request.setAttribute("rule", JSONArray.toJSON(optional.orElse(new ArrayList<AdvertiseRuleRelationDto>())));
+        List<Addres> list = new ArrayList<>();
+        request.setAttribute("regions", JSONArray.toJSON(list));
 
         model.addAttribute("data", newModel());
         return display("edit");
+    }
+
+    /**
+     * 判断商家是否有新增规则
+     * @return
+     */
+    @RequestMapping(value = "merchantRule", method = RequestMethod.GET)
+    @ResponseBody
+    public AjaxJson merchantRule(){
+        AjaxJson ajaxJson = new AjaxJson();
+        User user = UserUtils.getUser();
+        List<AdvertiseRuleRelationDto> list = advertiseRuleRelationService.selectRuleByMercharntId(user.getId());
+        if(list != null && list.size() > 0){
+            ajaxJson.setData(true);
+        }else {
+            ajaxJson.setData(false);
+        }
+        return ajaxJson;
     }
 
     @RequestMapping(value = "create", method = RequestMethod.POST)
@@ -116,7 +143,18 @@ public class AdvertiseController extends BaseBeanController<Advertise> {
         request.setAttribute("rule", JSONArray.toJSON(optional.orElse(new ArrayList<AdvertiseRuleRelationDto>())));
 
         Advertise advertise = get(id);
+        String regions = advertise.getRegion();
+        List<Addres> list = new ArrayList<>();
+        if(!StringUtils.isEmpty(regions)){
+            String[] strs = regions.split(",");
+            list = addressService.selectList(new EntityWrapper<Addres>().eq("type", 3).in("value", strs));
+        }
+        request.setAttribute("regions", JSONArray.toJSON(list));
+
         model.addAttribute("data", advertise);
+        if(DictConstants.GGSXJ_DICT_VALUE_1.equals(advertise.getReleaseStatus())){
+            return display("view");
+        }
         return display("edit");
     }
 
@@ -124,35 +162,13 @@ public class AdvertiseController extends BaseBeanController<Advertise> {
     @ResponseBody
     public AjaxJson update(Model model, @Valid @ModelAttribute("data") Advertise advertise, BindingResult result,
                            HttpServletRequest request, HttpServletResponse response) {
-    	advertiseService.updateAdvertise(advertise);
-        return null;
-    }
-
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    @ResponseBody
-    public AjaxJson doSave(Advertise advertise, HttpServletRequest request, HttpServletResponse response,
-                           BindingResult result) {
         AjaxJson ajaxJson = new AjaxJson();
-        ajaxJson.success("保存成功");
-        if (hasError(advertise, result)) {
-            // 错误提示
-            String errorMsg = errorMsg(result);
-            if (!StringUtils.isEmpty(errorMsg)) {
-                ajaxJson.fail(errorMsg);
-            } else {
-                ajaxJson.fail("保存失败");
-            }
-            return ajaxJson;
-        }
+        ajaxJson.success("修改成功");
         try {
-            if (StringUtils.isEmpty(advertise.getId())) {
-                advertiseService.insert(advertise);
-            } else {
-                advertiseService.insertOrUpdate(advertise);
-            }
-        } catch (Exception e) {
+            advertiseService.updateAdvertise(advertise);
+        }catch (Exception e){
             e.printStackTrace();
-            ajaxJson.fail("保存失败!<br />原因:" + e.getMessage());
+            ajaxJson.fail("修改失败");
         }
         return ajaxJson;
     }
@@ -186,23 +202,41 @@ public class AdvertiseController extends BaseBeanController<Advertise> {
         return ajaxJson;
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/view", method = RequestMethod.GET)
     public String view(Model model, @PathVariable("id") String id, HttpServletRequest request,
                        HttpServletResponse response) {
+        User user = UserUtils.getUser();
+        Optional<List<AdvertiseRuleRelationDto>> optional = Optional.ofNullable(advertiseRuleRelationService.selectRuleByMercharntId(user.getId()));
+        request.setAttribute("rule", JSONArray.toJSON(optional.orElse(new ArrayList<AdvertiseRuleRelationDto>())));
+
         Advertise advertise = get(id);
+        String regions = advertise.getRegion();
+        List<Addres> list = new ArrayList<>();
+        if(!StringUtils.isEmpty(regions)){
+            String[] strs = regions.split(",");
+            list = addressService.selectList(new EntityWrapper<Addres>().eq("type", 3).in("value", strs));
+        }
+        request.setAttribute("regions", JSONArray.toJSON(list));
+
         model.addAttribute("data", advertise);
-        return display("edit");
+        return display("view");
     }
 
     /**
      * 提交审核
      */
     @RequestMapping(value = "submitCheckAdv", method = RequestMethod.GET)
+    @ResponseBody
     public AjaxJson submitCheckAdv(HttpServletRequest request) {
     	AjaxJson ajaxJson = new AjaxJson();
     	ajaxJson.success("提交成功,请等待");
         String id = request.getParameter("id");
-        advertiseService.submitCheckAdv(id);
+        try {
+            advertiseService.submitCheckAdv(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ajaxJson.fail(e.getMessage());
+        }
         return ajaxJson;
     }
 
@@ -212,7 +246,20 @@ public class AdvertiseController extends BaseBeanController<Advertise> {
         return display("checklist");
     }
 
-
+    @RequestMapping(value = "checkAjaxList", method = { RequestMethod.GET, RequestMethod.POST })
+    @PageableDefaults(sort = "id=desc")
+    private void checkAjaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
+                          HttpServletResponse response) throws IOException {
+        EntityWrapper<Advertise> entityWrapper = new EntityWrapper<>(entityClass);
+        entityWrapper.ne("status", DictConstants.GGSH_DICT_VALUE_0).orderBy("release_status asc, update_date desc");
+        propertyPreFilterable.addQueryProperty("id");
+        // 预处理
+        QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
+        SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
+        PageJson<Advertise> pagejson = new PageJson<>(advertiseService.list(queryable,entityWrapper));
+        String content = JSON.toJSONString(pagejson, filter);
+        StringUtils.printJson(response, content);
+    }
 
     /**
      * 审核通过
@@ -220,11 +267,17 @@ public class AdvertiseController extends BaseBeanController<Advertise> {
      * @return
      */
     @RequestMapping(value = "checkSuccessAdv", method = RequestMethod.GET)
+    @ResponseBody
     public AjaxJson checkSuccessAdv(HttpServletRequest request) {
     	AjaxJson ajaxJson = new AjaxJson();
     	ajaxJson.success("审核通过");
         String id = request.getParameter("id");
-        advertiseService.checkSuccessAdv(id);
+        try {
+            advertiseService.checkSuccessAdv(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ajaxJson.fail("系统错误");
+        }
         return ajaxJson;
     }
 
@@ -234,7 +287,8 @@ public class AdvertiseController extends BaseBeanController<Advertise> {
      * @return
      */
     @RequestMapping(value = "checkFailAdv", method = RequestMethod.GET)
-    public AjaxJson checkFailAdv(HttpServletRequest request) {
+    @ResponseBody
+    public AjaxJson checkFailAdv(HttpServletRequest request) throws ExceptionResultInfo {
     	AjaxJson ajaxJson = new AjaxJson();
     	ajaxJson.success("审核不通过");
         String id = request.getParameter("id");

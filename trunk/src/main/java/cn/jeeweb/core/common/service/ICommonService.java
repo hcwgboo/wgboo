@@ -19,4 +19,6 @@ public interface ICommonService<T> extends IService<T> {
 	public List<T> listWithNoPage(Queryable queryable, Wrapper<T> wrapper);
 
 	Boolean doValid(DuplicateValid duplicateValid, Wrapper<T> wrapper);
+	
+	Boolean checkObjectInfo(Wrapper<T> wrapper);
 }

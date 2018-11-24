@@ -17,6 +17,7 @@
     <!--Loading bootstrap css-->
     <link type="text/css" rel="stylesheet" href="${staticPath}/vendors/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.min.css">
     <html:css  name="favicon,bootstrap,font-awesome,animate,pace,Validform"/>
+    <html:js  name="jquery,Validform"/>
 
     <!--Loading style-->
     <link type="text/css" rel="stylesheet" href="${staticPath}/uadmin/css/themes/style1/orange-blue.css" class="default-style">
@@ -37,19 +38,19 @@
                 <!--BEGIN TITLE & BREADCRUMB PAGE-->
                 <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
                     <div class="page-header pull-left">
-                        <div class="page-title">控制台</div>
+                        <div class="page-title">首页</div>
                     </div>
-                    <ol class="breadcrumb page-breadcrumb pull-left">
+                   <%--  <ol class="breadcrumb page-breadcrumb pull-left">
                         <li><i class="fa fa-home"></i>&nbsp;<a href="${adminPath}">首页</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-                        <li class="hidden"><a href="#">控制台</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-                        <li class="active">控制台</li>
-                    </ol>
+                        <li class="hidden"><a href="#">首页</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+                        <li class="active">首页</li>
+                    </ol> --%>
                    
                     <div class="clearfix"></div>
                 </div>
                 <!--END TITLE & BREADCRUMB PAGE-->
                 <!--BEGIN CONTENT-->
-                <div class="page-content">
+                <div class="page-content" style="padding:0;">
                      <%@include file="../../../decorators/uadmin/main.jsp"%>
 			    </div>
 			    <!--END CONTENT-->
@@ -101,12 +102,12 @@
 					try{
 						var beforeFunc=beforeSubmit;
 						if(beforeFunc&&typeof(beforeFunc)=="function"){
-							return beforeFunc(curform); 
+							return beforeFunc(curform);
 						}
 					}catch(err){
-						
+
 					}
-					return true;	
+					return true;
 				},callback:function(result){
 					if(result.ret==0)
 	              	{
@@ -120,6 +121,34 @@
 				}
 			});
 		});
+		function changeUserAccount(username,path){
+			var url = path+"/changeUserAccount";
+			top.layer.open({
+			    type: 2,  
+			    area: ["350px", "200px"],
+			    title: "请输入切换的账号",
+			    content: url ,
+			    btn: ['保存', '关闭'],
+			    yes: function(index, layero){
+			         var iframeWin = layero.find('iframe')[0];
+			         iframeWin.contentWindow.doSubmit(function()
+			         {
+			        	 window.location.href=window.origin+path;
+			         });
+				  },
+				  cancel: function(index){ 
+					  
+				  }
+			}); 
+		}
+		function errorDialog(msg){
+			if(!msg)
+				msg = "系统错误，请联系管理员！";
+			top.layer.open({
+				title:"提示",
+				content:msg
+			});
+		}
 	</script>
 </body>
 

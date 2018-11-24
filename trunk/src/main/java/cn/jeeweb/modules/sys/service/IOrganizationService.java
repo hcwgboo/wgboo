@@ -18,4 +18,6 @@ public interface IOrganizationService extends ITreeCommonService<Organization, S
 	 * 通过用户ID查找角色
 	 */
 	public List<Organization> findListByUserId(String userid);
+
+	Organization getRoot();
 }

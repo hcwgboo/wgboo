@@ -2,6 +2,7 @@ package cn.jeeweb.core.common.entity;
 
 import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableLogic;
 import com.baomidou.mybatisplus.enums.FieldFill;
 
 import cn.jeeweb.core.common.constant.DataBaseConstant;
@@ -26,11 +27,12 @@ public abstract class DataEntity<ID> extends AbstractEntity<ID> {
 	protected User createBy; // 创建者
 	@TableField(value = "create_date", fill = FieldFill.INSERT)
 	protected Date createDate; // 创建日期
-	@TableField(value = "update_by", el = "updateBy.id", fill = FieldFill.UPDATE)
+	@TableField(value = "update_by", el = "updateBy.id", fill = FieldFill.INSERT_UPDATE)
 	protected User updateBy; // 更新者
-	@TableField(value = "update_date", fill = FieldFill.UPDATE)
+	@TableField(value = "update_date", fill = FieldFill.INSERT_UPDATE)
 	protected Date updateDate; // 更新日期
 	@TableField(value = "del_flag", fill = FieldFill.INSERT)
+	@TableLogic
 	protected String delFlag = "0"; // 删除标记（0：正常；1：删除 ）
 
 	public DataEntity() {

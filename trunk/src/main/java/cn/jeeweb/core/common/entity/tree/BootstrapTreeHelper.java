@@ -67,5 +67,33 @@ public class BootstrapTreeHelper<ID extends Serializable> implements Serializabl
 		this.treeNodes.clear();
 		return rootNodes;
 	}
+	
+	/**
+	 * 获得根节点
+	 * 
+	 * @param trees
+	 */
+	public List<BootstrapTreeNode> getTopNodesById(String id) {
+		List<BootstrapTreeNode> list = new ArrayList<BootstrapTreeNode>();
+		for (TreeNode<ID> treeable : treeNodes) {
+			if (treeable.getId().equals(id)) {
+				list.add(new BootstrapTreeNode(treeable));
+			}
+		}
+		return list;
+	}
 
+	/**
+	 * 运行排序,根据父id来排序
+	 */
+	@SuppressWarnings("unchecked")
+	public List<BootstrapTreeNode> sortById(List<?> treeNodes,String id) {
+		this.treeNodes = (List<TreeNode<ID>>) treeNodes;
+		List<BootstrapTreeNode> rootNodes = getTopNodesById(id);
+		for (BootstrapTreeNode rootNode : rootNodes) {
+			parseSubNode(rootNode);
+		}
+		this.treeNodes.clear();
+		return rootNodes;
+	}
 }

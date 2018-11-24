@@ -138,7 +138,6 @@ public abstract class BaseCRUDController<Entity extends AbstractEntity<ID>, ID e
 	public String showCreate(Entity entity, Model model, HttpServletRequest request, HttpServletResponse response) {
 		return "";
 	}
-
 	@RequestMapping(value = "create", method = RequestMethod.GET)
 	public String _showCreate(Model model, HttpServletRequest request, HttpServletResponse response) {
 		preEdit(newModel(), model, request, response);
@@ -162,7 +161,7 @@ public abstract class BaseCRUDController<Entity extends AbstractEntity<ID>, ID e
 	public String showUpdate(Entity entity, Model model, HttpServletRequest request, HttpServletResponse response) {
 		return "";
 	}
-
+    //@RequiresMethodPermissions("update")
 	@RequestMapping(value = "{id}/update", method = RequestMethod.GET)
 	public String _showUpdate(@PathVariable("id") ID id, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -233,7 +232,6 @@ public abstract class BaseCRUDController<Entity extends AbstractEntity<ID>, ID e
 	 */
 	public void afterSave(Entity entity, HttpServletRequest request, HttpServletResponse response) {
 	}
-
 	@RequestMapping(value = "{id}/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public AjaxJson delete(@PathVariable("id") ID id) {

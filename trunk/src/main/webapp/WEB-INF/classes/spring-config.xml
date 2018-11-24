@@ -15,7 +15,7 @@
 
 	<!-- 引入属性文件 -->
 	<context:property-placeholder  ignore-unresolvable="true"
-		location="classpath:dbconfig.properties,classpath:jeeweb.properties,classpath:shiro.properties" />
+		location="classpath:dbconfig.properties,classpath:jeeweb.properties,classpath:shiro.properties,classpath:redis.properties" />
    
    	<!-- 自动扫描dao和service包(自动注入) -->
 	<context:component-scan base-package="cn.jeeweb.core.common.dao.*" />
@@ -24,7 +24,9 @@
 	<context:component-scan base-package="cn.jeeweb.modules.common.jcaptcha.*" />
 
 	<!-- 扫描注解Bean -->
-	<context:component-scan base-package="cn.jeeweb.modules.**.service" />
+	<!-- <context:component-scan base-package="cn.jeeweb.modules.**.service" />-->
+	<context:component-scan base-package="cn.jeeweb.core.*" />
+	<context:component-scan base-package="cn.jeeweb.modules.*" />
 
 	<!--微信handler-->
 	<context:component-scan base-package="cn.jeeweb.modules.weixin.mp.front.handler" />
@@ -38,5 +40,6 @@
 	<import resource="spring-config-cache.xml" />
 	<import resource="spring-config-shiro.xml" />
 	<import resource="spring-config-extend.xml" />
+	<import resource="spring-config-redis.xml" />
 
 </beans>

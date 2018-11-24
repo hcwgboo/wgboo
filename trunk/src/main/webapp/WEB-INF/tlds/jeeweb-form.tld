@@ -2817,6 +2817,12 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>删除的URL</description>
+			<name>deleteUrl</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description>上传的控件类型</description>
 			<name>fileInputType</name>
 			<required>false</required>
@@ -3080,6 +3086,18 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<attribute>
+			<description>HTML Event Attribute</description>
+			<name>showRemove</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>HTML Event Attribute</description>
+			<name>showUpload</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
@@ -3321,6 +3339,12 @@
 		<attribute>
 			<description>回调函数</description>
 			<name>callback</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>清除回调函数</description>
+			<name>clearCallback</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

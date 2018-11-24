@@ -34,10 +34,24 @@
 				</tr>
 		   		<tr>
 					<td class="width-15 active text-right">
-						<label>平台比例：</label>
+						<label>平台佣金占比：</label>
 					</td>
 					<td class="width-35" >
 						<form:input path="ratio" disabled="true" class="form-control"      />
+					</td>
+					<td class="width-15 active text-right">
+						<label>上级分销拥挤占比：</label>
+					</td>
+					<td class="width-35" >
+						<form:input path="superiorCommissionRatio" disabled="true" class="form-control"      />
+					</td>
+				</tr>
+		   		<tr>
+					<td class="width-15 active text-right">
+						<label>下级分销拥挤占比：</label>
+					</td>
+					<td class="width-35" >
+						<form:input path="subCommissionRatio" disabled="true" class="form-control"      />
 					</td>
 					<td class="width-15 active text-right">
 						<label>最少金额（分）：</label>
@@ -46,7 +60,7 @@
 						<form:input path="minMoney" disabled="true" class="form-control"      />
 					</td>
 				</tr>
-		   		<tr>
+				<tr>
 					<td class="width-15 active text-right">
 						<label>最少条数：</label>
 					</td>
@@ -71,6 +85,8 @@
             _.each(list,function (item) {
                 if(item.id == "${data.advRuleId}"){
                     $("#ratio").val(item.ratio);
+                    $("#superiorCommissionRatio").val(item.superiorCommissionRatio);
+                    $("#subCommissionRatio").val(item.subCommissionRatio);
                     $("#minMoney").val(item.minMoney);
                     $("#minSize").val(item.minSize);
                     $("#advRuleId").val(item.id);
@@ -78,6 +94,8 @@
             });
         }else {
             $("#ratio").val(list[0].ratio);
+            $("#superiorCommissionRatio").val(list[0].superiorCommissionRatio);
+            $("#subCommissionRatio").val(list[0].subCommissionRatio);
             $("#minMoney").val(list[0].minMoney);
             $("#minSize").val(list[0].minSize);
             $("#advRuleId").val(list[0].id);
@@ -89,6 +107,8 @@
         _.each(list,function (item) {
             if(item.id == value){
                 $("#ratio").val(item.ratio);
+                $("#superiorCommissionRatio").val(item.superiorCommissionRatio);
+                $("#subCommissionRatio").val(item.subCommissionRatio);
                 $("#minMoney").val(item.minMoney);
                 $("#minSize").val(item.minSize);
                 $("#advRuleId").val(item.id);

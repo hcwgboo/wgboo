@@ -39,8 +39,7 @@
 			            'link', 'image', 'hr', '|', 'indent', 'outdent' ];  
 	            var settings= {  
 			        textarea : $('#${path}'),  
-			        placeholder : '这里输入内容...',  
-			        toolbar : toolbar,  //工具栏  
+			        toolbar : toolbar,  //工具栏
 			        height:"${height!}",
 					width:"${width!}",
 			        //defaultImage : 'simditor-2.0.1/images/image.png', //编辑器插入图片时使用的默认图片  

@@ -48,5 +48,52 @@
 		<!-- 指定支持动态属性 -->
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
+	<tag>
+		<!-- 树主标签 -->
+		<name>ztreeview</name>
+		<!-- 处理类 -->
+		<tag-class>cn.jeeweb.core.tags.view.ZTreeviewTag</tag-class>
+		<!-- 标签的内容体 -->
+		<body-content>JSP</body-content>
+		<attribute>
+			<description>表格唯一标示</description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>标签的id</description>
+			<name>labelValue</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>标签的title</description>
+			<name>title</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>获取数据的URL</description>
+			<name>dataUrl</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>设置数据</description>
+			<name>datas</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>事件</description>
+			<name>clickTree</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		 
+		<!-- 指定支持动态属性 -->
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
 	 
 </taglib>

@@ -4,7 +4,7 @@
 	<fragment name="fileinput-file">  
     <![CDATA[ 
         <#if showType??&&showType=='file'>
-        <input  id="${path}File"  name="${path}File"  <#if multiple??&&multiple>multiple</#if> type="file" class="file-loading">
+        	<input  id="${path}File"  name="${path}File"  <#if multiple??&&multiple>multiple</#if> type="file" class="file-loading">
 		<#else>
 		   <div class="kv-avatar center-block">
 		     <input  id="${path}File"  name="${path}File" type="file" class="file-loading">
@@ -32,7 +32,7 @@
 					             var itemJson={caption: attachmentItem.filename, 
 					             				 filename: attachmentItem.filename+"."+attachmentItem.fileext, 
 					             				 size: attachmentItem.filesize, 
-					             				 url: "<#if deleteUrl??&&deleteUrl!=''>${deleteUrl}<#else>${adminPath}/sys/attachment/delete</#if>", 
+					             				 url: "<#if deleteUrl??&&deleteUrl!=''>${deleteUrl}<#else>${adminPath}/sys/attachment/"+attachmentItem.${idField}+"/delete</#if>", 
 					             				 extra:{${idField}: attachmentItem.${idField}},
 					             				 key:attachmentItem.${idField}
 					            			  };
@@ -59,8 +59,8 @@
 	                uploadUrl: "<#if uploadUrl??&&uploadUrl!=''>${uploadUrl}<#else>${adminPath}/sys/attachment/upload</#if>", //上传的地址
 	                allowedFileExtensions: [<#if extend??&&extend!=''>${extend}</#if>],//接收的文件后缀
 	                uploadAsync: true, //默认异步上传
-	                showUpload: true, //是否显示上传按钮
-	                showRemove : true, //显示移除按钮
+	                showUpload: ${showUpload?string("true","false")}, //是否显示上传按钮
+	                showRemove : ${showRemove?string("true","false")}, //显示移除按钮
 	                showPreview : true, //是否显示预览
 	                showCaption: ${showCaption?string("true","false")},//是否显示标题
 	                browseClass: "btn btn-primary", //按钮样式     
@@ -119,6 +119,9 @@
 				            return ext.match(/(mp3|wav)$/i);
 				        },
 				    },
+				    //layoutTemplates:{
+				    	//actionDelete:''
+				    //}
 	            };
 	            <#else>
 	            var ${path}settings={
@@ -133,17 +136,19 @@
 	                uploadAsync: true, //默认异步上传
 	                showUpload: true, //是否显示上传按钮
 	                showRemove : true, //显示移除按钮
-	                showPreview : true, //是否显示预览 
-	       			browseLabel: '',
-				    removeLabel: '',
+	                showPreview : true, //是否显示预览
 				    browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
 				    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
 				    removeTitle: 'Cancel or reset changes',
 				    elErrorContainer: '#kv-avatar-errors-1',
 				    msgErrorClass: 'alert alert-block alert-danger',
-				    preferIconicPreview: true, 
-				    defaultPreviewContent: '<img style="widht:${fileInputWidth};height:${fileInputHeight};" src="<#if value??&&value!=''>${ctx}/${value!}<#else>${staticPath}/common/img/default_avatar_male.jpg</#if>"  />',
+				    preferIconicPreview: true,
+				    defaultPreviewContent: '<img style="width:${fileInputWidth};height:${fileInputHeight};" src="<#if value??&&value!=''>${value!}<#else>${staticPath}/common/img/default_avatar_male.png</#if>"  />',
 	            };
+	           /** 
+	           ${ctx}/    被替换掉的原因使用了阿里云oss
+	            src="<#if value??&&value!=''>${ctx}/${value!}<#else>${staticPath}/common/img/default_avatar_male.png</#if>"  
+	            */ 
 	            </#if>
 	            
 	            <#if fileInputSettingCallback??&&fileInputSettingCallback!=''>
@@ -193,22 +198,27 @@
 			 
 			 function ${path}uploadsuccess(event, data, previewId, index){
 			 		var response=data.response;
-			        ${path}FileList.push({data:response.data[0],previewId:previewId })
-			        
-			        <#if uploadSuccessCallback??&&uploadSuccessCallback!=''>
-			             ${uploadSuccessCallback}(response);
-			        </#if>
-			        update${path}Bind();
+			 		if(response.ret == 0){
+						${path}FileList.push({data:response.data[0],previewId:previewId })
+
+						<#if uploadSuccessCallback??&&uploadSuccessCallback!=''>
+							 ${uploadSuccessCallback}(response);
+						</#if>
+						update${path}Bind();
+			 		}else{
+			 			errorDialog(response.msg);
+			 		}
 			 }
 			 
 			 function update${path}Bind(){
 			       var fileids="";
 			       for (var i = 0; i < ${path}FileList.length; i++) {
-			      		<#if saveType??&&saveType=='1'>
+			      		/*<#if saveType??&&saveType=='1'>
 				        var fileid= ${path}FileList[i].data.${idField};
 				        <#else>
 				        var fileid= ${path}FileList[i].data.${filepathField};
-				        </#if>
+				        </#if> */
+				        var fileid= ${path}FileList[i].data.${idField};
 				        if(fileids!=''){
 				          fileids+=",";
 				        }
@@ -239,7 +249,6 @@
 			 
 			 //预览删除
 			 $("#${path}File").on('filedeleted', function(event, id, jqXHR, data) {
-			       alert(id);
 			       for (var i = 0; i < ${path}FileList.length; i++) { 
 				      if (${path}FileList[i].previewId== id) {
 				        var fileid= ${path}FileList[i].data.${idField};

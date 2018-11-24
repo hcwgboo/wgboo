@@ -18,13 +18,15 @@
 			 	          <input type="hidden" placeholder="${queryItem.label!}"  <#list queryItem?keys as queryItemKey><#if queryItemKey??&&queryItemKey!='label'&&queryItemKey!='queryMode'&&queryItemKey!=''> ${queryItemKey}='${queryItem[queryItemKey]}'</#if></#list>/>
 			 	          </#if>
 			 	          <#if queryItem.queryMode=='input'>
-			 	          <${queryItem.queryMode}  type="text" placeholder="${queryItem.label}"  <#list queryItem?keys as queryItemKey><#if queryItemKey??&&queryItemKey!='label'&&queryItemKey!='queryMode'&&queryItemKey!=''> ${queryItemKey}='${queryItem[queryItemKey]}'</#if></#list>/>
+			 	          <${queryItem.queryMode}  type="text" placeholder="${queryItem.label}" onkeydown="keyOnClick(event,'${(id)}Grid');" <#list queryItem?keys as queryItemKey><#if queryItemKey??&&queryItemKey!='label'&&queryItemKey!='queryMode'&&queryItemKey!=''> ${queryItemKey}='${queryItem[queryItemKey]}'</#if></#list>/>
 			 	          </#if>
 			 	          <#if queryItem.queryMode=='select'>
-			 	          <${queryItem.queryMode} <#list queryItem?keys as queryItemKey><#if queryItemKey??&&queryItemKey!='label'&&queryItemKey!='queryMode'&&queryItemKey!=''> ${queryItemKey}='${queryItem[queryItemKey]}'</#if></#list>>
-			 	               <option value ="">请选择</option>
+			 	          <${queryItem.queryMode}  <#list queryItem?keys as queryItemKey><#if queryItemKey??&&queryItemKey!='label'&&queryItemKey!='queryMode'&&queryItemKey!=''> ${queryItemKey}='${queryItem[queryItemKey]}'</#if><#if queryItemKey??&&queryItemKey=='name'>onChange='${queryItem[queryItemKey]}Change("${(id)}Grid");'</#if></#list>>
+				 	           <#if queryItem.selectAll=='true'>
+					 	           <option value ="">请选择</option>
+				 	           </#if>
 			 	               <#list columnDictMap[queryItem.dict] as dict>
-					             <option value ="${dict.value!}">${dict.label!}</option>
+					             <option value ="${dict.value!}" <#if '${dict.value}'== queryItem.selectValue>selected="selected"</#if> >${dict.label!}</option>
 					           </#list>
 			 	          </${queryItem.queryMode}>
 			 	          </#if>
@@ -53,7 +55,8 @@
 	                          </#if>
 			 	          </#if>
 			 	     </div>
-			 	   </#list>  
+			 	   </#list>
+			 	   <div class="form-group" id="${(id)}DefineDiv"></div>
 				</div>
 				<br/>
 			</div>
@@ -136,6 +139,24 @@
 			var queryFields = $('#query${(id)}Fields').val();
 			queryParams['queryFields'] = queryFields;
 			
+			 $('#${(id)}GridQuery').find(":input").each(function() {
+				var val = $(this).val();
+				if (queryParams[$(this).attr('name')]) {
+					val = queryParams[$(this).attr('name')] + "," + $(this).val();
+				}
+				queryParams[$(this).attr('name')] = val;
+			});
+		
+			// 普通的查询
+			$('#${(id)}GridQuery').find(":input").each(function() {
+				var condition = $(this).attr('condition');
+				if (!condition) {
+					condition = "";
+				}
+				var key = "query." + $(this).attr('name') + "||" + condition;
+				queryParams[key] = queryParams[$(this).attr('name')];
+			});
+			
 			var colModel=[];
             <#list columnList as column>
 	        var col${column.name?cap_first?replace(".","_")}Item={label: '${column.label}', name: '${column.name}', <#if column.align??&&column.align!=''>align: '${column.align}',</#if><#if column.hidden??&&column.hidden>hidden:${column.hidden?string("true","false")},</#if><#if column.formatter??&&column.formatter!=''><#if column.formatter=='date'||column.formatter=='integer'||column.formatter=='currency'||column.formatter=='email'||column.formatter=='link'>formatter:'${column.formatter}'<#else>formatter:${(id)}${column.name?cap_first?replace(".","_")}Formatter</#if>,</#if><#if column.formatoptions??>formatoptions: ${column.formatoptions},</#if><#if column.width??>width: ${column.width},</#if><#if column.editable??&&column.editable>editable:${column.editable?string("true","false")},edittype:"${column.edittype!}",<#if column.editoptions??&&column.editoptions!=''>editoptions:<#if column.editoptions=='date'>{dataInit: function (element) {$(element).datepicker({autoclose: true,format: '${column.editdateformat}',orientation : 'auto bottom'});}}<#else>${column.editoptions}</#if>,</#if></#if><#if column.sortable??&&column.sortable>sortable:${column.sortable?string("true","false")},</#if><#if column.editrules??&&column.editrules!=''>editrules:${editrules.editrules},</#if><#if column.datatype??&&column.datatype!=''&&(!column.editrules??||column.editrules=='')>editrules:{custom:true, custom_func:${(id)}${column.name?cap_first?replace(".","_")}Validate},</#if> <#if column.checkbox??&&column.checkbox>checkbox:${column.checkbox?string("true","false")}</#if>,unformat:${(id)}UnFormatter};
@@ -194,6 +215,7 @@
 			    rownumbers: false,
 			    multikey: "true",
 			    autowidth: true,
+			    ondblClickRow: ondblClickRow,
 			    <#if editable??&&editable>
 			    editurl: 'clientArray',
 			    onSelectRow: ${(id)}EditRow,
@@ -239,6 +261,7 @@
         
      function init${(id)}Date(){
         <#list queryList as queryItem>
+        		
 	          <#if queryItem.queryMode=='date'>
 	            <#if queryItem.condition=='between'>
                  $('#${queryItem.name!?replace(".","_")}_date').datepicker({
@@ -246,12 +269,18 @@
 				    keyboardNavigation: false,
 				    forceParse: false,
 				    calendarWeeks: true,
+				    <#if queryItem.maxToday=='true'>
+				    endDate : new Date(),
+				    </#if>
 				    autoclose: true
 			 });
 			 <#else> 
 			   $('#${queryItem.name!}_date').datepicker({
 				     keyboardNavigation: false,
 	                 forceParse: false,
+	                 <#if queryItem.maxToday=='true'>
+				     endDate : new Date(),
+				     </#if>
 	                 autoclose: true
 			   });
 			 </#if>
@@ -280,7 +309,7 @@
 		   }
 		   </#if>
 		   var baseUrl='${appPath}';
-		   var imageHtml = "<img "+extendStyle+"  <#if column.formatterClass??>class='${column.formatterClass}'</#if>  src='${appPath}/" + value + "' originalValue='" + value + "' />";
+		   var imageHtml = "<img "+extendStyle+"  <#if column.formatterClass??>class='${column.formatterClass}'</#if>  src='" + value + "' originalValue='" + value + "' />";
 	       return imageHtml
 	   </#if>
 	   <#if column.formatter??&&"label" == column.formatter>
@@ -366,9 +395,9 @@
 				        <#else>
 				            <#if buttonItem.function?exists>
 				             	 <#if buttonItem.function=='delete'>
-				               		  href +="onclick=\"deleteRowData('${buttonItem.title!}','${buttonItem.url!}','"+row.id+"','${(id)}Grid')\"";
+				               		  href +="onclick=\"deleteRowData('${buttonItem.title!}','${buttonItem.url!}','"+row.id+"','${(id)}Grid','${buttonItem.tipMsg!}')\"";
 				                  <#elseif buttonItem.function=='rowConfirm'>
-				                 	  href +="onclick=\"${buttonItem.function!}('${buttonItem.title!}','${buttonItem.url!}','"+row.id+"','${(id)}Grid','${buttonItem.tipMsg!}')\"";
+				                 	  href +="onclick=\"rowConfirm('${buttonItem.title!}','${buttonItem.url!}','"+row.id+"','${(id)}Grid','${buttonItem.tipMsg!}')\"";
 				                 <#else>
 				                      href +="onclick=\"${buttonItem.function!}('${buttonItem.title!}','${buttonItem.url!}','${(id)}Grid','"+row.id+"','${buttonItem.winwidth!}','${buttonItem.winheight!}')\"";
 				                 </#if>
@@ -386,6 +415,32 @@
 	    	 </#list>
 	    	return href;
 	   </#if>
+	   <#if column.formatter??&&"a" == column.formatter>
+	   		if(!row.id) {
+                 return '';
+             }
+		     var href= "";
+		     <#list buttonList as buttonItem>
+	            <#if  column.name== buttonItem.groupname>
+	            	href +="<a href=\"#\" class=\"${buttonItem.outclass}\" ";
+	            	<#if buttonItem.onclick?exists>
+				        href +="onclick=\"${buttonItem.onclick}\"";
+				    <#else>
+				    	href +="onclick=\"${buttonItem.function!}('${buttonItem.title!}','${buttonItem.url!}','${(id)}Grid','"+row.id+"','${buttonItem.winwidth!}','${buttonItem.winheight!}')\"";
+	            	</#if>
+	            	href +="><span>"+ value +"</span></a>"
+	            </#if>
+	         </#list>  
+		   	 return href;
+	    </#if>
+	    <#if column.formatter??&&"customFun" == column.formatter>
+			if(!row.id) {
+                 return '';
+            }
+			<#if column.optCallback??&&column.optCallback!=''>
+				value = ${column.optCallback }(value, options, row);
+			</#if>
+		</#if>
 	   }catch(err){}
 	   return value;
 	}
@@ -416,6 +471,20 @@
 	           radioClass: 'iradio_square-green',
 	       });
 	}
+	function ondblClickRow(rowId){
+		
+	}
+	<#list queryList as queryItem>
+		<#if queryItem.queryMode=='select'>
+			<#list queryItem?keys as queryItemKey>
+				<#if queryItemKey??&&queryItemKey=='name' && queryItem.selectChange=='true'>
+					function ${queryItem[queryItemKey]}Change(){
+						search('${(id)}Grid');
+					}
+				</#if>
+			</#list>
+		</#if>
+	</#list>
     </script>
     ]]>
 	</fragment>

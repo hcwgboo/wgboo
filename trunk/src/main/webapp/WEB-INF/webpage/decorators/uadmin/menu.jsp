@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<li <c:if test="${currentMenu == null}">class="active"</c:if>><a href="${adminPath}"><i class="fa fa-tachometer fa-fw"><div class="icon-bg bg-orange"></div></i><span class="menu-title">控制台</span></a></li>
+<li <c:if test="${currentMenu == null}">class="active"</c:if>><a href="${adminPath}"><i class="fa fa-tachometer fa-fw"><div class="icon-bg bg-orange"></div></i><span class="menu-title">首页</span></a></li>
 <c:forEach items="${menus}" var="menu">
      <c:if test="${menu.parentId == null && menu.isshow eq '1'}">
 		<li <c:if test="${fn:contains(pmenuids,menu.id)==true||menu.id == currentMenu.id}">class="active"</c:if>>

@@ -37,6 +37,7 @@ public class TreeSelectTag extends HiddenInputTag {
 	private String chkboxType = "ps";// 上下级关系“p” 表示操作会影响父级节点； “s” 表示操作会影响子级节点。 
 	private String dataUrl = "";// 访问链接
 	private String callback = "";// 回调函数
+	private String clearCallback="";//清除后的回调函数
 
 	public String getLabelName() {
 		return labelName;
@@ -124,6 +125,14 @@ public class TreeSelectTag extends HiddenInputTag {
 
 	public void setChkboxType(String chkboxType) {
 		this.chkboxType = chkboxType;
+	}
+
+	public String getClearCallback() {
+		return clearCallback;
+	}
+
+	public void setClearCallback(String clearCallback) {
+		this.clearCallback = clearCallback;
 	}
 
 	@Override

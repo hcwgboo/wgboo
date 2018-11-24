@@ -63,12 +63,12 @@ public class AdvertiseRuleController extends BaseBeanController<AdvertiseRule> {
     @PageableDefaults(sort = "id=desc")
     private void ajaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                           HttpServletResponse response) throws IOException {
-        EntityWrapper<AdvertiseRule> entityWrapper = new EntityWrapper<AdvertiseRule>(entityClass);
+        EntityWrapper<AdvertiseRule> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
-        PageJson<AdvertiseRule> pagejson = new PageJson<AdvertiseRule>(advAdvertiseRuleService.list(queryable,entityWrapper));
+        PageJson<AdvertiseRule> pagejson = new PageJson<>(advAdvertiseRuleService.list(queryable,entityWrapper));
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response, content);
     }

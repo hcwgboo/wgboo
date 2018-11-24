@@ -1,6 +1,8 @@
 package cn.jeeweb.modules.sys.service;
 
 import cn.jeeweb.core.common.service.ICommonService;
+import cn.jeeweb.core.exception.ExceptionResultInfo;
+import cn.jeeweb.modules.sys.dto.UserRegisterDto;
 import cn.jeeweb.modules.sys.entity.User;
 
 /**
@@ -48,5 +50,15 @@ public interface IUserService extends ICommonService<User> {
 	 * @return
 	 */
 	public User findByPhone(String phone);
+
+	void userRegister(UserRegisterDto dto) throws ExceptionResultInfo;
+
+	/**
+	 * 商家账号锁定和解锁
+	 * @param id
+	 * @param type
+	 * @throws ExceptionResultInfo
+	 */
+	void userLockOrNot(String id, String status) throws ExceptionResultInfo;
 
 }

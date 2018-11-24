@@ -10505,7 +10505,7 @@ UE.plugins['autotypeset'] = function(){
             span:1
         },
         highlightCont;
-    //升级了版本，但配置项目里没有autotypeset
+    //升级了版本，但配置楼盘里没有autotypeset
     if(!opt){
         return;
     }

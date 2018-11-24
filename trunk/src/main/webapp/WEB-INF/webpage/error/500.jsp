@@ -10,9 +10,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-    <title>400</title>
-  
-    <link rel="shortcut icon" href="${staticPath}/common/favicon.ico"> 
+    <title>系统异常</title>
+
+    <link rel="shortcut icon" href="${staticPath}/common/favicon.ico">
     <link href="${staticPath}/common/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
     <link href="${staticPath}/common/css/font-awesome.css?v=4.4.0" rel="stylesheet">
 
@@ -25,8 +25,7 @@
 
 
     <div class="middle-box text-center animated fadeInDown">
-        <h2 style="font-size:80px;">400</h2>
-        <h3 class="font-bold">没有访问当前页面的权限！</h3>
+        <h3 class="font-bold">系统异常，请联系管理员！</h3>
     </div>
 
     <!-- 全局js -->

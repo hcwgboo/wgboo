@@ -8,6 +8,7 @@ import org.apache.ibatis.session.Configuration;
 import com.baomidou.mybatisplus.entity.TableFieldInfo;
 import com.baomidou.mybatisplus.entity.TableInfo;
 import com.baomidou.mybatisplus.enums.SqlMethod;
+import com.baomidou.mybatisplus.mapper.LogicSqlInjector;
 import com.baomidou.mybatisplus.toolkit.StringUtils;
 
 /**
@@ -23,7 +24,7 @@ import com.baomidou.mybatisplus.toolkit.StringUtils;
  * @copyright: 2017 www.jeeweb.cn Inc. All rights reserved.
  *
  */
-public class AutoSqlInjector extends com.baomidou.mybatisplus.mapper.AutoSqlInjector {
+public class AutoSqlInjector extends LogicSqlInjector {
 	@Override
 	public void inject(Configuration configuration, MapperBuilderAssistant builderAssistant, Class<?> mapperClass,
 			Class<?> modelClass, TableInfo table) {

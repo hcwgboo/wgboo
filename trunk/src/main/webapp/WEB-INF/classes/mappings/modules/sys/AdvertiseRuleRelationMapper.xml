@@ -17,6 +17,8 @@
       av.adv_rule_id as advRuleId,
       ar.name as advRuleName,
       ar.ratio as ratio,
+      ar.superior_commission_ratio as superiorCommissionRatio,
+      ar.sub_commission_ratio as subCommissionRatio,
       ar.min_money as minMoney,
       ar.min_size as minSize
     from adv_advertise_rule_relation as av
@@ -41,7 +43,9 @@
       ar.name as advRuleName,
       ar.ratio as ratio,
       ar.min_money as minMoney,
-      ar.min_size as minSize
+      ar.min_size as minSize,
+      ar.superior_commission_ratio as superiorCommissionRatio,
+      ar.sub_commission_ratio as subCommissionRatio
     from adv_advertise_rule_relation as av
     left join adv_advertise_rule ar on ar.id = av.adv_rule_id
     left join sys_user uu on uu.id = av.merchant_id
@@ -57,7 +61,9 @@
       ar.name as advRuleName,
       ar.ratio as ratio,
       ar.min_money as minMoney,
-      ar.min_size as minSize
+      ar.min_size as minSize,
+      ar.superior_commission_ratio as superiorCommissionRatio,
+      ar.sub_commission_ratio as subCommissionRatio
     from adv_advertise_rule_relation as av
     left join adv_advertise_rule ar on ar.id = av.adv_rule_id
     left join sys_user uu on uu.id = av.merchant_id

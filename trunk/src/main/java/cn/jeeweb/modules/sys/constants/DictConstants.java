@@ -2,7 +2,27 @@ package cn.jeeweb.modules.sys.constants;
 
 public class DictConstants {
 
+	/**
+	 * 标记（0：false；1：true ）
+	 */
+	public static final String DEL_FLAG_NORMAL = "0";
+	public static final String DEL_FLAG_DELETE = "1";
 
+	/** 用户状态*/
+	public static final String yhzt_group = "yhzt";
+	public static final String yhzt_group_display = "用户状态";
+	/** 用户锁定 */
+	public static final String yhzt_dict_value_0 = "0";
+	/** 正常 */
+	public static final String yhzt_dict_value_1 = "1";
+	/** 用户已经被删除 */
+	public static final String yhzt_dict_value_2 = "-1";
+
+	/**平台用户*/
+	public static final String USER_TYPE_1 = "1";
+
+	/**商家用户*/
+	public static final String USER_TYPE_2 = "2";
 
     /**广告上下架*/
     public static final String GGSXJ_GROUP = "ggsxj";
@@ -84,10 +104,39 @@ public class DictConstants {
     public static final String SJZJMX_DICT_LABEL_1 = "充值";
 
     /**升级*/
-    public static final String SJZJMX_DICT_VALUE_2 = "2";
-    public static final String SJZJMX_DICT_LABEL_2 = "升级";
+    public static final String  SJZJMX_DICT_VALUE_2 = "2";
+    public static final String SJZJMX_DICT_LABEL_2 = "退回账户";
 
     /**提现*/
     public static final String SJZJMX_DICT_VALUE_3 = "3";
     public static final String SJZJMX_DICT_LABEL_3 = "提现";
+    
+    /**报表查询快捷方式*/
+	public static final String bbcxkjfs_group = "bbcxkjfs";
+	public static final String bbcxkjfs_group_display = "报表查询快捷方式";
+	/**今天*/
+	public static final String bbcxkjfs_dict_value_0 = "0";
+	public static final String bbcxkjfs_dict_label_0 = "今天";
+	/**昨天*/
+	public static final String bbcxkjfs_dict_value_1 = "1";
+	public static final String bbcxkjfs_dict_label_1 = "昨天";
+	/**上周*/
+	public static final String bbcxkjfs_dict_value_2 = "2";
+	public static final String bbcxkjfs_dict_label_2 = "上周";
+	/**上月*/
+	public static final String bbcxkjfs_dict_value_3 = "3";
+	public static final String bbcxkjfs_dict_label_3 = "上月";
+
+	/**商家审核*/
+	public static final String SJSH_DISPLAY = "sjsh";
+
+    /**未审核*/
+    public static final String SJSH_DICT_VALUE_1 = "1";
+    public static final String SJSH_DICT_LABEL_1 = "未审核";
+    /**审核通过*/
+    public static final String SJSH_DICT_VALUE_2 = "2";
+    public static final String SJSH_DICT_LABEL_2 = "审核通过";
+    /**审核失败*/
+    public static final String SJSH_DICT_VALUE_3 = "3";
+    public static final String SJSH_DICT_LABEL_3 = "审核拒绝";
 }

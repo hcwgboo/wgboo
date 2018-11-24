@@ -43,6 +43,10 @@ public class User extends DataEntity<String> {
 	private String email;
 	// 联系电话
 	private String phone;
+	// 公司名称
+	private String companyname;
+	// 用户类型（1.平台，2.商家）
+	private String type;
 
 	/**
 	 * 系统用户的状态
@@ -169,4 +173,19 @@ public class User extends DataEntity<String> {
 		this.status = status;
 	}
 
+	public String getCompanyname() {
+		return companyname;
+	}
+
+	public void setCompanyname(String companyname) {
+		this.companyname = companyname;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 }

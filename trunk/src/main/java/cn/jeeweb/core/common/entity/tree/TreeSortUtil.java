@@ -94,4 +94,35 @@ public class TreeSortUtil<ID extends Serializable> implements Serializable {
 		return this;
 	}
 
+	
+	/**
+	 * 运行排序
+	 */
+	@SuppressWarnings("unchecked")
+	public TreeSortUtil<ID> sortById(List<?> treeNodes,String id) {
+		this.treeNodes = (List<TreeNode<ID>>) treeNodes;
+		List<TreeNode<ID>> rootNodes = getTopNodesById(id);
+		for (TreeNode<ID> rootNode : rootNodes) {
+			newTreeNodes.add(rootNode);
+			parseSubNode(rootNode);
+		}
+		this.treeNodes.clear();
+		this.treeNodes.addAll(newTreeNodes);
+		return this;
+	}
+	
+	/**
+	 * 获得根节点
+	 * 
+	 * @param trees
+	 */
+	public List<TreeNode<ID>> getTopNodesById(String id) {
+		List<TreeNode<ID>> list = new ArrayList<TreeNode<ID>>();
+		for (TreeNode<ID> treeable : treeNodes) {
+			if (treeable.getId().equals(id)) {
+				list.add(treeable);
+			}
+		}
+		return list;
+	}
 }

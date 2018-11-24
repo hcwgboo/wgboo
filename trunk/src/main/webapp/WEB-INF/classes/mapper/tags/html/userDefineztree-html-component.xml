@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html-component  PUBLIC "-//Jeeweb/Html Configuration DTD 1.0//EN" "http://www.jeeweb.cn/dtd/html-component-1.0.dtd">
+<html-component>
+	<fragment name="userdefine-treeselect">
+		<![CDATA[
+			<p style="font-weight: bolder;font-size: 16px">${title}</p>
+			<div class="col-sm-3 col-md-1" style="width:10%">
+				<ul id="${labelValue}" class="ztree"></ul>
+			</div>
+		
+		<script type="text/javascript">
+				//加载部门树
+				//ztree 数据初始化
+				var zTreeObj;
+				var setting = {
+					check: {
+						enable: false
+					},
+					data: {
+						key: {
+							url: "notarget",
+							icon: "notarget",
+							checked: "checked"
+						},
+						simpleData: {
+							enable: true,
+							idKey: "id",
+							pIdKey: "parentId",
+							rootPId: 0
+						}
+					},
+					callback: {
+						onClick: clickEvent
+					}
+				};
+				
+				function clickEvent(event, treeId, treeNode){
+			     	<#if clickTree??&&clickTree!=''>
+			       		${clickTree}(event, treeId, treeNode);
+			   		</#if>
+			 	}
+			   
+				$(document).ready(function(){
+					$.ajax({
+						type:'get',
+						url:"${dataUrl}",
+						dataType:'json',
+						success:function(data){
+							var orgNodes = data.data;
+							treeObj=$.fn.zTree.init($("#${labelValue}"), setting, orgNodes);
+							treeObj.expandAll(true);
+						},
+						error:function(error){
+							errorDialog();
+						}
+					});
+				});
+		</script>
+    ]]>
+	</fragment>
+
+</html-component>

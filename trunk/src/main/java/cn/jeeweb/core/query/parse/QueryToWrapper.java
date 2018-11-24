@@ -1,6 +1,7 @@
 package cn.jeeweb.core.query.parse;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -42,7 +43,7 @@ public class QueryToWrapper<T> {
 							wrapper.between(property, between[0], between[1]);
 						}
 					} else if (operator.name().toUpperCase(Locale.US).contains("LIKE")) {
-						value = parseLike(filter);
+//						value = parseLike(filter);//次代码会导致		%%value%%的出现
 						if (operator.name().contains("NOT")) {
 							wrapper.notLike(filter.getProperty(), (String) value);
 
@@ -57,6 +58,21 @@ public class QueryToWrapper<T> {
 			}
 		}
 
+	}
+	
+	public Map<String, Object> conditionToMap(Queryable queryable){
+		Map<String, Object> map = new HashMap<>();
+		Condition condition = queryable.getCondition();
+		if (condition != null) {
+			for (Filter filter : condition) {
+				Object value = filter.getValue();
+				if (!ObjectUtils.isNullOrEmpty(value)) {
+					String property = filter.getProperty();
+					map.put(property, value);
+				}
+			}
+		}
+		return map;
 	}
 
 	public Object parseLike(Filter filter) {
@@ -100,21 +116,36 @@ public class QueryToWrapper<T> {
 			}
 		}
 	}
-
-	public Map<String, Object> conditionToMap(Queryable queryable){
-		Map<String, Object> map = new HashMap<>();
-		Condition condition = queryable.getCondition();
-		if (condition != null) {
-			for (Filter filter : condition) {
-				Object value = filter.getValue();
-				if (!ObjectUtils.isNullOrEmpty(value)) {
-					String property = filter.getProperty();
-					map.put(property, value);
+	
+	/**
+	 * 
+	 * @Description:解析出排序字段 prefix前缀可以为null、""
+	 * @date:2018年8月14日 下午9:27:04
+	 * @param:
+	 * @return【id DESC】、【t.id DESC】【id DESC,createDate DESC】【t.id DESC,t.createDate DESC】
+	 * @throws
+	 *
+	 */
+	public String parseSortToString(String prefix,Queryable queryable) {
+		if (prefix==null) {
+			prefix="";
+		}
+		String orderStr="";
+		List<String> list = new ArrayList<String>();
+		cn.jeeweb.core.query.data.Sort sort = queryable.getPageable().getSort();
+		if (sort != null) {
+			for (cn.jeeweb.core.query.data.Sort.Order order : sort) {
+				if (order.getDirection() == cn.jeeweb.core.query.data.Sort.Direction.DESC) {
+					list.add(prefix+order.getProperty()+ " DESC");
+				} else if (order.getDirection() == cn.jeeweb.core.query.data.Sort.Direction.ASC) {
+					list.add(prefix+order.getProperty()+ " ASC");
 				}
 			}
 		}
-		return map;
+		if (list!=null && list.size()>0) {
+			orderStr = String.join(",", list);
+		}
+		return orderStr;
 	}
-
 
 }

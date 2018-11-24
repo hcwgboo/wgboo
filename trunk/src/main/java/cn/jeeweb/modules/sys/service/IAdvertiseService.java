@@ -2,6 +2,7 @@ package cn.jeeweb.modules.sys.service;
 
 
 import cn.jeeweb.core.common.service.ICommonService;
+import cn.jeeweb.core.exception.ExceptionResultInfo;
 import cn.jeeweb.modules.sys.entity.Advertise;
 
 /**
@@ -18,30 +19,30 @@ public interface IAdvertiseService extends ICommonService<Advertise> {
 	 * 新增广告
 	 * @param advertise
 	 */
-	void insertAdvertise(Advertise advertise);
+	void insertAdvertise(Advertise advertise) throws ExceptionResultInfo;
 	
 	/**
 	 * 修改广告
 	 * @param advertise
 	 */
-	void updateAdvertise(Advertise advertise);
+	void updateAdvertise(Advertise advertise) throws ExceptionResultInfo;
 	
 	/**
 	 * 提交审核
 	 * @param id
 	 */
-	void submitCheckAdv(String id);
+	void submitCheckAdv(String id) throws ExceptionResultInfo;
 	
 	/**
 	 * 审核通过
 	 * @param id
 	 */
-	void checkSuccessAdv(String id);
+	void checkSuccessAdv(String id) throws ExceptionResultInfo;
 	
 	/**
 	 * 审核不通过
 	 * @param id
 	 */
-	void checkFailAdv(String id);
+	void checkFailAdv(String id) throws ExceptionResultInfo;
 }
 

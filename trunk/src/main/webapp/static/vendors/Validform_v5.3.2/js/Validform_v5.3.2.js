@@ -195,12 +195,12 @@
 		dataType:{
 			"*":/[\w\W]+/,
 			"*6-16":/^[\w\W]{6,16}$/,
-			"n":/^\d+$/,
+			"n":/^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/,
 			"n6-16":/^\d{6,16}$/,
 			"s":/^[\u4E00-\u9FA5\uf900-\ufa2d\w\.\s]+$/,
 			"s6-18":/^[\u4E00-\u9FA5\uf900-\ufa2d\w\.\s]{6,18}$/,
 			"p":/^[0-9]{6}$/,
-			"m":/^13[0-9]{9}$|14[0-9]{9}|15[0-9]{9}$|18[0-9]{9}$/,
+				"m":/^1[1-9]{1}[0-9]{9}$/,
 			"e":/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
 			"url":/^(\w+:\/\/)?\w+(\.\w+)+.*$/
 		},
@@ -916,6 +916,98 @@
 		
 		},
 		
+		submitValidForm:function(settings,flg,url,ajaxPost,sync){
+			
+			var result = true;
+			/*
+				flg===true时跳过验证直接提交;
+				ajaxPost==="ajaxPost"指示当前表单以ajax方式提交;
+			*/
+			var curform=this;
+			
+			//表单正在提交时点击提交按钮不做反应;
+			if(curform[0].validform_status==="posting"){
+				result = false;
+				return result;
+			}
+			
+			//要求只能提交一次时;
+			if(settings.postonce && curform[0].validform_status==="posted"){
+				result = false;
+				return result;
+			}
+			
+			var beforeCheck=settings.beforeCheck && settings.beforeCheck(curform);
+			if(beforeCheck===false){
+				result = false;
+				return result;
+			}
+			
+			var flag=true,
+				inflag;
+				
+			curform.find("[datatype]").each(function(){
+				//跳过验证;
+				if(flg){
+					result = false;
+					return result;
+				}
+				
+				//隐藏或绑定dataIgnore的表单对象不做验证;
+				if(settings.ignoreHidden && $(this).is(":hidden") || $(this).data("dataIgnore")==="dataIgnore"){
+					result = true
+					return result;
+				}
+				
+				var inputval=Validform.util.getValue.call(curform,$(this)),
+					_this;
+				errorobj=_this=$(this);
+				
+				inflag=Validform.util.regcheck.call(curform,$(this).attr("datatype"),inputval,$(this));
+				
+				if(!inflag.passed){
+					Validform.util.showmsg.call(curform,inflag.info,settings.tiptype,{obj:$(this),type:inflag.type,sweep:settings.tipSweep});
+					_this.addClass("Validform_error");
+					
+					if(!settings.showAllError){
+						_this.focus();
+						result=false;
+						return result;
+					}
+					
+						flag && (flag=false);
+						return result;
+				}
+				
+				//当ignore="ignore"时，为空值可以通过验证，这时不需要ajax检测;
+				if($(this).attr("ajaxurl") && !Validform.util.isEmpty.call($(this),inputval)){
+					if(this.validform_valid!=="true"){
+						var thisobj=$(this);
+						Validform.util.showmsg.call(curform,curform.data("tipmsg").v||tipmsg.v,settings.tiptype,{obj:thisobj,type:3,sweep:settings.tipSweep});
+						_this.addClass("Validform_error");
+						
+						thisobj.trigger("blur",["postform"]);//continue the form post;
+						
+						if(!settings.showAllError){
+							result=false;
+							return result;
+						}
+						
+						flag && (flag=false);
+						return result;
+					}
+				}else if($(this).attr("ajaxurl") && Validform.util.isEmpty.call($(this),inputval)){
+					Validform.util.abort.call(this);
+					this.validform_valid="true";
+				}
+	
+				Validform.util.showmsg.call(curform,inflag.info,settings.tiptype,{obj:$(this),type:inflag.type,sweep:settings.tipSweep});
+				_this.removeClass("Validform_error");
+				errorobj=null;
+			});
+			return result;
+		},
+		
 		submitForm:function(settings,flg,url,ajaxPost,sync){
 			/*
 				flg===true时跳过验证直接提交;
@@ -1222,6 +1314,18 @@
 			return this;
 		},
 		
+		
+		userDefineFormValid:function(flag,sync,url){// update by cql 用户自定义ajax提交表单验证，放重复提交未完善
+			var obj=this;
+			var valid = true;
+			$(obj.forms).each(function(){
+				valid = Validform.util.submitValidForm.call($(obj.forms[0]),this.settings,flag,url,"ajaxPost",sync);
+				if(!valid){
+					return valid;					
+				}
+			});
+			return valid;
+		},
 		ajaxPost:function(flag,sync,url){
 			var obj=this;
 			

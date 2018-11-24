@@ -7,11 +7,11 @@
     <nav id="topbar" role="navigation" style="margin-bottom: 0; z-index: 2;" class="navbar navbar-default navbar-static-top">
        <div class="navbar-header">
            <button type="button" data-toggle="collapse" data-target=".sidebar-collapse" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-           </button><a id="logo" href="${adminPath}" class="navbar-brand"><span class="fa fa-rocket"></span><span class="logo-text">JeeWeb</span><span style="display: none" class="logo-text-icon">JW</span></a>
+           </button><a id="logo" href="${adminPath}" class="navbar-brand"><span class="fa fa-rocket"></span><span class="logo-text">微广播生活服务平台</span><span style="display: none" class="logo-text-icon">微</span></a>
        </div>
        <div class="topbar-main"><a id="menu-toggle" href="#" class="hidden-xs"><i class="fa fa-bars"></i></a>
            <ul class="nav navbar-nav    ">
-               <li class="active"><a href="${adminPath}">控制台</a>
+               <li class="active"><a href="${adminPath}">首页</a>
                </li>
                <li><a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle">Layouts&nbsp;<i class="fa fa-angle-down"></i></a>
                    <ul class="dropdown-menu">
@@ -297,63 +297,64 @@
                        <li><a href="#" data-hover="tooltip" title="修改密码" data-toggle="modal" data-target="#change-password"><i class="fa fa-key"></i>修改密码</a></li>  
                        <li class="divider"></li>
                        <li><a href="${adminPath}/logout"><i class="fa fa-key"></i>退出</a></li>
+                       <%-- <li><c:if test="${fns:getUser().username == 'admin'}"><a href="#" onclick="changeUserAccount('${fns:getUser().username}','${adminPath }');">切换账号</a></c:if></li> --%>
                    </ul>
                </li>
-               <li class="dropdown hidden-xs">
-                   <!--BEGIN THEME SETTING--><a id="theme-setting" href="javascript:;" data-hover="dropdown" data-step="1" data-intro="&lt;b&gt;Header&lt;/b&gt;, &lt;b&gt;sidebar&lt;/b&gt;, &lt;b&gt;border style&lt;/b&gt; and &lt;b&gt;color&lt;/b&gt;, all of them can change for you to create the best" data-position="left" class="dropdown-toggle"><i class="fa fa-cogs"></i></a>
-                   <ul class="dropdown-menu dropdown-theme-setting pull-right">
-                       <li>
-                           <h4 class="mtn">主题</h4>
-                           <select id="list_theme" class="form-control">
-                               <option value="uadmin">FLAT主题</option>
-                               <option value="ace">ACE主题</option>
-                               <option value="inspinia">INSPINIA主题</option>
-                           </select>
-                       </li>
-                       <li>
-                           <h4 class="mtn">风格</h4>
-                           <select id="list-menu" class="form-control">
-                               <option value="sidebar-default">风格1</option>
-                               <option value="sidebar-colors">风格2</option>
-                               <option value="sidebar-icons">风格3</option>
-                               <option value="sidebar-collapsed">风格4</option>
-                           </select>
-                       </li>
-                       <li>
-                           <h4 class="mtn">头部和侧边栏</h4>
-                           <select id="list-header" class="form-control">
-                               <option value="header-static">Static</option>
-                               <option value="header-fixed">Fixed</option>
-                           </select>
-                       </li>
-                       <li style="display:none;">
-                           <h4 class="mtn">Theme Colors</h4>
-                           <ul id="list-color" class="list-unstyled list-inline">
-                               <li data-color="green-dark" data-hover="tooltip" title="Green - Dark" class="green-dark"></li>
-                               <li data-color="red-dark" data-hover="tooltip" title="Red - Dark" class="red-dark"></li>
-                               <li data-color="pink-dark" data-hover="tooltip" title="Pink - Dark" class="pink-dark"></li>
-                               <li data-color="blue-dark" data-hover="tooltip" title="Blue - Dark" class="blue-dark"></li>
-                               <li data-color="yellow-dark" data-hover="tooltip" title="Yellow - Dark" class="yellow-dark"></li>
-                               <li data-color="green-grey" data-hover="tooltip" title="Green - Grey" class="green-grey"></li>
-                               <li data-color="red-grey" data-hover="tooltip" title="Red - Grey" class="red-grey"></li>
-                               <li data-color="pink-grey" data-hover="tooltip" title="Pink - Grey" class="pink-grey"></li>
-                               <li data-color="blue-grey" data-hover="tooltip" title="Blue - Grey" class="blue-grey"></li>
-                               <li data-color="yellow-grey" data-hover="tooltip" title="Yellow - Grey" class="yellow-grey"></li>
-                               <li data-color="yellow-green" data-hover="tooltip" title="Yellow - Green" class="yellow-green"></li>
-                               <li data-color="orange-grey" data-hover="tooltip" title="Orange - Grey" class="orange-grey"></li>
-                               <li data-color="pink-blue" data-hover="tooltip" title="Pink - Blue" class="pink-blue"></li>
-                               <li data-color="pink-violet" data-hover="tooltip" title="Pink - Violet" class="pink-violet active"></li>
-                               <li data-color="orange-violet" data-hover="tooltip" title="Orange - Violet" class="orange-violet"></li>
-                               <li data-color="pink-green" data-hover="tooltip" title="Pink - Green" class="pink-green"></li>
-                               <li data-color="pink-brown" data-hover="tooltip" title="Pink - Brown" class="pink-brown"></li>
-                               <li data-color="orange-blue" data-hover="tooltip" title="Orange - Blue" class="orange-blue"></li>
-                               <li data-color="yellow-blue" data-hover="tooltip" title="Yellow - Blue" class="yellow-blue"></li>
-                               <li data-color="green-blue" data-hover="tooltip" title="Green - Blue" class="green-blue"></li>
-                           </ul>
-                       </li>
-                   </ul>
-                   <!--END THEME SETTING-->
-               </li>
+               <%--<li class="dropdown hidden-xs">--%>
+                   <%--<!--BEGIN THEME SETTING--><a id="theme-setting" href="javascript:;" data-hover="dropdown" data-step="1" data-intro="&lt;b&gt;Header&lt;/b&gt;, &lt;b&gt;sidebar&lt;/b&gt;, &lt;b&gt;border style&lt;/b&gt; and &lt;b&gt;color&lt;/b&gt;, all of them can change for you to create the best" data-position="left" class="dropdown-toggle"><i class="fa fa-cogs"></i></a>--%>
+                   <%--<ul class="dropdown-menu dropdown-theme-setting pull-right">--%>
+                       <%--<li>--%>
+                           <%--<h4 class="mtn">主题</h4>--%>
+                           <%--<select id="list_theme" class="form-control">--%>
+                               <%--<option value="uadmin">FLAT主题</option>--%>
+                               <%--<option value="ace">ACE主题</option>--%>
+                               <%--<option value="inspinia">INSPINIA主题</option>--%>
+                           <%--</select>--%>
+                       <%--</li>--%>
+                       <%--<li>--%>
+                           <%--<h4 class="mtn">风格</h4>--%>
+                           <%--<select id="list-menu" class="form-control">--%>
+                               <%--<option value="sidebar-default">风格1</option>--%>
+                               <%--<option value="sidebar-colors">风格2</option>--%>
+                               <%--<option value="sidebar-icons">风格3</option>--%>
+                               <%--<option value="sidebar-collapsed">风格4</option>--%>
+                           <%--</select>--%>
+                       <%--</li>--%>
+                       <%--<li>--%>
+                           <%--<h4 class="mtn">头部和侧边栏</h4>--%>
+                           <%--<select id="list-header" class="form-control">--%>
+                               <%--<option value="header-static">Static</option>--%>
+                               <%--<option value="header-fixed">Fixed</option>--%>
+                           <%--</select>--%>
+                       <%--</li>--%>
+                       <%--<li style="display:none;">--%>
+                           <%--<h4 class="mtn">Theme Colors</h4>--%>
+                           <%--<ul id="list-color" class="list-unstyled list-inline">--%>
+                               <%--<li data-color="green-dark" data-hover="tooltip" title="Green - Dark" class="green-dark"></li>--%>
+                               <%--<li data-color="red-dark" data-hover="tooltip" title="Red - Dark" class="red-dark"></li>--%>
+                               <%--<li data-color="pink-dark" data-hover="tooltip" title="Pink - Dark" class="pink-dark"></li>--%>
+                               <%--<li data-color="blue-dark" data-hover="tooltip" title="Blue - Dark" class="blue-dark"></li>--%>
+                               <%--<li data-color="yellow-dark" data-hover="tooltip" title="Yellow - Dark" class="yellow-dark"></li>--%>
+                               <%--<li data-color="green-grey" data-hover="tooltip" title="Green - Grey" class="green-grey"></li>--%>
+                               <%--<li data-color="red-grey" data-hover="tooltip" title="Red - Grey" class="red-grey"></li>--%>
+                               <%--<li data-color="pink-grey" data-hover="tooltip" title="Pink - Grey" class="pink-grey"></li>--%>
+                               <%--<li data-color="blue-grey" data-hover="tooltip" title="Blue - Grey" class="blue-grey"></li>--%>
+                               <%--<li data-color="yellow-grey" data-hover="tooltip" title="Yellow - Grey" class="yellow-grey"></li>--%>
+                               <%--<li data-color="yellow-green" data-hover="tooltip" title="Yellow - Green" class="yellow-green"></li>--%>
+                               <%--<li data-color="orange-grey" data-hover="tooltip" title="Orange - Grey" class="orange-grey"></li>--%>
+                               <%--<li data-color="pink-blue" data-hover="tooltip" title="Pink - Blue" class="pink-blue"></li>--%>
+                               <%--<li data-color="pink-violet" data-hover="tooltip" title="Pink - Violet" class="pink-violet active"></li>--%>
+                               <%--<li data-color="orange-violet" data-hover="tooltip" title="Orange - Violet" class="orange-violet"></li>--%>
+                               <%--<li data-color="pink-green" data-hover="tooltip" title="Pink - Green" class="pink-green"></li>--%>
+                               <%--<li data-color="pink-brown" data-hover="tooltip" title="Pink - Brown" class="pink-brown"></li>--%>
+                               <%--<li data-color="orange-blue" data-hover="tooltip" title="Orange - Blue" class="orange-blue"></li>--%>
+                               <%--<li data-color="yellow-blue" data-hover="tooltip" title="Yellow - Blue" class="yellow-blue"></li>--%>
+                               <%--<li data-color="green-blue" data-hover="tooltip" title="Green - Blue" class="green-blue"></li>--%>
+                           <%--</ul>--%>
+                       <%--</li>--%>
+                   <%--</ul>--%>
+                   <%--<!--END THEME SETTING-->--%>
+               <%--</li>--%>
            </ul>
        </div>
    </nav>

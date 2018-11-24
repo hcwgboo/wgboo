@@ -20,4 +20,9 @@ public class OrganizationServiceImpl extends TreeCommonServiceImpl<OrganizationM
 		return baseMapper.findListByUserId(userid);
 	}
 
+	@Override
+	public Organization getRoot() {
+		return baseMapper.getRoot();
+	}
+
 }

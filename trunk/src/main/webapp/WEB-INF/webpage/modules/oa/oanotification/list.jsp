@@ -13,7 +13,7 @@
 	<grid:button   groupname="opt" function="delete" />
     <grid:column label="标题"  name="title"  query="true"  queryModel="input" width="100"   condition="like" />
     <grid:column label="内容"  name="content"  query="true"  queryModel="input"  condition="like" />
-    <grid:column label="发布状态"  name="status"  query="true" queryMode="select" width="60"  condition="eq"  dict="sf"/>
+    <grid:column label="发布状态"  name="status" query="true" queryMode="select" width="60"  condition="eq"  dict="sf"/>
     
     <grid:toolbar function="create"/>
 	<grid:toolbar   function="update" />
@@ -23,4 +23,10 @@
 	<grid:toolbar  function="reset" />
 </grid:grid>
 </body>
+<script>
+	/*function see(cellvalue, options, rowObject)
+	{
+		return "<a href=\"#\" class=\"btn btn-xs btn-success\" onclick=\"upperOrLowertest('开发商楼盘授权证明','/admin/pro/projectpicture/putaway','6d8a9c26102442e7ae05c2e3c33ded07','projectGridIdGrid')\">授权查看</a>";
+	}*/
+</script>
 </html>

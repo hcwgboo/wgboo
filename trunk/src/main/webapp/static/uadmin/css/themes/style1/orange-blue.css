@@ -135,7 +135,7 @@ hr {
 @media (min-width: 768px) {
     #page-wrapper {
         position: relative;
-        margin: 0 0 0 250px;
+        margin: 0 0 0 200px;
         padding: 0;
     }
 }
@@ -167,7 +167,7 @@ hr {
     display: block;
     font-weight: bold;
     font-family: 'Oswald', sans-serif;
-    font-size: 30px;
+    font-size: 24px;
 }
 #topbar .topbar-main {
     display: block;
@@ -1164,16 +1164,16 @@ hr {
     margin-top: 3px;
 }
 .fa.arrow:before {
-    content: "\f104";
+    content: "\f107";
 }
 .active > a > .fa.arrow:before {
-    content: "\f107";
+    content: "\f106";
 }
 @media (min-width: 768px) {
     .navbar-static-side {
         z-index: 1;
         position: absolute;
-        width: 250px;
+        width:200px;
     }
 }
 .right-sidebar #topbar .navbar-header {
@@ -1308,7 +1308,7 @@ hr {
 
 .page-content {
     padding: 20px 20px 50px 20px;
-    min-height: 700px;
+    min-height: 450px;
     clear: both;
 }
 #footer {

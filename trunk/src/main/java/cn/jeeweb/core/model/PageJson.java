@@ -19,6 +19,7 @@ public class PageJson<T> implements Serializable {
 	private long total; // 总数
 	private long totalPages; // 总页数
 	private List<T> results; // 结果
+	private String other;
 
 	public PageJson() {
 
@@ -68,12 +69,24 @@ public class PageJson<T> implements Serializable {
 		return totalPages;
 	}
 
+	public void setTotalPages(long totalPages) {
+		this.totalPages = totalPages;
+	}
+
 	public List<T> getResults() {
 		return results;
 	}
 
 	public void setResults(List<T> results) {
 		this.results = results;
+	}
+
+	public String getOther() {
+		return other;
+	}
+
+	public void setOther(String other) {
+		this.other = other;
 	}
 
 }

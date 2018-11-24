@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- redis数据源 -->
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxIdle" value="${redis.maxIdle}" />
+		<property name="maxTotal" value="${redis.maxActive}" />
+		<property name="maxWaitMillis" value="${redis.maxWait}" />
+		<property name="testOnBorrow" value="${redis.testOnBorrow}" />
+	</bean>
+
+	<!-- redis连接池 -->
+	<bean id="jedisPool" class="redis.clients.jedis.JedisPool"
+		destroy-method="destroy" depends-on="poolConfig">
+		<constructor-arg name="poolConfig" ref="poolConfig" /> <!-- 加载jedisPool配置信息 -->
+		<constructor-arg name="host" value="${redis.host}" /><!-- 
+			redis主机地址 -->
+		<constructor-arg name="port" value="${redis.port}" /> <!-- redis连接端口 -->
+		<constructor-arg name="password" value="${redis.pass}" /> <!-- 密码 -->
+		<!--<constructor-arg name="database" value="${redis.database}"/> 数据库 -->
+		<constructor-arg name="timeout" value="${redis.timeout}" /> <!-- 连接超时 -->
+	</bean>
+</beans>

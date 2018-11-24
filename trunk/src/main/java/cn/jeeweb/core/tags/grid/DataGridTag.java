@@ -45,7 +45,7 @@ public class DataGridTag extends AbstractGridHtmlTag {
 	private Object datas;// local时的数据
 	private Boolean pageable = Boolean.TRUE;// 是否分页
 	private String width = "auto"; // 表格宽度
-	private String height = "450";// 表格高度
+	private String height = "410";// 表格高度
 	private Boolean multiselect = true;// 是否多选
 	private Boolean multiSort = Boolean.TRUE;// 是否多列排序
 	private Boolean sortable = Boolean.TRUE;
@@ -60,7 +60,7 @@ public class DataGridTag extends AbstractGridHtmlTag {
 	private Boolean async = Boolean.FALSE; // 树情况是否异步
 	private String gridSetting = "";// 扩展设置
 	private String gridSettingCallback = ""; // 配置方法,为js方法，返回配置
-	private Boolean shrinkToFit=Boolean.TRUE; //是否
+	private Boolean shrinkToFit=Boolean.FALSE; //是否
 
 	public String getId() {
 		return id;
@@ -361,7 +361,7 @@ public class DataGridTag extends AbstractGridHtmlTag {
 		Map<String, Object> rootMap = new HashMap<String, Object>();
 		String appPath = pageContext.getServletContext().getContextPath();
 		String adminPath = pageContext.getServletContext().getContextPath() + SysFunctions.getAdminUrlPrefix();
-		String staticPath = pageContext.getServletContext().getContextPath() + "/static";
+		String staticPath = pageContext.getServletContext().getContextPath() + SysFunctions.getStaticUrlPrefix() + "/static";
 		rootMap.put("appPath", appPath);
 		rootMap.put("adminPath", adminPath);
 		rootMap.put("staticPath", staticPath);

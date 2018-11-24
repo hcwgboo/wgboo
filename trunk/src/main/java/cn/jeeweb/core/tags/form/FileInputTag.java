@@ -1,17 +1,18 @@
 package cn.jeeweb.core.tags.form;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.jsp.JspException;
-import org.springframework.web.servlet.tags.form.TagWriter;
 import cn.jeeweb.core.tags.html.manager.HtmlComponentManager;
 import cn.jeeweb.core.utils.PropertiesUtil;
 import cn.jeeweb.core.utils.SpringContextHolder;
 import cn.jeeweb.core.utils.StringUtils;
 import cn.jeeweb.modules.sys.tags.SysFunctions;
+import org.springframework.web.servlet.tags.form.TagWriter;
+
+import javax.servlet.jsp.JspException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -34,6 +35,8 @@ public class FileInputTag extends HiddenInputTag {
 	protected String fileInputType = "fileinput"; // 文本上传类型
 	protected Boolean multiple = Boolean.TRUE;// 是否多文件上传
 	protected String uploadUrl = "";// 文件上传的URL路径
+	protected Boolean showRemove = Boolean.TRUE;
+	protected Boolean showUpload = Boolean.TRUE;
 	protected String deleteUrl = "";// 删除URL
 	protected String initUrl = "";// 初始化的URL
 	protected String uploadExtraData = "{}";// 参数名称的扩展参数
@@ -46,7 +49,7 @@ public class FileInputTag extends HiddenInputTag {
 	protected String refreshCallback = "";// 刷新数据的时候回调
 	protected Boolean showCaption = Boolean.FALSE; // 是否显示标题
 	protected Boolean dropZoneEnabled = Boolean.FALSE;
-	protected Boolean autoUpload = null; // 是否自动上传
+	protected Boolean autoUpload = true; // 是否自动上传
 	protected int maxFileCount = 10;
 	protected int maxFileSize = 0;
 	protected String theme = ""; // 样式
@@ -276,12 +279,12 @@ public class FileInputTag extends HiddenInputTag {
 	private void writeFragment() throws JspException {
 		if (showType.equals("avatar")) {
 			if (StringUtils.isEmpty(extend)) {
-				extend = "jpg,png,gif";
+				extend = "jpg,png,jepg";
 			}
 			if (autoUpload == null) {
 				autoUpload = Boolean.TRUE;
 			}
-			this.saveType = "filepath";
+			/*this.saveType = "filepath";*/
 
 		}
 		if (autoUpload == null) {
@@ -290,10 +293,12 @@ public class FileInputTag extends HiddenInputTag {
 		Map<String, Object> rootMap = new HashMap<String, Object>();
 		String ctx = pageContext.getServletContext().getContextPath();
 		String adminPath = pageContext.getServletContext().getContextPath() + SysFunctions.getAdminUrlPrefix();
-		String staticPath = pageContext.getServletContext().getContextPath() + "/static";
+		String staticPath = pageContext.getServletContext().getContextPath() + SysFunctions.getStaticUrlPrefix() + "/static";
 		rootMap.put("ctx", ctx);
 		rootMap.put("adminPath", adminPath);
 		rootMap.put("staticPath", staticPath);
+		rootMap.put("showRemove", showRemove);
+		rootMap.put("showUpload", showUpload);
 		rootMap.put("uploadUrl", uploadUrl);
 		rootMap.put("deleteUrl", deleteUrl);
 		rootMap.put("initUrl", initUrl);
@@ -363,4 +368,22 @@ public class FileInputTag extends HiddenInputTag {
 	public void setMaxFileSize(int maxFileSize) {
 		this.maxFileSize = maxFileSize;
 	}
+
+	public Boolean getShowRemove() {
+		return showRemove;
+	}
+
+	public void setShowRemove(Boolean showRemove) {
+		this.showRemove = showRemove;
+	}
+
+	public Boolean getShowUpload() {
+		return showUpload;
+	}
+
+	public void setShowUpload(Boolean showUpload) {
+		this.showUpload = showUpload;
+	}
+	
+	
 }

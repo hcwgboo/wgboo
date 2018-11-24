@@ -8,6 +8,7 @@
     <result column="uploadip" property="uploadip" jdbcType="VARCHAR" />
     <result column="fileext" property="fileext" jdbcType="VARCHAR" />
     <result column="filepath" property="filepath" jdbcType="VARCHAR" />
+    <result column="path" property="path" jdbcType="VARCHAR" />
     <result column="filesize" property="filesize" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="VARCHAR" />
   </resultMap>
@@ -20,7 +21,8 @@
     a.uploadip, 
     a.fileext, 
     a.filepath, 
-    a.filesize, 
+    a.path,
+    a.filesize,
     a.status,
     a.userid as "user.id",
     u.realname as "user.realname",

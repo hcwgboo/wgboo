@@ -65,9 +65,9 @@ public class FreeMarkerUtils {
 	 * 初始化Freemarker参数配置
 	 * 
 	 * @param type
-	 *            模板文件夹路径类型，1：文件系统路径；2：项目路径
+	 *            模板文件夹路径类型，1：文件系统路径；2：楼盘路径
 	 * @param dir
-	 *            模板文件夹路径，当type=1时，文件系统中的绝对路径；当type=2时，项目中相对路径，与src同级开始,以"/开头"
+	 *            模板文件夹路径，当type=1时，文件系统中的绝对路径；当type=2时，楼盘中相对路径，与src同级开始,以"/开头"
 	 * @throws Exception
 	 */
 	public void initConfiguration(int type, String templatePath) {
@@ -77,7 +77,7 @@ public class FreeMarkerUtils {
 		case TEMPLATE_LOADING_FILE:
 			try {
 				if (!FileUtil.isAbsolutePath(templatePath)) {
-					// 获取项目全路径
+					// 获取楼盘全路径
 					// 这个目录以后再来确认
 					String filePath = ServletUtils.getRequest().getSession().getServletContext().getRealPath("/");
 					templatePath = filePath + templatePath;

@@ -26,7 +26,7 @@ public class ${entityName?cap_first} extends TreeEntity<${entityName?cap_first}>
 	<#list attributeInfos as attributeInfo>
     <#if attributeInfo.name!='id'&&attributeInfo.name!='name'&& attributeInfo.name!='parentId'&& attributeInfo.name!='parentIds'>
     /**${attributeInfo.remarks}*/
-	@TableField(value = "${attributeInfo.dbName}"<#if !attributeInfo.isBaseType>,el="${attributeInfo.name}.id"</#if><#if attributeInfo.name??&&(attributeInfo.name='createBy'||attributeInfo.name='createDate')>,fill = FieldFill.INSERT</#if><#if attributeInfo.name??&&(attributeInfo.name='updateBy'||attributeInfo.name='updateDate')>,fill = FieldFill.UPDATE</#if>)
+	@TableField(value = "${attributeInfo.dbName}"<#if !attributeInfo.isBaseType>,el="${attributeInfo.name}.id"</#if><#if attributeInfo.name??&&(attributeInfo.name='createBy'||attributeInfo.name='createDate')>,fill = FieldFill.INSERT</#if><#if attributeInfo.name??&&(attributeInfo.name='updateBy'||attributeInfo.name='updateDate')>,fill = FieldFill.INSERT_UPDATE</#if>)
 	private <#if attributeInfo.type=='this'>${entityName?cap_first}<#else>${attributeInfo.type}</#if> ${attributeInfo.name};
 	</#if>
 	</#list>

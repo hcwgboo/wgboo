@@ -7,7 +7,7 @@
   <meta name="decorator" content="list"/>
 </head>
 <body title="<spring:message code="sys.dict.group.title" />">
-<grid:grid id="groupGridId"  baseUrl="${adminPath}/sys/dict/group">
+<grid:grid id="groupGridId" gridSetting="gridSetting"  baseUrl="${adminPath}/sys/dict/group">
 	<grid:column label="sys.common.key" hidden="true"   name="id" width="100"/>
 	<grid:column label="sys.common.opt"  name="opt" formatter="button" width="100"/>
 	<grid:button title="sys.dict.group.adddict"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-primary"  innerclass="fa-plus" url="${adminPath}/sys/dict?gid=\"+row.id+\"" />
@@ -50,6 +50,16 @@ function forceRefresh() {
 			});
         });
  }
+
+ var  gridSetting={
+	 multiselect:true,
+	 multiboxonly:true,
+     beforeSelectRow:beforeSelectRow
+ }
+function beforeSelectRow() {
+    $("#groupGridId").jqGrid('resetSelection');
+    return (true);
+}
 </script>
 </body>
 </html>

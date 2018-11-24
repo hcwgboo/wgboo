@@ -16,7 +16,6 @@ import com.alibaba.fastjson.JSONObject;
 
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	private static final String CHARSET_NAME = "UTF-8";
-
 	// 首字母转小写
 	public static String toLowerCaseFirstOne(String s) {
 		if (Character.isLowerCase(s.charAt(0)))
@@ -342,4 +341,36 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}
 		return formaterValues;
 	}
+	/**
+	 * 
+	 * @param string
+	 * @return 如果是合法字符串则返回true，否则返回false
+	 */
+	public static boolean isStringAvaliable(String string) {
+		return string != null && !"".equals(string.trim());
+	}
+	
+
+	/**
+	 * 
+	 * @Description:验证是否非法 返回非法true，合法false;
+	 * @date:2018年5月17日 下午3:46:43
+	 * @param:
+	 * @return
+	 * @throws
+	 *
+	 */
+	public static boolean illegalPassWord(String str) {
+		
+		if (!isStringAvaliable(str)) {
+			return true;
+		}
+		
+		//String regex = ("^([A-Z]|[a-z]|[0-9]|[`-=[];,./~!@#$%^*()_+}{:?]){6,16}$");
+		String regex = ("^([A-Z]|[a-z]|[0-9]|[`\\-=\\[\\];,./~!@#$%^*()_+}{:?]){6,16}$");
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(str);
+		return !m.find();
+	}
+	
 }

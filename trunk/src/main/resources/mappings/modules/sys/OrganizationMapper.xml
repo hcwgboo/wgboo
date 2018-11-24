@@ -58,7 +58,15 @@
 			${ew.sqlSegment}
 		</where>
 	</select>
-
+	<select id="selectAjaxTreeList" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_organization t
+		<include refid="parentJoins" />
+		<where>
+			${ew.sqlSegment}
+		</where>
+	</select>
 	<!-- 通过用户ID组织机构 -->
 	<select id="findListByUserId" resultMap="BaseResultMap">
 		SELECT
@@ -87,5 +95,11 @@
 		delete from sys_organization
 		where parent_ids like concat(#{oldParentIds}, '%')
 	</delete>
+
+	<select id="getRoot" resultType="cn.jeeweb.modules.sys.entity.Organization">
+		select
+			id
+			from sys_organization where (parent_id is null or parent_id='') and (parent_ids is null or parent_ids='')
+	</select>
 
 </mapper>

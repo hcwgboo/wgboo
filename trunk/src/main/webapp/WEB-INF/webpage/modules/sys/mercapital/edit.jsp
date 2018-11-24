@@ -6,95 +6,31 @@
     <title>上架资金</title>
     <meta name="decorator" content="form"/>
     <html:css name="bootstrap-fileinput" />
-    <html:css name="simditor" />
+    <html:css name="simditor,common" />
 </head>
 
 <body class="white-bg"  formid="merCapitalForm">
     <form:form id="merCapitalForm" modelAttribute="data" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
+		<form:hidden path="merchantId"      />
 		<table  class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
 		   <tbody>
-				<tr>
-					<td  class="width-15 active text-right">	
-		              <label><font color="red">*</font>主键:</label>
-		            </td>
-					<td class="width-35">
-						<form:input path="id" htmlEscape="false" class="form-control"      />
-						<label class="Validform_checktip"></label>
-					</td>
-					<td  class="width-15 active text-right">	
-		              <label>商家id:</label>
-		            </td>
-					<td class="width-35">
-						<form:input path="merchantId" htmlEscape="false" class="form-control"      />
-						<label class="Validform_checktip"></label>
-					</td>
-				</tr>
 				<tr>
 					<td  class="width-15 active text-right">	
 		              <label>账户余额:</label>
 		            </td>
 					<td class="width-35">
-						<form:input path="balanceMoney" htmlEscape="false" class="form-control"      />
-						<label class="Validform_checktip"></label>
+						<form:input path="balanceMoney" disabled="true" htmlEscape="false" class="form-control"      />
 					</td>
-					<td  class="width-15 active text-right">	
-		              <label>冻结金额:</label>
-		            </td>
+					<td  class="width-15 active text-right">
+						<label>充值金额:</label>
+					</td>
 					<td class="width-35">
-						<form:input path="freezeMoney" htmlEscape="false" class="form-control"      />
+						<form:input path="chargeMoney" htmlEscape="false" datatype="n"
+									class="define-input-class"  style="width: 195px;" /><span style="color:red;font-size: 20px;">（元）</span>
 						<label class="Validform_checktip"></label>
 					</td>
 				</tr>
-				<tr>
-					<td  class="width-15 active text-right">	
-		              <label>创建者:</label>
-		            </td>
-					<td class="width-35">
-						<form:input path="createBy" htmlEscape="false" class="form-control"      />
-						<label class="Validform_checktip"></label>
-					</td>
-					<td  class="width-15 active text-right">	
-		              <label>创建时间:</label>
-		            </td>
-					<td class="width-35">
-						<form:input path="createDate" htmlEscape="false" class="form-control"      />
-						<label class="Validform_checktip"></label>
-					</td>
-				</tr>
-				<tr>
-					<td  class="width-15 active text-right">	
-		              <label>更新者:</label>
-		            </td>
-					<td class="width-35">
-						<form:input path="updateBy" htmlEscape="false" class="form-control"      />
-						<label class="Validform_checktip"></label>
-					</td>
-					<td  class="width-15 active text-right">	
-		              <label>更新时间:</label>
-		            </td>
-					<td class="width-35">
-						<form:input path="updateDate" htmlEscape="false" class="form-control"      />
-						<label class="Validform_checktip"></label>
-					</td>
-				</tr>
-				<tr>
-					<td  class="width-15 active text-right">	
-		              <label><font color="red">*</font>删除标记（0：正常；1：删除）:</label>
-		            </td>
-					<td class="width-35">
-						<form:input path="delFlag" htmlEscape="false" class="form-control"      />
-						<label class="Validform_checktip"></label>
-					</td>
-					<td  class="width-15 active text-right">	
-		              <label>备注信息:</label>
-		            </td>
-					<td class="width-35">
-						<form:input path="remarks" htmlEscape="false" class="form-control"      />
-						<label class="Validform_checktip"></label>
-					</td>
-				</tr>
-		      
 		   </tbody>
 		</table>   
 	</form:form>

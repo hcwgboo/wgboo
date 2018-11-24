@@ -1,6 +1,8 @@
 package cn.jeeweb.core.utils;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -159,6 +161,21 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 		return (day > 0 ? day + "," : "") + hour + ":" + min + ":" + s + "." + sss;
 	}
 
+	/***
+	 * 按照指定的格式格式化日期
+	 *
+	 * @return
+	 */
+	public static Date formatDateToDate(String format, Date date) {
+		SimpleDateFormat formater = new SimpleDateFormat();
+		formater.applyPattern(format);
+		formater.setLenient(false);
+		try {
+			return formater.parse(formater.format(date));
+		} catch (ParseException e) {
+			return null;
+		}
+	}
 	/**
 	 * 获取两个日期之间的天数
 	 * 
@@ -198,6 +215,73 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
                     return "刚刚";  
             }  
     }  
+    
+    /**
+     * 获取昨天的时间
+     * @param date
+     * @param formt
+     * @return
+     */
+    public static String getYesterdayDate(Date date, String formt){
+		Calendar result = Calendar.getInstance();
+		result.setTime(date);
+		result.add(Calendar.DAY_OF_MONTH, -1);
+		return formatDate(result.getTime(),formt);
+	}
+    
+    /**
+     * 获取上周一的时间
+     * @param date
+     * @param formt
+     * @return
+     */
+    public static String getLastWeekMon(Date date, String format){ 
+    	Calendar cal =Calendar.getInstance();
+    	cal.setFirstDayOfWeek(Calendar.MONDAY);
+    	cal.setTimeInMillis(System.currentTimeMillis());
+    	cal.add(Calendar.DAY_OF_MONTH, -7);
+    	cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+    	return formatDate(cal.getTime(),format);
+    }
+    
+    /**
+     * 获取上周末的时间
+     * @param date
+     * @param format
+     * @return
+     */
+    public static String getLastWeekSun(Date date, String format){
+    	Calendar cal =Calendar.getInstance();
+    	cal.setFirstDayOfWeek(Calendar.MONDAY);
+    	cal.setTimeInMillis(System.currentTimeMillis());
+    	cal.add(Calendar.DAY_OF_MONTH, -7);
+    	cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+    	return formatDate(cal.getTime(),format);
+    }
+    
+    /**
+     * 获取上月第一天的时间
+     * @param date
+     * @param format
+     * @return
+     */
+    public static String getLastMonthFirst(Date date, String format){
+    	Calendar cal =Calendar.getInstance();
+    	cal.add(Calendar.MONTH, -1);
+    	cal.set(Calendar.DAY_OF_MONTH,1); 
+    	return formatDate(cal.getTime(),format);
+    }
+    /**
+     * 获取上个月最后一天的时间
+     * @param date
+     * @param format
+     * @return
+     */
+    public static String getLastMonthLast(Date date, String format){
+    	Calendar cal =Calendar.getInstance();
+    	cal.set(Calendar.DAY_OF_MONTH, 0);
+    	return formatDate(cal.getTime(), format);
+    }
 
 	/**
 	 * @param args
@@ -208,5 +292,10 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 		// System.out.println(getDate("yyyy年MM月dd日 E"));
 		// long time = new Date().getTime()-parseDate("2012-11-19").getTime();
 		// System.out.println(time/(24*60*60*1000));
+		// System.out.println(getYesterdayDate(new Date()));
+//		System.out.println("1====: "+getLastWeekMon(new Date(), "yyyy-MM-dd"));
+//		System.out.println("2====: "+getLastWeekSun(new Date(), "yyyy-MM-dd"));
+//		System.out.println("3====: "+getLastMonthFirst(new Date(), "yyyy-MM-dd"));
+//		System.out.println("4====: "+getLastMonthLast(new Date(), "yyyy-MM-dd"));
 	}
 }

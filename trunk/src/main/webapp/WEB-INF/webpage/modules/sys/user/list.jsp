@@ -21,7 +21,7 @@
 	   </script>
 	</div>
 	<div  class="col-sm-9 col-md-10">
-		<grid:grid id="userGridId" url="${adminPath}/sys/user/ajaxList">
+		<grid:grid id="userGridId" url="${adminPath}/sys/user/ajaxList?type=1">
 			<grid:column label="sys.common.key" hidden="true"   name="id" width="100"/>
 			<grid:column label="sys.common.opt"  name="opt" formatter="button" width="100"/>
 			<grid:button groupname="opt" function="delete"/>

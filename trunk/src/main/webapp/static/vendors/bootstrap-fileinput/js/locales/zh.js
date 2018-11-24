@@ -49,9 +49,9 @@
             'object': 'object'
         },
         msgUploadAborted: '该文件上传被中止',
-        msgUploadThreshold: 'Processing...',
-        msgUploadBegin: 'Initializing...',
-        msgUploadEnd: 'Done',
+        msgUploadThreshold: '上传中...',
+        msgUploadBegin: '正在初始化...',
+        msgUploadEnd: '上传结束',
         msgUploadEmpty: 'No valid data available for upload.',
         msgValidationError: '验证错误',
         msgLoading: '加载第 {index} 文件 共 {files} &hellip;',
@@ -64,8 +64,8 @@
         msgImageHeightLarge: '图像文件"{name}"的高度不能超过{size}像素.',
         msgImageResizeError: '无法获取的图像尺寸调整。',
         msgImageResizeException: '错误而调整图像大小。<pre>{errors}</pre>',
-        msgAjaxError: 'Something went wrong with the {operation} operation. Please try again later!',
-        msgAjaxProgressError: '{operation} failed',
+        msgAjaxError: 'Something went wrong with the {operation} operation. 请稍后再试!',
+        msgAjaxProgressError: '{operation} 失败',
         ajaxOperations: {
             deleteThumb: 'file delete',
             uploadThumb: 'file upload',

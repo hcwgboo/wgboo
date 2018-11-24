@@ -12,4 +12,5 @@ public interface ITreeCommonService<T extends Serializable & TreeNode<ID>, ID ex
 		extends ICommonService<T> {
 	public List<T> selectTreeList(Wrapper<T> wrapper);
     public List<T> selectTreeList(Queryable queryable,Wrapper<T> wrapper);
+    public List<T> selectAjaxTreeList(Queryable queryable,Wrapper<T> wrapper);
 }

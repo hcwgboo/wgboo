@@ -53,9 +53,15 @@ public class Advertise extends AbstractEntity<String> {
 	/**规则id*/
 	@TableField(value = "rule_id")
 	private String ruleId;
-	/**平台佣金*/
+	/**平台佣金占比*/
 	@TableField(value = "ratio")
 	private Double ratio;
+	/**上级分销佣金占比*/
+	@TableField(value = "superior_commission_ratio")
+	private Double superiorCommissionRatio;
+	/**下级分销佣金占比*/
+	@TableField(value = "sub_commission_ratio")
+	private Double subCommissionRatio;
 	/**规则名称*/
 	@TableField(value = "rule_name")
 	private String ruleName;
@@ -104,7 +110,7 @@ public class Advertise extends AbstractEntity<String> {
     /**备注信息*/
     @TableField(value = "remarks")
 	private String remarks;
-    @TableField(exist = false)
+    @TableField(value = "reduce_money")
     private BigDecimal reduceMoney;
 
 	/**
@@ -256,6 +262,22 @@ public class Advertise extends AbstractEntity<String> {
 
 	public void setRatio(Double ratio) {
 		this.ratio = ratio;
+	}
+
+	public Double getSuperiorCommissionRatio() {
+		return superiorCommissionRatio;
+	}
+
+	public void setSuperiorCommissionRatio(Double superiorCommissionRatio) {
+		this.superiorCommissionRatio = superiorCommissionRatio;
+	}
+
+	public Double getSubCommissionRatio() {
+		return subCommissionRatio;
+	}
+
+	public void setSubCommissionRatio(Double subCommissionRatio) {
+		this.subCommissionRatio = subCommissionRatio;
 	}
 
 	public String getRuleName() {

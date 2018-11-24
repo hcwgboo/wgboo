@@ -13,10 +13,13 @@ import cn.jeeweb.core.query.wrapper.EntityWrapper;
 import cn.jeeweb.core.security.shiro.authz.annotation.RequiresMethodPermissions;
 import cn.jeeweb.core.utils.ObjectUtils;
 import cn.jeeweb.core.utils.StringUtils;
+import cn.jeeweb.modules.sys.dto.MerCapitalDto;
 import cn.jeeweb.modules.sys.entity.MerCapital;
 import cn.jeeweb.modules.sys.service.IMerCapitalService;
+import cn.jeeweb.modules.sys.utils.DeepFieldCopy;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,7 +57,7 @@ public class MerCapitalController extends BaseBeanController<MerCapital> {
     }
 
     @RequiresMethodPermissions("list")
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "list", method = RequestMethod.GET)
     public String list(Model model, HttpServletRequest request, HttpServletResponse response) {
         return display("list");
     }
@@ -63,12 +66,12 @@ public class MerCapitalController extends BaseBeanController<MerCapital> {
     @PageableDefaults(sort = "id=desc")
     private void ajaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                           HttpServletResponse response) throws IOException {
-        EntityWrapper<MerCapital> entityWrapper = new EntityWrapper<MerCapital>(entityClass);
+        EntityWrapper<MerCapitalDto> entityWrapper = new EntityWrapper<>(MerCapitalDto.class);
         propertyPreFilterable.addQueryProperty("id");
         // 预处理
-        QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
-        SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
-        PageJson<MerCapital> pagejson = new PageJson<MerCapital>(merCapitalService.list(queryable,entityWrapper));
+        QueryableConvertUtils.convertQueryValueToEntityValue(queryable, MerCapitalDto.class);
+        SerializeFilter filter = propertyPreFilterable.constructFilter(MerCapitalDto.class);
+        PageJson<MerCapitalDto> pagejson = new PageJson<>(merCapitalService.selectAdvRuleRelationPage(queryable,request));
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response, content);
     }
@@ -76,7 +79,7 @@ public class MerCapitalController extends BaseBeanController<MerCapital> {
     @RequestMapping(value = "create", method = RequestMethod.GET)
     public String create(Model model, HttpServletRequest request, HttpServletResponse response) {
         if (!model.containsAttribute("data")) {
-            model.addAttribute("data", newModel());
+            model.addAttribute("data", new MerCapitalDto());
         }
         return display("edit");
     }
@@ -92,15 +95,33 @@ public class MerCapitalController extends BaseBeanController<MerCapital> {
     public String update(@PathVariable("id") String id, Model model, HttpServletRequest request,
                               HttpServletResponse response) {
         MerCapital merCapital = get(id);
-        model.addAttribute("data", merCapital);
+        MerCapitalDto dto = DeepFieldCopy.transform(merCapital, MerCapitalDto.class);
+        model.addAttribute("data", dto);
         return display("edit");
     }
 
+    /**
+     * 商户充值
+     * @param model
+     * @param dto
+     * @param result
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(value = "{id}/update", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxJson update(Model model, @Valid @ModelAttribute("data") MerCapital merCapital, BindingResult result,
+    public AjaxJson update(Model model, @Valid @ModelAttribute("data") MerCapitalDto dto, BindingResult result,
                            HttpServletRequest request, HttpServletResponse response) {
-        return doSave(merCapital, request, response, result);
+        AjaxJson ajaxJson = new AjaxJson();
+        ajaxJson.success("充值成功");
+        try {
+            merCapitalService.merCapitalCharge(dto);
+        }catch (Exception e){
+            e.printStackTrace();
+            ajaxJson.fail("充值失败："+e.getMessage());
+        }
+        return ajaxJson;
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
@@ -132,66 +153,4 @@ public class MerCapitalController extends BaseBeanController<MerCapital> {
         return ajaxJson;
     }
 
-    @RequestMapping(value = "{id}/delete", method = RequestMethod.POST)
-    @ResponseBody
-    public AjaxJson delete(@PathVariable("id") String id) {
-        AjaxJson ajaxJson = new AjaxJson();
-        ajaxJson.success("删除成功");
-        try {
-            merCapitalService.deleteById(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            ajaxJson.fail("删除失败");
-        }
-        return ajaxJson;
-    }
-
-    @RequestMapping(value = "batch/delete", method = { RequestMethod.GET, RequestMethod.POST })
-    @ResponseBody
-    public AjaxJson batchDelete(@RequestParam(value = "ids", required = false) String[] ids) {
-        AjaxJson ajaxJson = new AjaxJson();
-        ajaxJson.success("删除成功");
-        try {
-            List<String> idList = java.util.Arrays.asList(ids);
-            merCapitalService.deleteBatchIds(idList);
-        } catch (Exception e) {
-            e.printStackTrace();
-            ajaxJson.fail("删除失败");
-        }
-        return ajaxJson;
-    }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public String view(Model model, @PathVariable("id") String id, HttpServletRequest request,
-                       HttpServletResponse response) {
-        MerCapital merCapital = get(id);
-        model.addAttribute("data", merCapital);
-        return display("edit");
-    }
-
-    @RequestMapping(value = "validate", method = { RequestMethod.GET, RequestMethod.POST })
-    @ResponseBody
-    public ValidJson validate(DuplicateValid duplicateValid, HttpServletRequest request) {
-        ValidJson validJson = new ValidJson();
-        Boolean valid = Boolean.FALSE;
-        try {
-            EntityWrapper<MerCapital> entityWrapper = new EntityWrapper<MerCapital>(entityClass);
-            valid = merCapitalService.doValid(duplicateValid,entityWrapper);
-            if (valid) {
-                validJson.setStatus("y");
-                validJson.setInfo("验证通过!");
-            } else {
-                validJson.setStatus("n");
-                if (!StringUtils.isEmpty(duplicateValid.getErrorMsg())) {
-                    validJson.setInfo(duplicateValid.getErrorMsg());
-                } else {
-                    validJson.setInfo("当前信息重复!");
-                }
-            }
-        } catch (Exception e) {
-            validJson.setStatus("n");
-            validJson.setInfo("验证异常，请检查字段是否正确!");
-        }
-        return validJson;
-    }
 }

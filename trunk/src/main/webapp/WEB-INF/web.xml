@@ -96,7 +96,7 @@
 		<async-supported>true</async-supported>
 		<init-param>
 			<param-name>exclusions</param-name>
-			<param-value>/static/*,*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*</param-value>
+			<param-value>${admin.url.prefix}/static/*,*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*</param-value>
 		</init-param>
 		<init-param>
 			<param-name>principalSessionName</param-name>
@@ -116,7 +116,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>DruidStatView</servlet-name>
-		<url-pattern>/admin/sys/monitor/druid/*</url-pattern>
+		<url-pattern>/sys/monitor/druid/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- 验证码过滤器需要放到Shiro之后 因为Shiro将包装HttpSession 如果不 可能造成两次的sesison id 不一样 -->
@@ -127,10 +127,22 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>JCaptchaFilter</filter-name>
-		<url-pattern>/jcaptcha.jpg</url-pattern>
+		<url-pattern>/devpc/jcaptcha.jpg</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>JCaptchaFilter</filter-name>
+		<url-pattern>/testpc/jcaptcha.jpg</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>JCaptchaFilter</filter-name>
+		<url-pattern>/prepc/jcaptcha.jpg</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>JCaptchaFilter</filter-name>
+		<url-pattern>/propc/jcaptcha.jpg</url-pattern>
 	</filter-mapping>
 
-	<!-- Xss安全过滤
+	<!-- Xss安全过滤 -->
 	<filter>
 		<filter-name>XssEscape</filter-name>
 		<filter-class>cn.jeeweb.core.filter.xss.XssFilter</filter-class>
@@ -139,7 +151,7 @@
 		<filter-name>XssEscape</filter-name>
 		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
-	</filter-mapping> -->
+	</filter-mapping>
 	<!-- 装饰容器 sitemesh 文档 http://wiki.sitemesh.org/wiki/display/sitemesh/Home -->
 	<filter>
 		<filter-name>sitemeshFilter</filter-name>
@@ -149,6 +161,14 @@
 		<filter-name>sitemeshFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	<filter>  
+      <filter-name>cors</filter-name>  
+      <filter-class>cn.jeeweb.core.filter.SimpleCORSFilter</filter-class>  
+    </filter>  
+    <filter-mapping>  
+      <filter-name>cors</filter-name>  
+      <url-pattern>/*</url-pattern>  
+    </filter-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
@@ -173,4 +193,8 @@
 		<exception-type>java.lang.Exception</exception-type>
 		<location>/WEB-INF/webpage/error/error.jsp</location>
 	</error-page>-->
+	<!--<error-page>-->
+		<!--<error-code>500</error-code>-->
+		<!--<location>/WEB-INF/webpage/error/500.jsp</location>-->
+	<!--</error-page>-->
 </web-app>

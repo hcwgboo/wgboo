@@ -45,6 +45,23 @@
     (select count(*) from sys_menu s
 		WHERE s.parent_id=t.id and s.isshow=1) as hasChildren
   </sql>
+  <sql id="Base_ajax_Column_List" >
+    t.id, 
+    t.name,
+    t.parent_id, 
+    t.parent_ids, 
+    t.parent_id AS parent_id,
+    p.name AS parent_name,
+    t.type, 
+    t.url,
+    t.permission, 
+    t.isshow, 
+    t.sort, 
+    t.menu_icon,
+    t.remarks,
+    (select count(*) from sys_menu s
+		WHERE s.parent_id=t.id) as hasChildren
+  </sql>
   <sql id="parentJoins">
 		LEFT JOIN sys_menu p ON p.id = t.parent_id
   </sql>
@@ -66,7 +83,15 @@
 	    ${ew.sqlSegment} 
 	  </where>
   </select>
-  
+  <select id="selectAjaxTreeList" resultMap="BaseResultMap">
+	  select 
+   	   <include refid="Base_ajax_Column_List" />
+      from sys_menu t
+      <include refid="parentJoins"/>
+	  <where>
+	    ${ew.sqlSegment} 
+	  </where>
+  </select>
   <!-- 更新子树 -->  
   <update id="updateSunTreeParentIds">  
 	       update sys_menu set parent_ids= CONCAT(#{newParentIds},
@@ -105,6 +130,20 @@
 		LEFT JOIN sys_role_menu rm on t.id=rm.menu_id
 		WHERE rm.role_id= #{roleId}
 		ORDER BY sort
+  </select>
+
+    <select id="getParentMenuId" parameterType="java.util.List" resultType="String">
+        select id
+        from sys_menu
+        where 1=1 and name in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and (parent_id is null or parent_id='')
+    </select>
+
+    <select id="getMenuIdListByPId" parameterType="String" resultType="cn.jeeweb.modules.sys.entity.Menu">
+  	select id,parent_id,name from sys_menu where FIND_IN_SET(id,getChildrenMenu(#{id}))
   </select>
  
 </mapper>

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <!DOCTYPE html>
-<html:js  name="bootstrap,iCheck,metisMenu,slimscroll,layer,pace,bootstrap-hover-dropdown,jquery-cookie"/>
+<html:js  name="bootstrap,iCheck,metisMenu,slimscroll,layer,pace,bootstrap-hover-dropdown,jquery-cookie,Validform"/>
 <!--loading bootstrap js-->
 <script src="${staticPath}/uadmin/js/html5shiv.js"></script>
 <script src="${staticPath}/uadmin/js/respond.min.js"></script>

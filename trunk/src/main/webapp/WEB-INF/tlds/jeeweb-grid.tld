@@ -212,6 +212,12 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>最大值是今天针对时间</description>
+			<name>maxToday</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description>列宽度</description>
 			<name>width</name>
 			<required>false</required>
@@ -514,6 +520,12 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<attribute>
+			<description>权限</description>
+			<name>permission</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 		<!-- 指定支持动态属性 -->
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
@@ -594,6 +606,12 @@
 		<attribute>
 			<description>询问提示语</description>
 			<name>tipMsg</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>权限</description>
+			<name>permission</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

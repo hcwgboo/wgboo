@@ -14,8 +14,12 @@ public class AdvertiseRuleRelationDto {
     private String advRuleId;
     /**规则名称*/
     private String advRuleName;
-    /**平台佣金比例*/
+    /**平台佣金占比*/
     private Double ratio;
+    /**上级分销佣金占比*/
+    private Double superiorCommissionRatio;
+    /**下级分销佣金占比*/
+    private Double subCommissionRatio;
     /**最低金额*/
     private BigDecimal minMoney;
     /**最少条数*/
@@ -67,6 +71,22 @@ public class AdvertiseRuleRelationDto {
 
     public void setRatio(Double ratio) {
         this.ratio = ratio;
+    }
+
+    public Double getSuperiorCommissionRatio() {
+        return superiorCommissionRatio;
+    }
+
+    public void setSuperiorCommissionRatio(Double superiorCommissionRatio) {
+        this.superiorCommissionRatio = superiorCommissionRatio;
+    }
+
+    public Double getSubCommissionRatio() {
+        return subCommissionRatio;
+    }
+
+    public void setSubCommissionRatio(Double subCommissionRatio) {
+        this.subCommissionRatio = subCommissionRatio;
     }
 
     public BigDecimal getMinMoney() {

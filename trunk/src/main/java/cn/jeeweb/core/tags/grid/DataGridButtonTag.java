@@ -9,6 +9,7 @@ import javax.servlet.jsp.tagext.Tag;
 import org.apache.commons.lang3.StringUtils;
 import cn.jeeweb.core.tags.common.tag.AbstractGridHtmlTag;
 import cn.jeeweb.core.utils.MessageUtils;
+import cn.jeeweb.modules.sys.utils.UserUtils;
 
 /**
  * 
@@ -38,6 +39,7 @@ public class DataGridButtonTag extends AbstractGridHtmlTag {
 	private String innerclass = "";// 按钮内部的I样式
 	private String innerhtml = "";// 按钮内部内容
 	private String exp = ""; // 表达式
+	private String permission = ""; // 权限
 
 	public String getTitle() {
 		return title;
@@ -134,7 +136,13 @@ public class DataGridButtonTag extends AbstractGridHtmlTag {
 	public void setTipMsg(String tipMsg) {
 		this.tipMsg = tipMsg;
 	}
+	public String getPermission() {
+		return permission;
+	}
 
+	public void setPermission(String permission) {
+		this.permission = permission;
+	}
 	private void dealDefault(DataGridTag parent) {
 		if (!StringUtils.isEmpty(this.function) && isFunction(this.function)) {
 			// 预处理Url问题
@@ -153,7 +161,7 @@ public class DataGridButtonTag extends AbstractGridHtmlTag {
 			}
 
 			if (StringUtils.isEmpty(outclass)) {
-				String outclass = "";
+				String outclass = "btn-danger";
 				if (this.function.equals("delete")) {
 					outclass = "btn-danger";
 				}
@@ -161,7 +169,7 @@ public class DataGridButtonTag extends AbstractGridHtmlTag {
 			}
 
 			if (StringUtils.isEmpty(innerclass)) {
-				String innerclass = "";
+				String innerclass = "fa-trash";
 				if (this.function.equals("delete")) {
 					innerclass = "fa-trash";
 				}
@@ -196,7 +204,11 @@ public class DataGridButtonTag extends AbstractGridHtmlTag {
 			dynamicAttributes.put("class", "btn btn-xs ");
 		}
 		buttonMap.put("dynamicAttributes", dynamicAttributes);
-		parent.addButton(buttonMap);
+		// 改造后需要更改
+		if (StringUtils.isEmpty(this.permission) || UserUtils.getPermissionsList().contains(this.permission)) {
+			parent.addButton(buttonMap);
+		}
+		
 		return EVAL_PAGE;
 	}
 
@@ -243,4 +255,5 @@ public class DataGridButtonTag extends AbstractGridHtmlTag {
 		}
 		return Boolean.FALSE;
 	}
+
 }

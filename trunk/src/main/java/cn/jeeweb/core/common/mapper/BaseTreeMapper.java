@@ -28,6 +28,8 @@ public interface BaseTreeMapper<T> extends BaseMapper<T> {
 	 * @return: List<T>
 	 */
 	List<T> selectTreeList(@Param("ew") Wrapper<T> wrapper);
+	
+	List<T> selectAjaxTreeList(@Param("ew") Wrapper<T> wrapper);
 
 	/**
 	 * 

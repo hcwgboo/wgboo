@@ -21,6 +21,9 @@ public class Attachment extends DataEntity<String> {
 	@TableField(value = "filepath")
 	private String filepath;// 文件路径
 
+	@TableField(value = "path")
+	private String path;// oss路径
+
 	@TableField(value = "filesize")
 	private Long filesize;// 文件大小
 
@@ -122,4 +125,11 @@ public class Attachment extends DataEntity<String> {
 		this.status = status;
 	}
 
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
 }

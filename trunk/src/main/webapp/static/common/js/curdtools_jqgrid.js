@@ -14,6 +14,43 @@ function create(title,url,gridid,width,height) {
 	openDialog(title,url,gridid,width,height);
 }
 
+function changeUserAccount(username,path){
+	var url = path+"/changeUserAccount";
+	top.layer.open({
+	    type: 2,  
+	    area: ["350px", "200px"],
+	    title: "请输入切换的账号",
+	    content: url ,
+	    btn: ['保存', '关闭'],
+	    yes: function(index, layero){
+	         var iframeWin = layero.find('iframe')[0];
+	         iframeWin.contentWindow.doSubmit(function()
+	         {
+	        	 window.location.href=window.origin+path;
+	         });
+		  },
+		  cancel: function(index){ 
+			  
+		  }
+	}); 
+}/**
+ * 说明：自定义的关闭按钮，楼盘新增的页面，关闭按钮是自定义的。
+ * @author cql
+ * @returns
+ */
+function closeUserDefinedBtn(){
+	var index=parent.layer.getFrameIndex(window.name);
+	setTimeout(function(){top.layer.close(index)}, 100);
+}
+
+function keyOnClick(e,gridId){
+	var theEvent = window.event || e;
+    var code = theEvent.keyCode || theEvent.which;
+    if (code==13) {//回车键的键值为13
+    	search(gridId);
+    }
+}
+
 /**
  * 新增事件打开窗口
  * @param title 编辑框标题
@@ -24,35 +61,68 @@ function createDialog(title,url,gridid,width,height) {
 }
 
 /**
- * 提示弹出，常用于ajax失败之后的弹出提示
- * @param msg
- * @author cql
- * @returns
- */
-function msgDialog(msg){
-    if(!msg)
-        msg = "系统错误，请联系管理员！";
-    top.layer.open({
-        title:"提示",
-        content:msg
-    });
-}
-
-/**
  * 说明：适用于自定义异常弹出处理，或者成功之后的弹出处理
  * @param data
  * @author cql
  * @returns
  */
 function successOrExceptionDialog(data){
-    if(data.ret==0|| data.ret==-1){
+	if(data.ret==0|| data.ret==-1){
         msgDialog(data.msg)
-    }else{
-        msgDialog(data.message);
-    }
+	}else{
+		msgDialog(data.message);
+	}
 }
 
+/**导出**/
+function DataExport(title, url, gridId){
+	if(!url) return;
+	if(!gridId) return;
+	layer.confirm(title, {
+		title:title,
+    	btn : [ '确定', '取消' ]//按钮
+    }, function(index) {
+    	layer.close(index);
+    	index=ityzl_SHOW_LOAD_LAYER();
+    	var dataStr = getDataStr(gridId);
+    	window.location.href=url+dataStr;
+    	ityzl_CLOSE_LOAD_LAYER(index);
+	}); 	
+}
 
+function getDataStr(gridId){
+	var queryParams = {};
+	$('#' + gridId + "Query").find(":input").each(function() {
+		var val = $(this).val();
+		if(val==null)val='';
+		if (queryParams[$(this).attr('name')]) {
+			val = queryParams[$(this).attr('name')] + "," + $(this).val();
+		}
+		queryParams[$(this).attr('name')] = val;
+	});
+	return JSON.stringify(queryParams);
+}
+//加载效果
+function ityzl_SHOW_LOAD_LAYER() {
+	return top.layer.msg('努力中...', {icon: 16, scrollbar: false, offset: '50%', time: 300000});
+ }
+function ityzl_CLOSE_LOAD_LAYER(index) {
+    top.layer.close(index);
+}
+/**
+ * 提示弹出，常用于ajax失败之后的弹出提示
+ * @param msg
+ * @author cql
+ * @returns
+ */
+function msgDialog(msg){
+	if(!msg)
+		msg = "系统错误，请联系管理员！";
+	top.layer.open({
+		title:"提示",
+		content:msg
+	});
+}
 /**
  * 说明：适用于	回掉弹出页面的数据，然后进一步操作，参考 user/list.jsp	allotProject();
  * 注意：参数非空
@@ -66,24 +136,57 @@ function successOrExceptionDialog(data){
  * @returns
  */
 function commonDialog(title,url,width,heigth,callback){
-    top.layer.open({
-        type: 2,
-        area: [width, heigth],
-        title: title,
-        maxmin: true, //开启最大化最小化按钮
-        content: url,
-        btn: ['确定', '关闭'],
-        yes: function(index, layero) {
-            var iframeWin = layero.find('iframe')[0];
-            var select = iframeWin.contentWindow.subCallback();
-            if(callback){
-                callback(select,index);
-            }
-        },
-        cancel: function(index) {
+	top.layer.open({
+		type: 2,
+		area: [width, heigth],
+		title: title,
+		maxmin: true, //开启最大化最小化按钮
+		content: url,
+		btn: ['确定', '关闭'],
+		yes: function(index, layero) {
+			var iframeWin = layero.find('iframe')[0];
+			var select = iframeWin.contentWindow.subCallback();
+			if(callback, index){
+				callback(select, index);
+			}
+		},
+		cancel: function(index) {
 
-        }
-    });
+		}
+	 });
+}
+
+/**
+ * 此方法在多页面保存一个页面的内容是比较方便，参考 user/list.jsp allotAppGaMenu();
+ * 说明：用于父页面保存子页面，采用系统中的doSubmit,doSubmit方法做了重复提交验证和表单验证，比手动验证要方便很多
+ * 注意：参数不能为空
+ * @param title
+ * @param url
+ * @param width
+ * @param height
+ * @param callback
+ * @author	cql
+ * @returns
+ */
+
+function commonDosubmitDialog(title,url,width,height,callback){
+	top.layer.open({
+		type: 2,
+		area: [width, height],
+		title: title,
+		maxmin: true,
+		content: url,
+		btn: ['确定', '关闭'],
+		yes: function(index, layero) {
+			var iframeWin = layero.find('iframe')[0];
+			if(callback){
+				callback(iframeWin);				
+			}
+		},
+		cancel: function(index) {
+
+		}
+	 });
 }
 
 /**
@@ -94,31 +197,30 @@ function commonDialog(title,url,width,heigth,callback){
  * @returns
  */
 function chooseVerify(url,gridId){
-    var rowData = $("#" + gridId).jqGrid('getGridParam', 'selrow');
-    if(!rowData) {
-        top.layer.alert('请选择一条数据!', {
-            icon: 0,
-            title: '警告'
-        });
-        return false;
-    }
-    var rowsArray= $("#"+gridId).jqGrid('getGridParam','selarrrow');
-    if(rowsArray.length>1){
-        top.layer.alert('只能选择一条数据!', {
-            icon: 0,
-            title: '警告'
-        });
-        return false;
-    }
-    if(url)
-        return url = url.replace("{id}", rowData);
-    else
-        return true;
+	var rowData = $("#" + gridId).jqGrid('getGridParam', 'selrow');
+	if(!rowData) {
+		top.layer.alert('请选择一条数据!', {
+			icon: 0,
+			title: '警告'
+		});
+		return false;
+	}
+	var rowsArray= $("#"+gridId).jqGrid('getGridParam','selarrrow');
+	if(rowsArray.length>1){
+		top.layer.alert('只能选择一条数据!', {
+			icon: 0,
+			title: '警告'
+		});
+		return false;
+	}
+	if(url)
+		return url = url.replace("{id}", rowData);
+	else
+		return true;
 }
 
-
 /**
- * 说明：	1.ajax提交数据
+ * 说明：	1.ajax提交数据 
  * 		2.没有表单验证 若使用表单验证，可以添加 var flag = validateForm.userDefineFormValid(); 先引入Validform这个js 如果flag 为true表面验证通过，否则没有通过，
  * 		3.重复提交需要自己定义
  * @param param	请求参数
@@ -132,38 +234,113 @@ function chooseVerify(url,gridId){
  * @returns
  */
 function ajaxSumbit(param,url,gridId,callback,async,type,errorCallback){
-    if(!type)
-        var type='get';
-    if(!url)
-        errorDialog("参数错误！");
-    if(async==null)
-        async=true;
-    $.ajax({
-        type: type,
-        dataType: 'json',
-        data: param,
-        url: url,
-        async:async,
-        success: function(data) {
-            if(gridId!=null){
-                reset(gridId);
-            }
-            if(callback){
-                callback(data);
-            }else{
-                successOrExceptionDialog(data);
-            }
-        },
-        error: function(error) {
-            if(errorCallback){
-                errorCallback();
-            }
-            errorDialog();
-        }
-    });
+	if(!type)
+		var type='get';
+	if(!url)
+		msgDialog("参数错误");
+	if(async==null)
+		async=true;
+	$.ajax({
+		type: type,
+		dataType: 'json',
+		data: param,
+		url: url,
+		async:async,
+		success: function(data) {
+			if(gridId!=null){
+				reset(gridId);
+			}
+			if(callback){
+				callback(data);
+			}else{
+				successOrExceptionDialog(data);
+			}
+		},
+		error: function(error) {
+			if(errorCallback){
+				errorCallback();
+			}
+			msgDialog();
+		}
+	});
 }
 
+//打开对话框(添加修改)
+function userDefinedDialog(title,url,gridId,width,height,callback){
+	top.layer.open({
+	    type: 2,  
+	    area: [width, height],
+	    title: title,
+        maxmin: true, 
+	    content: url ,
+	    btn: ['确定', '关闭'],
+	    yes: function(index, layero){
+	    	 var body = top.layer.getChildFrame('body', index);
+	         var iframeWin = layero.find('iframe')[0]; 
+	         iframeWin.contentWindow.doSubmit(callback);
+		  },
+		  cancel: function(index){ 
+			  
+		  }
+	}); 	
+	
+}
+/**
+ * 说明：使用于父页面弹框就可以了，子页面自己干自己的，常见例子，子页面是一个列表
+ * @param title
+ * @param url
+ * @param width
+ * @param height
+ * @author cql
+ * @returns
+ */
+function onlyOpenDialog(title,url,width,height,gridId){
+	if(gridId){
+		var url = chooseVerify(url,gridId);
+		if(!url)
+			return;
+	}
+	top.layer.open({
+        type: 2,
+        area: [width, height],
+        title: title,
+        maxmin: true,
+        content: url,
+	});
+}
 
+/**
+ * 表单日期加载格式化
+ * @param value
+ * @returns
+ */
+function initDateFormatter(value){
+	try{
+       if(value==undefined || value==null || value==""){
+	      return "";
+	   }
+        var data = new Date(value);  
+        var year = data.getFullYear();  //获取年
+        var month = data.getMonth() + 1;    //获取月
+        var day = data.getDate(); //获取日
+        value = year + "-" + month + "-" + day ;
+	   return value;
+   }catch(err){
+	   
+   }
+   return value;
+}
+/**
+ * 清除验证
+ * @param formId
+ * @returns
+ */
+function clearValidChecktip(formId){
+	$('#'+formId).find('input').removeClass('Validform_error');
+	$('#'+formId).find('input').val("");
+	$('#'+formId).find('label.Validform_checktip ').removeClass('Validform_wrong').text('');
+	$('#'+formId).find('label.Validform_checktip ').removeClass('Validform_right').text('');
+}
 
 /**
  * 更新事件打开窗口
@@ -195,6 +372,14 @@ function update(title,url,gridId,width,height) {
     url=url.replace("{id}",id);
     openDialog(title,url,gridId,width, height);
 }
+
+//双击打开编辑
+function dblClickUpdate(title,url,gridId,selectedId,width,height) {
+    url=url.replace("{id}",selectedId);
+    openDialog(title,url,gridId,width, height);
+}
+
+
 
 /**
  * 更新事件打开窗口
@@ -307,7 +492,8 @@ function openDialog(title,url,gridId,width,height){
 	    title: title,
         maxmin: true, //开启最大化最小化按钮
 	    content: url ,
-	    btn: ['确定', '关闭'],
+	    shift: -1,
+	    btn: ['保存', '关闭'],
 	    yes: function(index, layero){
 	    	 var body = top.layer.getChildFrame('body', index);
 	         var iframeWin = layero.find('iframe')[0]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
@@ -340,6 +526,8 @@ function deleteRowData(title,url,infoid,gridId,tipMsg) {
 	   url=url.replace("{id}",infoid);
 	   if(tipMsg==undefined||tipMsg==''){
 		   msg= "您确定要删除该信息么，请谨慎操作！";
+	   }else{
+		   msg = tipMsg;
 	   }
 	   swal({
             title: "提示",
@@ -368,6 +556,9 @@ function deleteRowData(title,url,infoid,gridId,tipMsg) {
 						var msg = d.msg;
 					    swal("提示！", msg, "error");
 					}
+				},
+				error:function(error){
+					swal("提示！", msg, "系统错误，请联系管理员！");
 				}
 			});
         });
@@ -445,7 +636,9 @@ function rowConfirm(title,url,infoid,gridId,tipMsg) {
 	  url=url.replace("{id}",infoid);
 	  if(tipMsg==undefined||tipMsg==''){
 		  tipMsg="您确定要执行该操作！";
-	  }
+	  }else{
+		   msg = tipMsg;
+	   }
 	   swal({
             title: "提示",
             text: tipMsg,
@@ -646,6 +839,226 @@ function detail(title,url, gridId,width,height) {
     
     var id = rowsData[0].id;;
     openDialogView(title,url+"&id="+id,"800px", "500px","");
+}
+
+
+
+
+
+//选择用户信息
+function searchUser(title,url,parentId,labelId,valueId,param,callback){
+    var width ="1000px";
+    var height="500px";
+    openDialogSearchUser(title,url,parentId,labelId,valueId,width,height,param,callback)
+}
+
+//清除选择的用户
+function cleanUserInfo(parentId,labelId,valueId){
+    $("#"+parentId +" #"+labelId).val('');
+    $("#"+parentId +" #"+valueId).val('');
+}
+
+//弹出用户选择
+function openDialogSearchUser(title,url,parentId,labelId,valueId,width,height,param,callback){
+    top.layer.open({
+        type: 2,
+        area: [width, height],
+        title: title,
+        maxmin: true, //开启最大化最小化按钮
+        content: url ,
+        btn: ['确定','关闭'],
+        yes: function(index, layero){
+            var iframeWin = layero.find('iframe')[0];
+            var selectedRowsdata = [];
+            selectedRowsdata = iframeWin.contentWindow.selectedData();
+            if (!selectedRowsdata || selectedRowsdata.length==0) {
+                top.layer.alert('请至少选择一条数据!', {icon: 0, title:'警告'});
+                return;
+            }
+            if (selectedRowsdata.length>1) {
+                top.layer.alert('只能选择一条数据!', {icon: 0, title:'警告'});
+                return;
+            }
+            $("#serveLable").attr("class","Validform_checktip");
+            var selectedRowData = selectedRowsdata[0];
+            $("#"+parentId + " #"+labelId).val(selectedRowData.realname);
+            $("#"+parentId +" #"+valueId).val(selectedRowData.id);
+            if(callback){
+            	param.serverId= selectedRowData.id;
+            	callback(param);
+            }
+            setTimeout(function(){top.layer.close(index)}, 100);//延时0.1秒，对应360 7.1版本bug
+
+        },
+
+        cancel: function(index){
+        }
+    });
+}
+
+
+//选择楼盘信息
+function searchProject(title,url,parentId,labelId,valueId){
+    var width ="1000px";
+    var height="500px";
+    openDialogSearchProject(title,url,parentId,labelId,valueId,width,height)
+}
+//清除选择的楼盘
+function cleanProjectInfo(parentId,labelId,valueId){
+    $("#"+parentId +" #"+labelId).val('');
+    $("#"+parentId +" #"+valueId).val('');
+}
+
+//弹出楼盘选择
+function openDialogSearchProject(title,url,parentId,labelId,valueId,width,height){
+    top.layer.open({
+        type: 2,
+        area: [width, height],
+        title: title,
+        maxmin: true, //开启最大化最小化按钮
+        content: url ,
+        btn: ['确定','关闭'],
+        yes: function(index, layero){
+            var iframeWin = layero.find('iframe')[0];
+            var selectedRowsdata = [];
+            selectedRowsdata = iframeWin.contentWindow.selectedData();
+            if (!selectedRowsdata || selectedRowsdata.length==0) {
+                top.layer.alert('请至少选择一条数据!', {icon: 0, title:'警告'});
+                return;
+            }
+            if (selectedRowsdata.length>1) {
+                top.layer.alert('只能选择一条数据!', {icon: 0, title:'警告'});
+                return;
+            }
+            var selectedRowData = selectedRowsdata[0];
+            $("#"+parentId + " #"+labelId).val(selectedRowData.name);
+            $("#"+parentId +" #"+valueId).val(selectedRowData.id);
+            setTimeout(function(){top.layer.close(index)}, 100);//延时0.1秒，对应360 7.1版本bug
+
+        },
+
+        cancel: function(index){
+        }
+    });
+}
+//时间格式化
+function dateFormatter(value, options, row){
+    try{
+        if(value==undefined){
+            return "";
+        }
+        var data = new Date(value);
+        var year = data.getFullYear();  //获取年
+        var month = data.getMonth() + 1;    //获取月
+        var day = data.getDate(); //获取日
+        value = year + "-" + month + "-" + day ;
+        return value;
+    }catch(err){}
+    return value;
+}
+
+
+
+function map(title,url,parentId,labelId) {
+    var width = '800px';
+    var height ='500px';
+    top.layer.open({
+        type: 2,
+        area: [width, height],
+        title: title,
+        maxmin: true, //开启最大化最小化按钮
+        content: url,
+        btn: ['确定', '关闭'],
+        yes:
+            function (index, layero) {
+                var iframeWin = layero.find('iframe')[0]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                var lnglat = iframeWin.contentWindow.getLnglat();
+                $("#"+parentId +" #"+labelId).val(lnglat);
+                setTimeout(function(){top.layer.close(index)}, 100);//延时0.1秒，对应360 7.1版本bug
+            },
+
+        cancel: function (index) {
+        }
+    });
+}
+
+function mapMessage(title,url,callback) {
+    var width = '800px';
+    var height ='500px';
+    top.layer.open({
+        type: 2,
+        area: [width, height],
+        title: title,
+        maxmin: true, //开启最大化最小化按钮
+        content: url,
+        btn: ['确定', '关闭'],
+        yes:
+            function (index, layero) {
+                var iframeWin = layero.find('iframe')[0]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                var lnglat = iframeWin.contentWindow.getLnglat();
+                var mapMessage = iframeWin.contentWindow.getMapMessage(lnglat);
+                if(callback){
+                	callback(lnglat,mapMessage);
+                }
+        		setTimeout(function(){top.layer.close(index)}, 100);//延时0.1秒，对应360 7.1版本bug
+            },
+
+        cancel: function (index) {
+        }
+    });
+}
+//清除选择的用户
+function cleanMap(parentId,labelId){
+    $("#"+parentId +" #"+labelId).val('');
+}
+
+
+function getIds(gridId) {
+    var ids = [];
+    var rows = $("#" + gridId).jqGrid('getGridParam', 'selarrrow');
+    var rowData = $("#" + gridId).jqGrid('getGridParam', 'selrow');
+    var multiselect = $("#" + gridId).jqGrid('getGridParam', 'multiselect');
+    if (!multiselect) {
+        if (rowData) {
+            rows[0] = rowData;
+        }
+    }
+    if (rows.length > 0) {
+        for (var i = 0; i < rows.length; i++) {
+            ids.push(rows[i]);
+        }
+    }
+    return ids;
+}
+
+//加载效果
+function ityzl_SHOW_LOAD_LAYER() {
+	return top.layer.msg('努力中...', {icon: 16, scrollbar: false, offset: '50%', time: 300000});
+ }
+
+
+function StatisticalDetails(title,url,grid,infoid,width,height){
+	var dataStr=getDataStr(grid).replace(/\"/g,"'");
+	var rowData = $("#"+grid).jqGrid('getRowData',infoid);
+	var urls=url+"&dataStr="+dataStr+"&serverId="+rowData['server.id']+"&companyId="+rowData['company.id']+"&" +
+			"userId="+rowData['user.id']+"&projectId="+rowData['project.id'];
+	
+	top.layer.open({
+            type : 2,
+            area : [ width, height ],
+            title : title,
+            maxmin : true, 
+            content : urls,
+            btn : [ '关闭' ],
+            yes: function(index, layero){
+            	setTimeout(function(){top.layer.close(index)}, 100);
+	        	/*  //刷新表单
+            	refreshTable(grid); */
+   		  	},
+            cancel : function(index) {
+            	top.layer.closeAll();
+            }
+        }); 
 }
 
 

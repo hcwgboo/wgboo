@@ -9,6 +9,7 @@ import javax.servlet.jsp.tagext.Tag;
 import cn.jeeweb.core.tags.common.tag.AbstractGridHtmlTag;
 import cn.jeeweb.core.utils.MessageUtils;
 import cn.jeeweb.core.utils.StringUtils;
+import cn.jeeweb.modules.sys.utils.UserUtils;
 
 /**
  * 
@@ -37,6 +38,7 @@ public class DataGridToolbarTag extends AbstractGridHtmlTag {
 	private String layout = "left";// left，right;默认在左边
 	private String tipMsg = ""; // 当时询问时打开的时候的询问提示语
 	private String exp = ""; // 表达式
+	private String permission = ""; // 权限
 
 	public String getTitle() {
 		return title;
@@ -119,6 +121,14 @@ public class DataGridToolbarTag extends AbstractGridHtmlTag {
 	}
 	
 
+	public String getPermission() {
+		return permission;
+	}
+
+	public void setPermission(String permission) {
+		this.permission = permission;
+	}
+
 	public String getBtnclass() {
 		return btnclass;
 	}
@@ -138,7 +148,11 @@ public class DataGridToolbarTag extends AbstractGridHtmlTag {
 			dynamicAttributes = new HashMap<String, Object>();
 		}
 		toobarMap.put("dynamicAttributes", dynamicAttributes);
-		parent.addToolbar(toobarMap);
+		//改造后需要更改
+		if (StringUtils.isEmpty(this.permission) || UserUtils.getPermissionsList().contains(this.permission)) {
+			parent.addToolbar(toobarMap);
+		}
+		
 		return EVAL_PAGE;
 	}
 

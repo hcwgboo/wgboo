@@ -1,7 +1,9 @@
 package cn.jeeweb.core.common.handler;
 
 import java.util.Date;
+
 import org.apache.ibatis.reflection.MetaObject;
+
 import com.baomidou.mybatisplus.mapper.MetaObjectHandler;
 
 import cn.jeeweb.core.common.constant.DataBaseConstant;
@@ -39,15 +41,6 @@ public class BaseMetaObjectHandler extends MetaObjectHandler {
 			setFieldValByName(DataBaseFieldConstant.CREATE_DATE, new Date(), metaObject);
 		}
 
-		// 删除标记
-		Object delFlag = getFieldValByName(DataBaseFieldConstant.DEL_FLAG, metaObject);
-		if (delFlag == null) {
-			setFieldValByName(DataBaseFieldConstant.DEL_FLAG, DataBaseConstant.DEL_FLAG_NORMAL, metaObject);
-		}
-	}
-
-	@Override
-	public void updateFill(MetaObject metaObject) {
 		// 更新用户
 		Object updateBy = getFieldValByName(DataBaseFieldConstant.UPDATE_BY, metaObject);
 		if (updateBy == null) {
@@ -59,5 +52,26 @@ public class BaseMetaObjectHandler extends MetaObjectHandler {
 		if (updateDate == null) {
 			setFieldValByName(DataBaseFieldConstant.UPDATE_DATE, new Date(), metaObject);
 		}
+
+		// 删除标记
+		Object delFlag = getFieldValByName(DataBaseFieldConstant.DEL_FLAG, metaObject);
+		if (delFlag == null) {
+			setFieldValByName(DataBaseFieldConstant.DEL_FLAG, DataBaseConstant.DEL_FLAG_NORMAL, metaObject);
+		}
+	}
+
+	@Override
+	public void updateFill(MetaObject metaObject) {
+		// 更新用户
+		Object updateBy = getFieldValByName(DataBaseFieldConstant.UPDATE_BY, metaObject);
+		//if (updateBy == null) {
+			setFieldValByName(DataBaseFieldConstant.UPDATE_BY, UserUtils.getUser(), metaObject);
+		//}
+
+		// 更新用户
+		Object updateDate = getFieldValByName(DataBaseFieldConstant.UPDATE_DATE, metaObject);
+		//if (updateDate == null) {
+			setFieldValByName(DataBaseFieldConstant.UPDATE_DATE, new Date(), metaObject);
+		//}
 	}
 }

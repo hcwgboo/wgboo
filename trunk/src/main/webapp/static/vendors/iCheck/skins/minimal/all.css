@@ -306,7 +306,7 @@
     width: 18px;
     height: 18px;
     background: url(grey.png) no-repeat;
-    border: none;
+    border: 1px solid #aeaeae;
     cursor: pointer;
 }
 .icheckbox_minimal-grey {

@@ -1,10 +1,5 @@
 package cn.jeeweb.core.tags.html.manager;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.Map;
-import java.util.Map.Entry;
 import cn.jeeweb.core.tags.html.builder.HtmlComponentBuilder;
 import cn.jeeweb.core.tags.html.builder.NoneHtmlComponentBuilder;
 import cn.jeeweb.core.utils.EhcacheUtil;
@@ -12,6 +7,13 @@ import cn.jeeweb.core.utils.StringUtils;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * HTML组建管理器
@@ -20,6 +22,7 @@ import freemarker.template.Template;
  * @version 2017-02-09
  */
 public class HtmlComponentManager {
+	public final Logger log = Logger.getLogger(this.getClass());
 	protected HtmlComponentBuilder dynamicStatementBuilder = null;
 	protected final static String HTML_COMPONENT_CACHE_NAME = "htmlComponentCache";
 	protected final static String HTML_COMPONENT_PRE_NAME_JS = "js_";
@@ -93,6 +96,7 @@ public class HtmlComponentManager {
 			template.process(dataMap, stringWriter);
 			configuration.setTemplateLoader(stringLoader);
 			content = stringWriter.toString();
+//			log.error(content);
 			return content;
 		} catch (Exception e) {
 			e.printStackTrace();

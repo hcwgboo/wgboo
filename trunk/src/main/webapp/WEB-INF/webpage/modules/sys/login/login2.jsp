@@ -43,7 +43,7 @@
                      <input   name="jcaptchaCode" class="form-control" placeholder="<spring:message code="sys.login.captcha.placeholder"/>" required="">
                    </div>
                    <div class="col-lg-6">
-                     <img id="img_jcaptcha"  src="${appPath}/jcaptcha.jpg" width="100" height="35" onclick="changeJcaptchaSrc();" />
+                     <img id="img_jcaptcha"  src="${adminPath}/jcaptcha.jpg" width="100" height="35" onclick="changeJcaptchaSrc();" />
                     </div>   
                 </div>
                 </c:if>
@@ -73,7 +73,7 @@
             });
         });
         function changeJcaptchaSrc(){  
-            document.getElementById("img_jcaptcha").src='${appPath}/jcaptcha.jpg?_='+(new Date()).getTime();  
+            document.getElementById("img_jcaptcha").src='${adminPath}/jcaptcha.jpg?_='+(new Date()).getTime();  
         }  
     </script>
     <script type="text/javascript">

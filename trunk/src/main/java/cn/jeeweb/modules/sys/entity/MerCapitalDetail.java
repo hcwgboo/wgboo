@@ -45,14 +45,14 @@ public class MerCapitalDetail extends AbstractEntity<String> {
     @TableField(value = "type")
 	private String type;
     /**创建者*/
-    @TableField(value = "create_by",fill = FieldFill.INSERT)
-	private String createBy;
+    @TableField(value = "create_by",el="createBy.id",fill = FieldFill.INSERT)
+	private User createBy;
     /**创建时间*/
     @TableField(value = "create_date",fill = FieldFill.INSERT)
 	private Date createDate;
     /**更新者*/
-    @TableField(value = "update_by",fill = FieldFill.INSERT_UPDATE)
-	private String updateBy;
+    @TableField(value = "update_by",el="updateBy.id",fill = FieldFill.INSERT_UPDATE)
+	private User updateBy;
     /**更新时间*/
     @TableField(value = "update_date",fill = FieldFill.INSERT_UPDATE)
 	private Date updateDate;
@@ -172,7 +172,7 @@ public class MerCapitalDetail extends AbstractEntity<String> {
 	 * 获取  createBy
 	 *@return: String  创建者
 	 */
-	public String getCreateBy(){
+	public User getCreateBy(){
 		return this.createBy;
 	}
 
@@ -180,7 +180,7 @@ public class MerCapitalDetail extends AbstractEntity<String> {
 	 * 设置  createBy
 	 *@param: createBy  创建者
 	 */
-	public void setCreateBy(String createBy){
+	public void setCreateBy(User createBy){
 		this.createBy = createBy;
 	}
 	/**
@@ -202,7 +202,7 @@ public class MerCapitalDetail extends AbstractEntity<String> {
 	 * 获取  updateBy
 	 *@return: String  更新者
 	 */
-	public String getUpdateBy(){
+	public User getUpdateBy(){
 		return this.updateBy;
 	}
 
@@ -210,7 +210,7 @@ public class MerCapitalDetail extends AbstractEntity<String> {
 	 * 设置  updateBy
 	 *@param: updateBy  更新者
 	 */
-	public void setUpdateBy(String updateBy){
+	public void setUpdateBy(User updateBy){
 		this.updateBy = updateBy;
 	}
 	/**

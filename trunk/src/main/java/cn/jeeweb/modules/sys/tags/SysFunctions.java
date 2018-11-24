@@ -31,6 +31,22 @@ public class SysFunctions {
 		String adminUrlPrefix = JeewebPropertiesUtil.getConfig("admin.url.prefix");
 		return adminUrlPrefix;
 	}
+	public static String getStaticUrlPrefix() {
+		String staticUrlPrefix = JeewebPropertiesUtil.getConfig("admin.url.prefix");
+		return staticUrlPrefix;
+	}
+	/**
+	 * 获得后台地址
+	 * 
+	 * @title: getstaticUrlHost
+	 * @description: 获得静态资源的地址
+	 * @return
+	 * @return: String
+	 */
+	public static String getStaticUrlHost() {
+		String staticUrlHost = JeewebPropertiesUtil.getConfig("static.url.host");
+		return staticUrlHost;
+	}
 
 	/**
 	 * 获得后台地址

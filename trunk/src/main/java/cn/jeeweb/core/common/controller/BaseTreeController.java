@@ -22,6 +22,7 @@ import cn.jeeweb.core.query.data.Queryable;
 import cn.jeeweb.core.query.wrapper.EntityWrapper;
 import cn.jeeweb.core.utils.ObjectUtils;
 import cn.jeeweb.core.utils.StringUtils;
+import cn.jeeweb.modules.sys.constants.DictConstants;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -55,6 +56,7 @@ public abstract class BaseTreeController<Entity extends AbstractEntity<ID> & Tre
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		EntityWrapper<Entity> entityWrapper = new EntityWrapper<Entity>(entityClass);
 		entityWrapper.setTableAlias("t.");
+		entityWrapper.eq("t.del_flag", DictConstants.DEL_FLAG_NORMAL);
 		List<Entity> treeNodeList = null;
 		if (!async) { // 非异步 查自己和子子孙孙
 			treeNodeList = treeCommonService.selectTreeList(queryable, entityWrapper);
@@ -98,7 +100,7 @@ public abstract class BaseTreeController<Entity extends AbstractEntity<ID> & Tre
 
 		List<Entity> treeNodeList = null;
 		if (!async) { // 非异步 查自己和子子孙孙
-			treeNodeList = treeCommonService.selectTreeList(queryable, entityWrapper);
+			treeNodeList = treeCommonService.selectAjaxTreeList(queryable, entityWrapper.eq("del_flag", "0"));
 			TreeSortUtil.create().sort(treeNodeList).async(treeNodeList);
 		} else { // 异步模式只查自己
 			// queryable.addCondition("parentId", nodeid);
@@ -108,7 +110,7 @@ public abstract class BaseTreeController<Entity extends AbstractEntity<ID> & Tre
 			} else {
 				entityWrapper.eq("parentId", nodeid);
 			}
-			treeNodeList = treeCommonService.selectTreeList(queryable, entityWrapper);
+			treeNodeList = treeCommonService.selectAjaxTreeList(queryable, entityWrapper.eq("del_flag", "0"));
 			TreeSortUtil.create().sync(treeNodeList);
 		}
 		propertyPreFilterable.addQueryProperty("id", "expanded", "hasChildren", "leaf", "loaded", "level", "parentId");

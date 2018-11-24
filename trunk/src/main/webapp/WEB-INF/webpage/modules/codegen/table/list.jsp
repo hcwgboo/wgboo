@@ -10,7 +10,7 @@
 <grid:grid id="codegenGrid"  url="${adminPath}/codegen/table/ajaxList">
     <grid:column label="sys.common.key" hidden="true"   name="id"/>
     <grid:column label="codegen.table.tabletype"   width="60" name="tableType"   dict="tabletype"  query="true" queryMode="select"  />
-    <grid:column label="codegen.table.table.name"  width="120"  name="tableName"  query="true" />
+    <grid:column label="codegen.table.table.name"  width="120"  name="tableName" queryMode="input"  condition="like" query="true" />
 	<grid:column label="codegen.table.remarks"  name="remarks" />
 	<grid:column label="codegen.table.sync.database"  width="80" dict="sf" formatterClass="0:label label-danger;1:label label-success" name="syncDatabase" />
 	

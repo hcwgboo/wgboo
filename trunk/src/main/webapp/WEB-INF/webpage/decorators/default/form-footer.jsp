@@ -32,7 +32,14 @@
 					}
 					return true;	
 				},callback:function(result){
-					if(result.ret==0)
+					//异常的处理
+					if(result.ret==null){
+						if(result.resultInfo!=null){
+							top.layer.open({title:"提示",content:result.resultInfo.message});
+						}else{							
+							top.layer.open({title:"提示",content:result.message});
+						}
+					}else if(result.ret==0)
 	              	{
 	              	    top.layer.alert(result.msg, {icon: 0, title:'提示'});
 	              	    //运行回调

@@ -117,7 +117,7 @@ public class TreeviewTag extends AbstractGridHtmlTag {
 		Map<String, Object> rootMap = new HashMap<String, Object>();
 		String appPath = pageContext.getServletContext().getContextPath();
 		String adminPath = pageContext.getServletContext().getContextPath() + SysFunctions.getAdminUrlPrefix();
-		String staticPath = pageContext.getServletContext().getContextPath() + "/static";
+		String staticPath = pageContext.getServletContext().getContextPath() + SysFunctions.getStaticUrlPrefix() + "/static";
 		rootMap.put("appPath", appPath);
 		rootMap.put("adminPath", adminPath);
 		rootMap.put("staticPath", staticPath);

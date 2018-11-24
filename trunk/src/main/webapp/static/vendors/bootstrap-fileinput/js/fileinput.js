@@ -451,7 +451,10 @@
                 $h.OBJECT_PARAMS + ' ' + $h.DEFAULT_PREVIEW + '\n</object>\n';
             tPdf = '<embed class="kv-preview-data" src="{data}" ' +
                 'width="{width}" height="{height}" type="application/pdf">\n';
-            tOther = '<div class="kv-preview-data file-preview-other-frame">\n' + $h.DEFAULT_PREVIEW + '\n</div>\n';
+            // tOther = '<div class="kv-preview-data file-preview-other-frame">\n' + $h.DEFAULT_PREVIEW + '\n</div>\n';
+            tOther ='<video class="kv-preview-data file-preview-video" width="{width}" ' +
+                'height="{height}" controls>\n' + '<source src="{data}">\n' + $h.DEFAULT_PREVIEW +
+                '\n</video>\n';
             tZoomCache = '<div class="kv-zoom-cache" style="display:none">{zoomContent}</div>';
             vDefaultDim = {width: "100%", height: "100%", 'min-height': "480px"};
             self.defaults = {
@@ -2457,7 +2460,16 @@
                     fileExtExpr = new RegExp('\\.(' + fileExt.join('|') + ')$', 'i');
                 }
                 fSizeKB = fileSize.toFixed(2);
-                if (self.maxFileSize > 0 && fileSize > self.maxFileSize) {
+                if (!canPreview && fileSize > maxPreviewSize) {
+                    self.addToStack(file);
+                    $container.addClass('file-thumb-loading');
+                    self._previewDefault(file, previewId);
+                    self._initFileActions();
+                    self._updateFileDetails(numFiles);
+                    readFile(i + 1);
+                    return;
+                }
+                    if (self.maxFileSize > 0 && fileSize > self.maxFileSize) {
                     msg = self.msgSizeTooLarge.replace('{name}', caption).replace('{size}', fSizeKB)
                         .replace('{maxSize}', self.maxFileSize);
                     self.isError = throwError(msg, file, previewId, i);

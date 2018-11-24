@@ -3,6 +3,7 @@ package cn.jeeweb.core.common.service.impl;
 import java.io.Serializable;
 import java.util.List;
 
+import cn.jeeweb.core.query.data.Condition;
 import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import cn.jeeweb.core.common.entity.tree.TreeNode;
@@ -12,6 +13,8 @@ import cn.jeeweb.core.query.data.Queryable;
 import cn.jeeweb.core.query.parse.QueryToWrapper;
 import cn.jeeweb.core.utils.ObjectUtils;
 
+import static com.sun.tracing.dtrace.DependencyClass.PLATFORM;
+
 @Transactional
 public class TreeCommonServiceImpl<M extends BaseTreeMapper<T>, T extends Serializable & TreeNode<ID>, ID extends Serializable>
 		extends CommonServiceImpl<M, T> implements ITreeCommonService<T, ID> {
@@ -20,16 +23,38 @@ public class TreeCommonServiceImpl<M extends BaseTreeMapper<T>, T extends Serial
 	public T selectById(Serializable id) {
 		return baseMapper.selectByTreeId(id);
 	}
-
 	@Override
 	public List<T> selectTreeList(Queryable queryable, Wrapper<T> wrapper) {
+		if(!ObjectUtils.isNullOrEmpty(queryable.getCondition())) {
+			Condition condition = queryable.getCondition();
+			for (Condition.Filter filter : condition) {
+				String property = filter.getProperty();
+				String value = filter.getValue().toString();
+				if (property.equals("code")) {
+					value = ".1." + value.substring(1, value.length()) + ".";
+					filter.setValue(value);
+				}
+			}
+		}
+		// 保证有where字句
+		QueryToWrapper<T> queryToWrapper = new QueryToWrapper<T>();
+		wrapper.eq("1", "1");
+		queryToWrapper.parseCondition(wrapper, queryable);
+		// 排序问题
+//		queryToWrapper.parseSort(wrapper, queryable);
+		List<T> content = baseMapper.selectTreeList(wrapper);
+		return content;
+	}
+	
+	@Override
+	public List<T> selectAjaxTreeList(Queryable queryable, Wrapper<T> wrapper) {
 		// 保证有where字句
 		QueryToWrapper<T> queryToWrapper = new QueryToWrapper<T>();
 		wrapper.eq("1", "1");
 		queryToWrapper.parseCondition(wrapper, queryable);
 		// 排序问题
 		queryToWrapper.parseSort(wrapper, queryable);
-		List<T> content = baseMapper.selectTreeList(wrapper);
+		List<T> content = baseMapper.selectAjaxTreeList(wrapper);
 		return content;
 	}
 

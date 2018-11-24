@@ -3,7 +3,7 @@
 <decorators defaultdir="/WEB-INF/webpage/decorators">
 	 <!-- 此处用来定义不需要过滤的页面 -->
     <excludes>
-        <pattern>/static/*</pattern>
+        <pattern>${admin.url.prefix}/static/*</pattern>
     </excludes>
 	<!-- 列表页装饰界面 -->
 	<decorator name="list" page="list-theme.jsp" />

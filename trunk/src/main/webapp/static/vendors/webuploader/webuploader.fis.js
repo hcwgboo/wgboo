@@ -5165,7 +5165,7 @@ return (function( root, factory ) {
     });
     /**
      * 代码来自于：https://github.com/blueimp/JavaScript-Load-Image
-     * 暂时项目中只用了orientation.
+     * 暂时楼盘中只用了orientation.
      *
      * 去除了 Exif Sub IFD Pointer, GPS Info IFD Pointer, Exif Thumbnail.
      * @fileOverview EXIF解析
@@ -7745,7 +7745,6 @@ return (function( root, factory ) {
 
             //     this.flashExec( 'Image', 'init', options );
             //     owner.on( 'load', function() {
-            //         debugger;
             //     });
             // },
 

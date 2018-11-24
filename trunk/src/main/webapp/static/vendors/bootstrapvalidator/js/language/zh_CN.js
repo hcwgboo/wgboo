@@ -226,7 +226,7 @@
             'default': '请输入有效的MEID(移动设备识别码)'
         },
         notEmpty: {
-            'default': '请填写必填项目'
+            'default': '' //请填写必填楼盘
         },
         numeric: {
             'default': '请输入有效的数值，允许小数'

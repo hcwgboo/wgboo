@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.jeeweb.modules.adv.mapper.MerCapitalMapper" >
+<mapper namespace="cn.jeeweb.modules.sys.mapper.MerCapitalMapper" >
 
   <sql id="Base_Column_List" >
     t.id,
@@ -14,5 +14,21 @@
     t.del_flag,
     t.remarks
   </sql>
+
+  <select id="selectMerCaptialPage" parameterType="java.util.Map" resultType="cn.jeeweb.modules.sys.dto.MerCapitalDto">
+    select
+      mc.id,
+      mc.merchant_id as merchantId,
+      mc.balance_money as balanceMoney,
+      mc.freeze_money as freezeMoney,
+      uu.realname as merchantName
+    from mer_capital mc
+    left join sys_user uu on uu.id = mc.merchant_id
+    where 1=1
+    <if test="merchantName !=null and merchantName != ''">
+      and uu.realname like concat('%','#{merchantName}','%')
+    </if>
+    
+  </select>
   
 </mapper>

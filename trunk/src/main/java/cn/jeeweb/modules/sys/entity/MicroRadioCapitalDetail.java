@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.enums.FieldFill;
+
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**   
@@ -37,16 +39,16 @@ public class MicroRadioCapitalDetail extends AbstractEntity<String> {
 	private Double balanceMoney;
     /**当前金额*/
     @TableField(value = "now_money")
-	private Double nowMoney;
+	private BigDecimal nowMoney;
     /**创建者*/
-    @TableField(value = "create_by",fill = FieldFill.INSERT)
-	private String createBy;
+    @TableField(value = "create_by",el="createBy.id",fill = FieldFill.INSERT)
+	private User createBy;
     /**创建时间*/
     @TableField(value = "create_date",fill = FieldFill.INSERT)
 	private Date createDate;
     /**更新者*/
-    @TableField(value = "update_by",fill = FieldFill.INSERT_UPDATE)
-	private String updateBy;
+    @TableField(value = "update_by",el="updateBy.id",fill = FieldFill.INSERT_UPDATE)
+	private User updateBy;
     /**更新时间*/
     @TableField(value = "update_date",fill = FieldFill.INSERT_UPDATE)
 	private Date updateDate;
@@ -136,7 +138,7 @@ public class MicroRadioCapitalDetail extends AbstractEntity<String> {
 	 * 获取  nowMoney
 	 *@return: Double  当前金额
 	 */
-	public Double getNowMoney(){
+	public BigDecimal getNowMoney(){
 		return this.nowMoney;
 	}
 
@@ -144,14 +146,14 @@ public class MicroRadioCapitalDetail extends AbstractEntity<String> {
 	 * 设置  nowMoney
 	 *@param: nowMoney  当前金额
 	 */
-	public void setNowMoney(Double nowMoney){
+	public void setNowMoney(BigDecimal nowMoney){
 		this.nowMoney = nowMoney;
 	}
 	/**
 	 * 获取  createBy
 	 *@return: String  创建者
 	 */
-	public String getCreateBy(){
+	public User getCreateBy(){
 		return this.createBy;
 	}
 
@@ -159,7 +161,7 @@ public class MicroRadioCapitalDetail extends AbstractEntity<String> {
 	 * 设置  createBy
 	 *@param: createBy  创建者
 	 */
-	public void setCreateBy(String createBy){
+	public void setCreateBy(User createBy){
 		this.createBy = createBy;
 	}
 	/**
@@ -181,7 +183,7 @@ public class MicroRadioCapitalDetail extends AbstractEntity<String> {
 	 * 获取  updateBy
 	 *@return: String  更新者
 	 */
-	public String getUpdateBy(){
+	public User getUpdateBy(){
 		return this.updateBy;
 	}
 
@@ -189,7 +191,7 @@ public class MicroRadioCapitalDetail extends AbstractEntity<String> {
 	 * 设置  updateBy
 	 *@param: updateBy  更新者
 	 */
-	public void setUpdateBy(String updateBy){
+	public void setUpdateBy(User updateBy){
 		this.updateBy = updateBy;
 	}
 	/**

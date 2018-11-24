@@ -5,6 +5,16 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
+
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 /**
  * 文件操作类
@@ -13,10 +23,14 @@ import java.io.InputStream;
  *
  */
 public class FileUtil {
+	private static final Log logger = LogFactory.getLog(FileUtil.class);
 	// 验证字符串是否为正确路径名的正则表达式
 	private static String matches = "[A-Za-z]:\\\\[^:?\"><*]*";
 	boolean flag = false;
 	File file;
+	
+	public static String FILES = "files";
+	public static String FILENAMES = "fileNames";
 
 	/**
 	 * 传入路径，返回是否是绝对路径，是绝对路径返回true，反之
@@ -30,6 +44,23 @@ public class FileUtil {
 			return true;
 		}
 		return false;
+	}
+	
+	public static Map<String, Object> getFileInfos(MultipartFile[] multipartFiles) {
+		Map<String, Object> map = new HashedMap();
+		File[] files = new File[multipartFiles.length];
+		String[] fileNames = new String[multipartFiles.length];
+		for (int i = 0; i < multipartFiles.length; i++) {
+			CommonsMultipartFile cf = (CommonsMultipartFile) multipartFiles[i];
+			String fileName = cf.getOriginalFilename();
+			DiskFileItem fi = (DiskFileItem) cf.getFileItem();
+			File f = fi.getStoreLocation();
+			fileNames[i] = fileName;
+			files[i] = f;
+		}
+		map.put(FILES, files);
+		map.put(FILENAMES, fileNames);
+		return map;
 	}
 
 	public boolean deleteFolder(String deletePath) {// 根据路径删除指定的目录或文件，无论存在与否
@@ -331,17 +362,127 @@ public class FileUtil {
 			return delFile(source);
 		}
 	}
-
-	public static void main(String[] args) {
-		String dirName = "E:/createFile/";// 创建目录
-		FileUtil.mkDir(dirName);// 调用方法创建目录
-		String fileName = dirName + "/file1.txt";// 创建文件
-		FileUtil.createFile(fileName);// 调用方法创建文件
-		String prefix = "temp";// 创建临时文件
-		String surfix = ".txt";// 后缀
-		for (int i = 0; i < 10; i++) {// 循环创建多个文件
-			System.out.println("创建临时文件: "// 调用方法创建临时文件
-					+ FileUtil.createTempFile(prefix, surfix, dirName));
+	
+	/**
+	 * 判断文件类型 是否excel2007
+	 * 
+	 * @param filePath
+	 * @return
+	 */
+	public static boolean isExcel2007(File file) {
+		// File file;
+		FileInputStream is = null;
+		try {
+			// file = new File(filePath);
+			is = new FileInputStream(file);
+			new XSSFWorkbook(is);
+		} catch (Exception e) {
+			return false;
+		} finally {
+			try {
+				if (is != null)
+					is.close();
+			} catch (IOException e) {
+				logger.error("", e);
+			}
 		}
+		return true;
+	}
+
+	/**
+	 * 判断文件类型 是否excel2003
+	 * 
+	 * @param filePath
+	 * @return
+	 */
+	public static boolean isExcel2003(File file) {
+		// File file;
+		FileInputStream is = null;
+		try {
+			// file = new File(filePath);
+			is = new FileInputStream(file);
+			new HSSFWorkbook(is);
+		} catch (Exception e) {
+			return false;
+		} finally {
+			try {
+				if (is != null)
+					is.close();
+			} catch (IOException e) {
+				logger.error("", e);
+			}
+		}
+		return true;
+	}
+
+	public static boolean isExceFile(File file) {
+		if (file == null) {
+			return false;
+		}
+		try {
+
+			FileInputStream is = new FileInputStream(file);
+			byte[] b = new byte[4];
+			is.read(b, 0, b.length);
+			String type = bytesToHexString(b).toUpperCase();
+
+			if (type.equals("D0CF11E0") || type.equals("504B0304")) {
+				return true;
+			}
+
+		} catch (Exception e) {
+			return false;
+		}
+		return false;
+	}
+
+	private static String bytesToHexString(byte[] src) {
+		StringBuilder stringBuilder = new StringBuilder();
+		if (src == null || src.length <= 0) {
+			return null;
+		}
+		for (int i = 0; i < src.length; i++) {
+			int v = src[i] & 0xFF;
+			String hv = Integer.toHexString(v);
+			if (hv.length() < 2) {
+				stringBuilder.append(0);
+			}
+			stringBuilder.append(hv);
+		}
+		return stringBuilder.toString().toUpperCase();
+	}
+
+	public static String getWebRoot() throws RuntimeException {
+		String path = getWebClassesPath();
+		if (path.indexOf("WEB-INF") > 0) {
+			path = path.substring(0, path.indexOf("WEB-INF") - 1);
+		} else {
+			throw new RuntimeException("路径获取错误");
+		}
+		return path;
+	}
+
+	private static String getWebClassesPath() {
+		String path = FileUtil.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		return path;
+	}
+
+	public static String getExcelTemplatePath() throws RuntimeException {
+		String path = getWebRoot();
+		path = path + File.separator + "static" + File.separator + "templates";
+		return path;
+	}
+	
+	public static String getExcelTemporaryPath() throws RuntimeException {
+		String path = getWebRoot();
+		path = path + File.separator + "static" + File.separator + "temporary";
+		return path;
+	}
+	//删除字符串中html标签
+	public static String delHtmlTag(String str){ 
+	    String newstr = ""; 
+	    newstr = str.replaceAll("<[.[^>]]*>","");
+	    newstr = newstr.replaceAll(" ", ""); 
+	    return newstr;
 	}
 }

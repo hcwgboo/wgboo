@@ -137,8 +137,8 @@ public class DefaultHtmlComponentBuilder implements HtmlComponentBuilder, Resour
 		String statementId = element.attribute("name").getText().toLowerCase();
 		Validate.notEmpty(statementId);
 		if (statementMap.containsKey(statementId)) {
-			throw new HtmlComponentException(
-					"重复的组建语句定义在文件:" + resource.getURI() + "中，必须保证name“" + statementId + "”的唯一.");
+//			throw new HtmlComponentException(
+//					"重复的组建语句定义在文件:" + resource.getURI() + "中，必须保证name“" + statementId + "”的唯一.");
 		}
 		String queryText = element.getText().trim();
 		statementMap.put(statementId, queryText);

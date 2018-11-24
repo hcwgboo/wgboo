@@ -15,9 +15,9 @@ import cn.jeeweb.modules.sys.entity.Dict;
 import cn.jeeweb.modules.sys.utils.DictUtils;
 
 /**
- * 
+ *
  * All rights Reserved, Designed By www.jeeweb.cn
- * 
+ *
  * @Title: DataGridColumnTag.java
  * @Package cn.jeeweb.core.tags.grid
  * @Description: 数据列
@@ -62,8 +62,8 @@ public class DataGridColumnTag extends AbstractGridHtmlTag {
 
 	private Boolean editable = Boolean.FALSE;// 是否开启编辑
 	private String edittype = "text";// 类型可以编辑的类型。可选值：text, textarea,
-										// select,password,date,autocomplete
-										// 不支持checkbox, button, image and file.
+	// select,password,date,autocomplete
+	// 不支持checkbox, button, image and file.
 	private String editdateformat = "yyyy-mm-dd";
 	private String editoptions = "";// 行内编辑回调
 	// 验证
@@ -71,6 +71,7 @@ public class DataGridColumnTag extends AbstractGridHtmlTag {
 	private String datatype;// 验证规则
 	private String nullmsg;// 空验证
 	private String errormsg;// 验证错误
+	private String maxToday = "false";//是否最大值是今天针对时间
 
 	private Map<String, Object> queryStaticAttributes;
 	private Map<String, Object> queryDynamicAttributes;
@@ -103,9 +104,11 @@ public class DataGridColumnTag extends AbstractGridHtmlTag {
 			}
 			queryMap.put("queryMode", queryMode);
 			queryMap.put("condition", condition);
+			queryMap.put("maxToday", maxToday);
 			if (queryDynamicAttributes != null) {
 				queryMap.putAll(queryDynamicAttributes);
 			}
+
 			if (queryStaticAttributes != null) {
 				queryMap.putAll(queryStaticAttributes);
 			}
@@ -479,12 +482,12 @@ public class DataGridColumnTag extends AbstractGridHtmlTag {
 		this.editrules = editrules;
 	}
 
-	public String getOptCallback() {
-		return optCallback;
+	public String getMaxToday() {
+		return maxToday;
 	}
 
-	public void setOptCallback(String optCallback) {
-		this.optCallback = optCallback;
+	public void setMaxToday(String maxToday) {
+		this.maxToday = maxToday;
 	}
 
 	public String getSelectValue() {
@@ -493,6 +496,14 @@ public class DataGridColumnTag extends AbstractGridHtmlTag {
 
 	public void setSelectValue(String selectValue) {
 		this.selectValue = selectValue;
+	}
+
+	public String getOptCallback() {
+		return optCallback;
+	}
+
+	public void setOptCallback(String optCallback) {
+		this.optCallback = optCallback;
 	}
 
 	public String getSelectAll() {
@@ -510,4 +521,5 @@ public class DataGridColumnTag extends AbstractGridHtmlTag {
 	public void setSelectChange(String selectChange) {
 		this.selectChange = selectChange;
 	}
+
 }
