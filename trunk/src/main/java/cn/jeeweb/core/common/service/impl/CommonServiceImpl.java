@@ -8,16 +8,15 @@ import cn.jeeweb.core.query.data.Pageable;
 import cn.jeeweb.core.query.data.Queryable;
 import cn.jeeweb.core.query.parse.QueryToWrapper;
 import cn.jeeweb.core.query.wrapper.EntityWrapper;
-
-import java.util.List;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
-@Transactional
+import java.util.List;
+
+@Transactional(rollbackFor = Exception.class)
 public class CommonServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, T> implements ICommonService<T> {
 
 	@Override

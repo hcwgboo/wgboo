@@ -8,16 +8,13 @@ import cn.jeeweb.core.query.data.Pageable;
 import cn.jeeweb.core.query.data.Queryable;
 import cn.jeeweb.core.query.parse.QueryToWrapper;
 import cn.jeeweb.core.utils.StringUtils;
-import cn.jeeweb.modules.excel.util.StringUtil;
 import cn.jeeweb.modules.sys.constants.DictConstants;
 import cn.jeeweb.modules.sys.dto.MerCapitalDto;
 import cn.jeeweb.modules.sys.entity.MerCapital;
 import cn.jeeweb.modules.sys.entity.MerCapitalDetail;
-import cn.jeeweb.modules.sys.entity.User;
 import cn.jeeweb.modules.sys.mapper.MerCapitalMapper;
 import cn.jeeweb.modules.sys.service.IMerCapitalDetailService;
 import cn.jeeweb.modules.sys.service.IMerCapitalService;
-import cn.jeeweb.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +31,7 @@ import java.util.Map;
  * @version V1.0   
  *
  */
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("merCapitalService")
 public class MerCapitalServiceImpl  extends CommonServiceImpl<MerCapitalMapper, MerCapital> implements IMerCapitalService {
 

@@ -54,7 +54,7 @@ public class MemberController extends BaseBeanController<Member> {
     }
 
     @RequiresMethodPermissions("list")
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "list", method = RequestMethod.GET)
     public String list(Model model, HttpServletRequest request, HttpServletResponse response) {
         return display("list");
     }
@@ -63,12 +63,12 @@ public class MemberController extends BaseBeanController<Member> {
     @PageableDefaults(sort = "id=desc")
     private void ajaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                           HttpServletResponse response) throws IOException {
-        EntityWrapper<Member> entityWrapper = new EntityWrapper<Member>(entityClass);
+        EntityWrapper<Member> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
-        PageJson<Member> pagejson = new PageJson<Member>(memberService.list(queryable,entityWrapper));
+        PageJson<Member> pagejson = new PageJson<>(memberService.list(queryable,entityWrapper));
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response, content);
     }

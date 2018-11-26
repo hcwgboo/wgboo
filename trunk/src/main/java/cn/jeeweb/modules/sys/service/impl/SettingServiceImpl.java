@@ -5,7 +5,7 @@ import cn.jeeweb.modules.sys.service.ISettingService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("settingService")
 public class SettingServiceImpl implements ISettingService {
 	

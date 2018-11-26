@@ -1,20 +1,19 @@
 package cn.jeeweb.modules.sys.service.impl;
 
-import java.math.BigDecimal;
-
 import cn.jeeweb.core.common.service.impl.CommonServiceImpl;
 import cn.jeeweb.core.exception.ExceptionResultInfo;
 import cn.jeeweb.core.query.wrapper.EntityWrapper;
+import cn.jeeweb.core.utils.StringUtils;
+import cn.jeeweb.modules.sys.constants.DictConstants;
 import cn.jeeweb.modules.sys.entity.*;
 import cn.jeeweb.modules.sys.mapper.AdvertiseMapper;
 import cn.jeeweb.modules.sys.service.*;
+import cn.jeeweb.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.jeeweb.core.utils.StringUtils;
-import cn.jeeweb.modules.sys.constants.DictConstants;
-import cn.jeeweb.modules.sys.utils.UserUtils;
+import java.math.BigDecimal;
 
 /**
  * @Title: 广告
@@ -24,7 +23,7 @@ import cn.jeeweb.modules.sys.utils.UserUtils;
  * @version V1.0
  *
  */
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("advertiseService")
 public class AdvertiseServiceImpl  extends CommonServiceImpl<AdvertiseMapper, Advertise> implements IAdvertiseService {
 
@@ -89,7 +88,8 @@ public class AdvertiseServiceImpl  extends CommonServiceImpl<AdvertiseMapper, Ad
 		advertise.setRuleName(rule.getName());
 		advertise.setRatio(rule.getRatio());
 		advertise.setType(rule.getTaskType());
-		advertise.setReduceMoney(advertise.getTotalMoney().multiply(new BigDecimal(rule.getRatio())));
+		advertise.setSubCommissionRatio(rule.getSubCommissionRatio());
+		advertise.setSuperiorCommissionRatio(rule.getSuperiorCommissionRatio());
 	}
 
 	@Override

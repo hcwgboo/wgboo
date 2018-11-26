@@ -95,8 +95,11 @@
 <script type="text/javascript">
 	function ratioChange() {
 		var ratio = $("#ratio").val();
+		ratio = parseFloat(ratio);
         var sup = $("#superiorCommissionRatio").val();
+        sup = parseFloat(sup);
         var sub = $("#subCommissionRatio").val();
+        sub = parseFloat(sub);
         if(ratio && sup && sub){
 			if((ratio + sub + sup) != 1){
                 $("#ratio").val("")

@@ -666,4 +666,17 @@ public class ValidateHelper {
     public static boolean illegalTAAccountSeq(String text) {
         return !text.matches("^[1-9]{1}[0-9]{7}$");
     }
+    
+
+	public static boolean regCheckTelphone(String telphone) {
+		boolean flag = false;
+		if(StringUtils.isEmpty(telphone)) return flag;
+		String reg = "^[1][0-9]{10}$";
+		Pattern pattern = Pattern.compile(reg);
+		Matcher matcher = pattern.matcher(telphone);
+		if (matcher.matches()) {
+			flag = true;
+		}
+		return flag;
+	}
 }

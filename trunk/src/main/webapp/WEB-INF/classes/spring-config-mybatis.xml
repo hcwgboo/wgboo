@@ -140,6 +140,8 @@
         <constructor-arg name="enabled" value="true"/>
     </bean>
     
+    <aop:aspectj-autoproxy/>
     <!-- 开启事务 -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
+	
 </beans>

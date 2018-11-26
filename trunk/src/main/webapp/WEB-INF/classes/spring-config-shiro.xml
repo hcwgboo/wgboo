@@ -173,9 +173,8 @@
                 ${admin.url.prefix}/jcaptcha* = anon
                 ${admin.url.prefix}/upload/** = anon
 
-                ${admin.url.prefix}/sendVerifyCode = anon
-                ${admin.url.prefix}/sys/appdownstatistics/statistics = anon
-                ${admin.url.prefix}/officialRegister = anon
+                ${admin.url.prefix}/sys/merchantregister/sendVerifyCode = anon
+                ${admin.url.prefix}/sys/merchantregister/officialRegister = anon
                 /weixin/mp/front/** = anon
                 ${admin.url.prefix}/logout = logout
                 ${admin.url.prefix}/sys/merchantregister/register = anon

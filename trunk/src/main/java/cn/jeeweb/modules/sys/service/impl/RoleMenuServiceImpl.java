@@ -8,7 +8,7 @@ import cn.jeeweb.modules.sys.service.IRoleMenuService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("roleMenuService")
 public class RoleMenuServiceImpl extends CommonServiceImpl<RoleMenuMapper,RoleMenu> implements IRoleMenuService {
 

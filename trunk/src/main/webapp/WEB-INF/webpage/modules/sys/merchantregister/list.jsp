@@ -6,14 +6,14 @@
   <title>商家注册列表</title>
   <meta name="decorator" content="list"/>
 </head>
-<body title="商家注册">
+<body title="商家审核">
 <grid:grid id="merchantRegisterGridId" gridSetting="merchantSetting" url="${adminPath}/sys/merchantregister/ajaxList">
 	<grid:column label="sys.common.key" hidden="true"   name="id" width="100"/>
     <grid:column label="sys.common.opt"  name="opt" formatter="customFun" optCallback="merchantAuditOptFun" />
     <grid:column label="公司名称"  name="companyname" />
     <grid:column label="真实名称"  name="realname" />
     <grid:column label="用户名"  name="username" />
-    <grid:column label="商家状态"  name="status" />
+    <grid:column label="商家状态"  name="status" dict="sjsh" />
     <grid:toolbar function="merchantCheck" title="审核" icon="fa fa-file-text-o"
                   class="btn btn-sm btn-success" url="${adminPath}/sys/merchantregister/{id}/view" />
 	

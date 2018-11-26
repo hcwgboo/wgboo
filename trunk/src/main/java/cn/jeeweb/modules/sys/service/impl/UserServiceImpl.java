@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.util.List;
 
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("userService")
 public class UserServiceImpl extends CommonServiceImpl<UserMapper, User> implements IUserService {
 	@Autowired

@@ -110,8 +110,6 @@ public class Advertise extends AbstractEntity<String> {
     /**备注信息*/
     @TableField(value = "remarks")
 	private String remarks;
-    @TableField(value = "reduce_money")
-    private BigDecimal reduceMoney;
 
 	/**
 	 * 获取  id
@@ -493,11 +491,4 @@ public class Advertise extends AbstractEntity<String> {
 		this.ruleId = ruleId;
 	}
 
-	public BigDecimal getReduceMoney() {
-		return reduceMoney;
-	}
-
-	public void setReduceMoney(BigDecimal reduceMoney) {
-		this.reduceMoney = reduceMoney;
-	}
 }

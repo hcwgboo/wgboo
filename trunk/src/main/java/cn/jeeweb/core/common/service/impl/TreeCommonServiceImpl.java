@@ -1,21 +1,19 @@
 package cn.jeeweb.core.common.service.impl;
 
-import java.io.Serializable;
-import java.util.List;
-
-import cn.jeeweb.core.query.data.Condition;
-import org.springframework.transaction.annotation.Transactional;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import cn.jeeweb.core.common.entity.tree.TreeNode;
 import cn.jeeweb.core.common.mapper.BaseTreeMapper;
 import cn.jeeweb.core.common.service.ITreeCommonService;
+import cn.jeeweb.core.query.data.Condition;
 import cn.jeeweb.core.query.data.Queryable;
 import cn.jeeweb.core.query.parse.QueryToWrapper;
 import cn.jeeweb.core.utils.ObjectUtils;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import org.springframework.transaction.annotation.Transactional;
 
-import static com.sun.tracing.dtrace.DependencyClass.PLATFORM;
+import java.io.Serializable;
+import java.util.List;
 
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class TreeCommonServiceImpl<M extends BaseTreeMapper<T>, T extends Serializable & TreeNode<ID>, ID extends Serializable>
 		extends CommonServiceImpl<M, T> implements ITreeCommonService<T, ID> {
 

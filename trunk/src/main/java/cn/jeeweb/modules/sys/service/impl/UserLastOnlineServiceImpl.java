@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @version V1.0   
  *
  */
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("userLastOnlineService")
 public class UserLastOnlineServiceImpl  extends CommonServiceImpl<UserLastOnlineMapper,UserLastOnline> implements  IUserLastOnlineService {
 

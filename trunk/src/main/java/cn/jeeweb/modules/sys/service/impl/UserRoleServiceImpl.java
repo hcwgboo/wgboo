@@ -8,7 +8,7 @@ import cn.jeeweb.modules.sys.service.IUserRoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("userRoleService")
 public class UserRoleServiceImpl extends CommonServiceImpl<UserRoleMapper,UserRole> implements IUserRoleService {
 

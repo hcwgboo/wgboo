@@ -253,6 +253,10 @@ alter table adv_advertise_rule add column `sub_commission_ratio` double(10,2) DE
 
 alter table adv_advertise_detial add column `wgb_money` decimal(10,2) DEFAULT NULL COMMENT '平台所得';
 
+
+alter table sys_user add column  `companyname` varchar(100) DEFAULT NULL COMMENT '公司名';
+alter table sys_user add column  `type` varchar(50) DEFAULT NULL COMMENT '用户类型（1.平台，2.商家）';
+
 -- 商家注册
 CREATE TABLE `sys_merchant_register` (
   `id` varchar(32) NOT NULL,
@@ -268,3 +272,18 @@ CREATE TABLE `sys_merchant_register` (
   `del_flag` char(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `log_smscode` (
+  `id` varchar(32) NOT NULL COMMENT '主键',
+  `create_by` varchar(32) DEFAULT NULL COMMENT '创建者',
+  `create_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(32) DEFAULT NULL COMMENT '更新者',
+  `update_date` datetime DEFAULT NULL COMMENT '更新时间',
+  `del_flag` varchar(1) DEFAULT '0' COMMENT '删除标记（0：正常；1：删除）',
+  `type` int(2) DEFAULT NULL COMMENT '短信类型(1.注册验证码2.修改手机号验证码)',
+  `telphone` varchar(20) DEFAULT NULL COMMENT '手机号',
+  `code` varchar(20) DEFAULT NULL COMMENT '验证码',
+  `result` varchar(1024) DEFAULT NULL COMMENT '返回结果集',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='短信日志表';

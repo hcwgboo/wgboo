@@ -25,3 +25,83 @@ VALUES ( '7b109aeabf5345c990c4c406eb005a49',  '05d3d61378e24d8cac2d6bbdc144b6e8'
 
 INSERT INTO sys_dict ( id,  gid,  `label`,  `value`,  remarks,  sort,create_by,create_date,update_by,update_date,del_flag )
 VALUES ( '9b00b168a5414efd8de8e98c8b80a77b',  '05d3d61378e24d8cac2d6bbdc144b6e8',  '审核失败',  '3',  '',  3,'4028ea815a3d2a8c015a3d2f8d2a0002','2018-11-24 14:31:14','4028ea815a3d2a8c015a3d2f8d2a0002','2018-11-24 14:31:14','0' );
+
+INSERT INTO `sys_menu` (`id`, `name`, `type`, `url`, `parent_id`, `parent_ids`, `permission`, `isshow`, `sort`, `menu_icon`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('bca4ad14fe144cbeacb5f81693ea4516', '会员管理', NULL, '', NULL, NULL, '', '1', '5', '', '', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-24 18:26:52', NULL, NULL, '0');
+
+INSERT INTO `sys_menu` (`id`, `name`, `type`, `url`, `parent_id`, `parent_ids`, `permission`, `isshow`, `sort`, `menu_icon`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('46995b53c47b4651b8b10a0ee43fe5f4', '会员管理', NULL, 'sys/member/list', 'bca4ad14fe144cbeacb5f81693ea4516', 'bca4ad14fe144cbeacb5f81693ea4516/', 'sys:member:list', '1', '1', '', '', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-24 18:28:52', NULL, NULL, '0');
+
+INSERT INTO sys_dict_group ( id,  `name`,  remarks,  code,create_by,create_date,update_by,update_date,del_flag )
+VALUES ( '8d10c0d0b65d44cb90527b41e19b1ee8',  '性别',  '',  'xb','4028ea815a3d2a8c015a3d2f8d2a0002','2018-11-24 18:47:03','4028ea815a3d2a8c015a3d2f8d2a0002','2018-11-24 18:47:03','0' );
+
+INSERT INTO sys_dict ( id,  gid,  `label`,  `value`,  remarks,  sort,create_by,create_date,update_by,update_date,del_flag )
+VALUES ( '2e06d8d4896b4406a6a29c75ed9a59fd',  '8d10c0d0b65d44cb90527b41e19b1ee8',  '未知',  '0',  '',  0,'4028ea815a3d2a8c015a3d2f8d2a0002','2018-11-24 18:48:14','4028ea815a3d2a8c015a3d2f8d2a0002','2018-11-24 18:48:14','0' );
+
+INSERT INTO sys_dict ( id,  gid,  `label`,  `value`,  remarks,  sort,create_by,create_date,update_by,update_date,del_flag )
+VALUES ( 'ce43d86c5fbc425999d2e98a3115fa43',  '8d10c0d0b65d44cb90527b41e19b1ee8',  '男',  '1',  '',  1,'4028ea815a3d2a8c015a3d2f8d2a0002','2018-11-24 18:48:23','4028ea815a3d2a8c015a3d2f8d2a0002','2018-11-24 18:48:23','0' );
+
+INSERT INTO sys_dict ( id,  gid,  `label`,  `value`,  remarks,  sort,create_by,create_date,update_by,update_date,del_flag )
+VALUES ( '2cb393cc1f074e9bb86674bd5060f3ad',  '8d10c0d0b65d44cb90527b41e19b1ee8',  '女',  '2',  '',  2,'4028ea815a3d2a8c015a3d2f8d2a0002','2018-11-24 18:48:57','4028ea815a3d2a8c015a3d2f8d2a0002','2018-11-24 18:48:57','0' );
+
+INSERT INTO `sys_role` (`id`, `name`, `code`, `is_sys`, `usable`, `create_by`, `create_date`, `update_by`, `update_date`, `remarks`, `del_flag`)
+VALUES ('402880e45b5d7636015b5d8baca60000', '系统普通用户', 'normal', '1', '1', NULL, '2017-04-11 23:04:46', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-19 10:26:29', '', '0');
+
+INSERT INTO `sys_role` (`id`, `name`, `code`, `is_sys`, `usable`, `create_by`, `create_date`, `update_by`, `update_date`, `remarks`, `del_flag`)
+VALUES ('e47fc019c9b647c8a682bc385443bab2', '普通商家', 'merchant', '1', '1', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-19 10:27:06', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-19 10:27:25', '', '0');
+
+INSERT INTO `sys_role` (`id`, `name`, `code`, `is_sys`, `usable`, `create_by`, `create_date`, `update_by`, `update_date`, `remarks`, `del_flag`)
+VALUES ('f7a43636456842b787c25f6622cbd599', 'vip商家', 'vipMerchant', '1', '1', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-19 10:27:50', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-19 10:27:50', '', '0');
+
+INSERT INTO `sys_menu` (`id`, `name`, `type`, `url`, `parent_id`, `parent_ids`, `permission`, `isshow`, `sort`, `menu_icon`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('b76bdb41f420402bb8ad2dd36fe03357', '商户资金', NULL, 'sys/mercapital/list', '04273e3a84c04cc796207c6f9c15acee', '04273e3a84c04cc796207c6f9c15acee/', 'sys:mercapital:list', '1', '3', '', '', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-18 19:26:55', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-19 21:12:47', '0');
+
+
+
+
+
+INSERT INTO `sys_dict_group` (`id`, `name`, `code`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('151447f3fda04200bde50d598a7d80f2', '商户类型', 'shlx', '', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-15 20:35:10', NULL, NULL, '0');
+
+INSERT INTO `sys_dict` (`id`, `gid`, `label`, `value`, `sort`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('a14bedd9b101497c99017e7b6b6cf05c', '151447f3fda04200bde50d598a7d80f2', '平台', '2', '2', '', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-15 20:35:41', NULL, NULL, '0');
+
+INSERT INTO `sys_dict` (`id`, `gid`, `label`, `value`, `sort`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('ab5dbbfc448e4d6886896213ee0935f0', '151447f3fda04200bde50d598a7d80f2', '商户', '1', '1', '1', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-15 20:35:27', NULL, NULL, '0');
+
+
+
+INSERT INTO `sys_dict_group` (`id`, `name`, `code`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('e4ced5a26f734d55915a8806b25351c6', '上架状态', 'sjzt', '', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-19 20:15:22', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-19 20:15:22', '0');
+
+INSERT INTO `sys_dict` (`id`, `gid`, `label`, `value`, `sort`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('b7883addd94446198e3a8a9dd1cb5f56', 'e4ced5a26f734d55915a8806b25351c6', '上架', '1', '1', '', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-19 20:15:45', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-19 20:15:45', '0');
+
+INSERT INTO `sys_dict` (`id`, `gid`, `label`, `value`, `sort`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('d98e03081c0e4282a4cf891e5b3e14b4', 'e4ced5a26f734d55915a8806b25351c6', '下架', '0', '0', '', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-19 20:15:36', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-19 20:15:36', '0');
+
+INSERT INTO `sys_dict_group` (`id`, `name`, `code`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('94773eddee804300ba02c1b2825f547d', '审核状态', 'shzt', '', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-18 17:34:27', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-18 17:34:27', '0');
+
+INSERT INTO `sys_dict` (`id`, `gid`, `label`, `value`, `sort`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('2511f6b56264411cabf55c6b3302e9c6', '94773eddee804300ba02c1b2825f547d', '审核中', '1', '1', '', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-18 17:35:35', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-18 17:35:35', '0');
+
+INSERT INTO `sys_dict` (`id`, `gid`, `label`, `value`, `sort`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('5b82a7ffeb6948a5afe0689958677619', '94773eddee804300ba02c1b2825f547d', '审核通过', '2', '2', '', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-18 17:35:43', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-18 17:35:43', '0');
+
+INSERT INTO `sys_dict` (`id`, `gid`, `label`, `value`, `sort`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('ca91eef1ca65488085e40d2333d1fbb8', '94773eddee804300ba02c1b2825f547d', '未提交', '0', '0', '', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-18 17:35:12', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-18 17:35:12', '0');
+
+INSERT INTO `sys_dict` (`id`, `gid`, `label`, `value`, `sort`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('f73b0a1324ea459dae1f3a03fa936c2c', '94773eddee804300ba02c1b2825f547d', '审核失败', '3', '3', '', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-18 17:36:04', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-18 17:36:04', '0');
+
+
+INSERT INTO `sys_dict_group` (`id`, `name`, `code`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('a837a20f190f4409b19a76d38d437276', '任务类型', 'rwlx', '', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-15 20:33:16', NULL, NULL, '0');
+
+INSERT INTO `sys_dict` (`id`, `gid`, `label`, `value`, `sort`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('3e7f420aa4794305b2339d86c52e9eaa', 'a837a20f190f4409b19a76d38d437276', '转发', '1', '1', '1', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-15 20:33:34', NULL, NULL, '0');
+
+INSERT INTO `sys_dict` (`id`, `gid`, `label`, `value`, `sort`, `remarks`, `create_by`, `create_date`, `update_by`, `update_date`, `del_flag`)
+VALUES ('4e5324553c4b4559bda06d3a201a7a40', 'a837a20f190f4409b19a76d38d437276', '浏览', '2', '2', '', '4028ea815a3d2a8c015a3d2f8d2a0002', '2018-11-15 20:33:51', NULL, NULL, '0');
+

@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @version V1.0   
  *
  */
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("advertiseDetialService")
 public class AdvertiseDetialServiceImpl  extends CommonServiceImpl<AdvertiseDetialMapper, AdvertiseDetial> implements IAdvertiseDetialService {
 

@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @version V1.0   
  *
  */
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("capitalAccountService")
 public class CapitalAccountServiceImpl  extends CommonServiceImpl<CapitalAccountMapper, CapitalAccount> implements ICapitalAccountService {
 

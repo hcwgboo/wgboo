@@ -84,7 +84,7 @@
                 </div>
             </div>
             <div class="clearfix"></div>
-            <p class="faq"><span style="color:#999999;">如您没有账号，请联系： </span> <span style="color:#000000">xxx-xxx </span></p>
+            <!-- <p class="faq"><span style="color:#999999;">如您没有账号，请联系： </span> <span style="color:#000000">xxx-xxx </span></p> -->
             <div class=" " style="position: fixed;bottom: 0;margin-left:-70px;">
             <div class=" " style="position: fixed;bottom: 0;">
 

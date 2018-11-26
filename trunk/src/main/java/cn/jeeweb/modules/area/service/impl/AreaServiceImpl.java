@@ -17,7 +17,7 @@ import java.util.List;
  * @version V1.0   
  *
  */
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("areaService")
 public class AreaServiceImpl  extends CommonServiceImpl<AreaMapper,Area> implements IAreaService {
 

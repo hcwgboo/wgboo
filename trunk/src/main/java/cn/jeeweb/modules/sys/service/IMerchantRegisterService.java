@@ -27,5 +27,7 @@ public interface IMerchantRegisterService extends ICommonService<MerchantRegiste
      * @throws ExceptionResultInfo
      */
     void checkMerFail(String id) throws ExceptionResultInfo;
+
+	void officialRegister(MerchantRegister merchantRegister) throws Exception;
 }
 

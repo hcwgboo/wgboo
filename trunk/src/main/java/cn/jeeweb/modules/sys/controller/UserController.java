@@ -152,7 +152,12 @@ public class UserController extends BaseCRUDController<User, String> {
 		if (!StringUtils.isEmpty(organizationid)) {
 			entityWrapper.eq("uo.organization_id", organizationid);
 		}
-		entityWrapper.eq("type", DictConstants.USER_TYPE_1);
+		String type = request.getParameter("type");
+		if(!StringUtils.isEmpty(type) && DictConstants.USER_TYPE_2.equals(type)) {
+			entityWrapper.eq("type", DictConstants.USER_TYPE_2);
+		}else {
+			entityWrapper.eq("type", DictConstants.USER_TYPE_1);
+		}
 	}
 
 	@Override

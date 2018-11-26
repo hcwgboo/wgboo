@@ -25,7 +25,7 @@ import java.util.Map;
  * @version V1.0   
  *
  */
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("advertiseRuleRelationService")
 public class AdvertiseRuleRelationServiceImpl  extends CommonServiceImpl<AdvertiseRuleRelationMapper, AdvertiseRuleRelation>
         implements IAdvertiseRuleRelationService {

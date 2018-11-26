@@ -1,6 +1,30 @@
 package cn.jeeweb.modules.sys.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.serializer.SerializeFilter;
+
 import cn.jeeweb.core.common.controller.BaseBeanController;
+import cn.jeeweb.core.exception.ExceptionResultInfo;
 import cn.jeeweb.core.model.AjaxJson;
 import cn.jeeweb.core.model.PageJson;
 import cn.jeeweb.core.query.annotation.PageableDefaults;
@@ -10,26 +34,18 @@ import cn.jeeweb.core.query.utils.QueryableConvertUtils;
 import cn.jeeweb.core.query.wrapper.EntityWrapper;
 import cn.jeeweb.core.security.shiro.authz.annotation.RequiresMethodPermissions;
 import cn.jeeweb.core.security.shiro.authz.annotation.RequiresPathPermission;
+import cn.jeeweb.core.utils.JedisUtils;
 import cn.jeeweb.core.utils.ObjectUtils;
 import cn.jeeweb.core.utils.StringUtils;
+import cn.jeeweb.modules.excel.validate.ValidateHelper;
+import cn.jeeweb.modules.sms.util.VerificationCode;
+import cn.jeeweb.modules.sys.Constants;
+import cn.jeeweb.modules.sys.entity.LogSmscode;
 import cn.jeeweb.modules.sys.entity.MerchantRegister;
+import cn.jeeweb.modules.sys.entity.User;
+import cn.jeeweb.modules.sys.service.ILogSmscodeService;
 import cn.jeeweb.modules.sys.service.IMerchantRegisterService;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.serializer.SerializeFilter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import cn.jeeweb.modules.sys.service.IUserService;
 
 /**   
  * @Title: 商家注册
@@ -46,6 +62,10 @@ public class MerchantRegisterController extends BaseBeanController<MerchantRegis
 
     @Autowired
     protected IMerchantRegisterService merchantRegisterService;
+    @Autowired
+    private IUserService userService;
+    @Autowired
+    private ILogSmscodeService logSmscodeService;
 
     public MerchantRegister get(String id) {
         if (!ObjectUtils.isNullOrEmpty(id)) {
@@ -195,6 +215,90 @@ public class MerchantRegisterController extends BaseBeanController<MerchantRegis
         if (!model.containsAttribute("data")) {
             model.addAttribute("data", newModel());
         }
-        return "modules/sys/login/register";
+        return display("register");
     }
+    
+    /**
+	 * 发送验证码
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws ExceptionResultInfo
+	 */
+	@RequestMapping(value="sendVerifyCode", method = RequestMethod.GET)
+	@ResponseBody
+	public AjaxJson sendVerifyCode(HttpServletRequest request, HttpServletResponse response) throws ExceptionResultInfo{
+		AjaxJson ajaxJson = new AjaxJson();
+		//1.参数校验
+		String type = request.getParameter("type");
+		String telephone = request.getParameter("telephone");
+		if (StringUtils.isEmpty(type) || StringUtils.isEmpty(telephone)){
+			ajaxJson.fail("参数错误");
+			return ajaxJson;
+		}
+		//2.手机号码校验
+		if(!ValidateHelper.regCheckTelphone(telephone)){
+			ajaxJson.fail("手机号码不合法");
+			return ajaxJson;
+		}
+		//3.校验用户是否存在
+		User user = userService.selectOne(new EntityWrapper<User>().eq("username", telephone).in("del_flag", Arrays.asList("0", "1")));
+		
+		if(user != null){
+			ajaxJson.fail("账号已存在");
+			return ajaxJson;
+		}
+
+		//获取验证码（1小时内，用一种类型验证码一致）
+		String defCodeKey = Constants.DEF_CODE + Constants.REGISTER + "_" + telephone;
+		String defCode = JedisUtils.get(defCodeKey);
+		if(cn.jeeweb.core.utils.ObjectUtils.isNullOrEmpty(defCode)){
+			defCode = VerificationCode.getDefCode();
+			JedisUtils.set(defCodeKey,defCode,Constants.DEF_CODE_TIME);
+		}
+
+		//4.发送验证码
+		LogSmscode sms = new LogSmscode();
+		sms.setType(Integer.parseInt(type));
+		sms.setTelphone(telephone);
+		sms.setCode(defCode);
+		boolean flag = logSmscodeService.sendSmsCode(sms);
+		if(!flag) {
+			ajaxJson.fail("验证码发送失败，请联系客服");
+		}else{
+			//5.存入缓存中
+			String cashKey = Constants.SMS_CODE + Constants.REGISTER + "_" + telephone; 
+			String value = JedisUtils.get(cashKey);
+			if(!StringUtils.isEmpty(value)){
+				JedisUtils.del(cashKey);
+			}
+			JedisUtils.set(cashKey, sms.getCode(), 300);
+//			ajaxJson.setData(sms.getCode());
+		}
+		return ajaxJson;
+	}
+	
+	/**
+	 * 总代官网注册
+	 * @param dto
+	 * @return
+	 * @throws ExceptionResultInfo
+	 */
+	@RequestMapping(value="officialRegister", method = RequestMethod.POST)
+	@ResponseBody
+	public AjaxJson officialRegister(MerchantRegister merchantRegister) throws ExceptionResultInfo{
+		AjaxJson ajaxJson = new AjaxJson();
+		try {
+			if(merchantRegister==null) {
+				ajaxJson.fail("参数错误");
+				return ajaxJson;
+			}
+			merchantRegisterService.officialRegister(merchantRegister);
+			ajaxJson.success("提审成功，请等待官方审核！");
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxJson.fail(e.getMessage());
+		}
+		return ajaxJson;
+	}
 }

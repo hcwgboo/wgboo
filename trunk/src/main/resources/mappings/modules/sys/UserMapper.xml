@@ -7,6 +7,8 @@
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="portrait" property="portrait" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="companyname" property="companyname" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
     <result column="salt" property="salt" jdbcType="VARCHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
@@ -23,6 +25,8 @@
     t.salt, 
     t.email, 
     t.phone, 
+    t.companyname, 
+    t.type, 
     t.status
   </sql>
   

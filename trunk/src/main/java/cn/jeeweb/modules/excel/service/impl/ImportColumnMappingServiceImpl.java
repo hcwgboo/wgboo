@@ -16,7 +16,7 @@ import cn.jeeweb.modules.excel.service.IImportColumnMappingService;
  * @version V1.0   
  *
  */
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("importColumnMappingService")
 public class ImportColumnMappingServiceImpl  extends CommonServiceImpl<ImportColumnMappingMapper,ImportColumnMapping> implements  IImportColumnMappingService {
 

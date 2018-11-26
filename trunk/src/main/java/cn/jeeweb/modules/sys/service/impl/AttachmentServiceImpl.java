@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("attachmentService")
 public class AttachmentServiceImpl extends CommonServiceImpl<AttachmentMapper, Attachment>
 		implements IAttachmentService {

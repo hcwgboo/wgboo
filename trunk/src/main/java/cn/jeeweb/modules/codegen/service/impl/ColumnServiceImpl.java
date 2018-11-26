@@ -1,17 +1,16 @@
 package cn.jeeweb.modules.codegen.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import cn.jeeweb.core.common.service.impl.CommonServiceImpl;
 import cn.jeeweb.core.query.wrapper.EntityWrapper;
 import cn.jeeweb.modules.codegen.entity.Column;
 import cn.jeeweb.modules.codegen.mapper.ColumnMapper;
 import cn.jeeweb.modules.codegen.service.IColumnService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+import java.util.List;
+
+@Transactional(rollbackFor = Exception.class)
 @Service("columnService")
 public class ColumnServiceImpl extends CommonServiceImpl<ColumnMapper, Column> implements IColumnService {
 

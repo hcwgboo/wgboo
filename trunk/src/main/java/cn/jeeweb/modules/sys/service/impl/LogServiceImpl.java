@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("logService")
 public class LogServiceImpl extends CommonServiceImpl<LogMapper,Log> implements ILogService {
 	@Override

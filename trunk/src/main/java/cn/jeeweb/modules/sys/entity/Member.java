@@ -21,10 +21,10 @@ import java.util.Date;
 public class Member extends AbstractEntity<String> {
 
     /**主键*/
-    @TableField(value = "id")
+    @TableId(value = "id", type = IdType.UUID)
 	private String id;
     /**当前用户的标识，小程序用来区分用户*/
-    @TableId(value = "id", type = IdType.UUID)
+    @TableField(value = "user_id")
 	private Integer userId;
     /**昵称*/
     @TableField(value = "nick_name")

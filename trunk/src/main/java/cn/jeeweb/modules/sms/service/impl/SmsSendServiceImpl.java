@@ -22,7 +22,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
  * @version V1.0
  *
  */
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("smsSendService")
 public class SmsSendServiceImpl implements ISmsSendService {
 	@Autowired

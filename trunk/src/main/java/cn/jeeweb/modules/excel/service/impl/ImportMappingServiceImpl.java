@@ -1,16 +1,15 @@
 package cn.jeeweb.modules.excel.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import cn.jeeweb.core.common.service.impl.CommonServiceImpl;
 import cn.jeeweb.core.utils.StringUtils;
 import cn.jeeweb.modules.excel.entity.ImportMapping;
 import cn.jeeweb.modules.excel.entity.ImportMappingConfiguration;
 import cn.jeeweb.modules.excel.mapper.ImportMappingMapper;
 import cn.jeeweb.modules.excel.service.IImportMappingService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @Title: 导入配置主表
@@ -20,7 +19,7 @@ import cn.jeeweb.modules.excel.service.IImportMappingService;
  * @version V1.0
  *
  */
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("importMappingService")
 public class ImportMappingServiceImpl extends CommonServiceImpl<ImportMappingMapper, ImportMapping>
 		implements IImportMappingService {

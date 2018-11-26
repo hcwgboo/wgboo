@@ -6,13 +6,11 @@ import cn.jeeweb.modules.task.entity.ScheduleJob;
 import cn.jeeweb.modules.task.mapper.ScheduleJobMapper;
 import cn.jeeweb.modules.task.service.IScheduleJobService;
 import cn.jeeweb.modules.task.utils.ScheduleJobUtils;
-import java.io.Serializable;
-import java.util.List;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import java.io.Serializable;
 
 /**
  * @Title: 任务
@@ -22,7 +20,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
  * @version V1.0
  *
  */
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("scheduleJobService")
 public class ScheduleJobServiceImpl extends CommonServiceImpl<ScheduleJobMapper, ScheduleJob>
 		implements IScheduleJobService {

@@ -13,7 +13,7 @@ import cn.jeeweb.modules.excel.definition.CommonExportDataContext;
 import cn.jeeweb.modules.excel.service.IExportCommonService;
 import cn.jeeweb.modules.excel.util.ExcelExportUtils;
 import cn.jeeweb.modules.excel.web.ExportDataBaseAction;
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class ExportCommonServiceImpl<T> implements IExportCommonService<T>{
 

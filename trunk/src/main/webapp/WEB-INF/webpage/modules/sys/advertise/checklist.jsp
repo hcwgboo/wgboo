@@ -6,7 +6,7 @@
     <title>广告列表</title>
     <meta name="decorator" content="list"/>
 </head>
-<body title="广告">
+<body title="广告审核">
 <grid:grid id="advertiseGridId" url="${adminPath}/sys/advertise/checkAjaxList">
     <grid:column label="sys.common.key" hidden="true"   name="id" width="100"/>
     <grid:column label="商户id" hidden="true" name="merchantId" />

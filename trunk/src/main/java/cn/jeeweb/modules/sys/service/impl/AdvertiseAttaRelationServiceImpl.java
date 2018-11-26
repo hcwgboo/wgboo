@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @version V1.0   
  *
  */
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service("advertiseAttaRelationService")
 public class AdvertiseAttaRelationServiceImpl  extends CommonServiceImpl<AdvertiseAttaRelationMapper, AdvertiseAttaRelation> implements IAdvertiseAttaRelationService {
 
